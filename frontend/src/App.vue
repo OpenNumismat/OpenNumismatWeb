@@ -1,6 +1,6 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import FileUploader from './components/FileUploader.vue'
 </script>
 
 <template>
@@ -13,7 +13,8 @@ import TheWelcome from './components/TheWelcome.vue'
   </header>
 
   <main>
-    <TheWelcome />
+    <FileUploader />
+    Your file not will be uploaded to the internet. You can disable internet connection.
   </main>
 </template>
 
