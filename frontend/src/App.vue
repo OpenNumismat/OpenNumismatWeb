@@ -1,6 +1,15 @@
 <script setup>
+import { ref } from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
 import FileUploader from './components/FileUploader.vue'
+import CoinList from "@/components/CoinList.vue";
+
+const selectedFile = ref(null)
+
+const handleFile = (file) => {
+  console.log(file);
+  selectedFile.value = file;
+};
 </script>
 
 <template>
@@ -13,8 +22,13 @@ import FileUploader from './components/FileUploader.vue'
   </header>
 
   <main>
-    <FileUploader />
-    Your file not will be uploaded to the internet. You can disable internet connection.
+    <div v-if="!selectedFile" class="select-view">
+      <FileUploader :handleFile="handleFile" />
+      <p>Your file not will be uploaded to the internet. You can disable internet connection.</p>
+    </div>
+    <div v-else class="file-view">
+      <CoinList :file_name="selectedFile.name" />
+    </div>
   </main>
 </template>
 

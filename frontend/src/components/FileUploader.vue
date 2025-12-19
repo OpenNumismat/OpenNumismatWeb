@@ -1,6 +1,16 @@
 <script setup>
+import { defineProps } from 'vue';
+
+const props = defineProps({
+  handleFile: Function,
+});
+
 const handleFileUpload = (event) => {
-  console.log(event.target.files);
+  if (props.handleFile) {
+    // TODO: Check file extension here
+
+    props.handleFile(event.target.files[0]);
+  }
 }
 </script>
 
