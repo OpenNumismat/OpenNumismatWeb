@@ -12,7 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@sqlite.org/sqlite-wasm": "^3.47.0-build1",
+    "sql.js": "^1.13.0",
     "vue": "^3.5.25"
   },
   "devDependencies": {
