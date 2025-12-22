@@ -5,6 +5,7 @@ import FileUploader from './components/FileUploader.vue'
 import CoinList from "@/components/CoinList.vue";
 
 const selectedFile = ref(null)
+const coinsList = ref([])
 
 const db = ref(null);
 const status = ref('');
@@ -38,10 +39,15 @@ const handleFileUpload = async (file) => {
       // Load database
       db.value = new SQL.Database(uint8Array);
 
-      const result = db.value.exec(`SELECT COUNT(*) FROM coins`);
-      console.log(`Coins in database: ${result[0].values[0][0]}`);
-
       status.value = `Database loaded successfully: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+
+      const coins = db.value.exec(`
+        SELECT coins.id, images.image, title, status, subjectshort, value, unit, year, mintmark, series, country
+        FROM coins LEFT OUTER JOIN images on images.id = coins.image
+      `);
+      coinsList.value = coins.length > 0
+        ? coins[0].values
+        : [];
 
       selectedFile.value = file;
     } catch (err) {
@@ -65,7 +71,7 @@ const handleFileUpload = async (file) => {
       <p>Your file not will be uploaded to the internet. You can disable internet connection.</p>
     </div>
     <div v-else class="file-view">
-      <CoinList :file_name="selectedFile.name" />
+      <CoinList :file_name="selectedFile.name" :coins_list="coinsList" />
     </div>
     <div v-if="status" class="status">{{ status }}</div>
   </main>
