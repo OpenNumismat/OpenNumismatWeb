@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import initSqlJs from 'sql.js';
-import HelloWorld from './components/HelloWorld.vue'
 import FileUploader from './components/FileUploader.vue'
 import CoinList from "@/components/CoinList.vue";
 
@@ -60,14 +59,6 @@ const handleFileUpload = async (file) => {
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
   <main>
     <div v-if="!selectedFile" class="select-view">
       <FileUploader :handleFile="handleFileUpload" />
