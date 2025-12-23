@@ -3,6 +3,16 @@ import { ref, onMounted } from 'vue'
 import initSqlJs from 'sql.js';
 import FileUploader from './components/FileUploader.vue'
 import CoinList from "@/components/CoinList.vue";
+import Button from 'primevue/button';
+import Drawer from 'primevue/drawer';
+import Menubar from 'primevue/menubar';
+
+
+const menuVisible = ref(false);
+const menuItems = ref([
+  { label: 'Home', icon: 'pi pi-home', to: '/' },
+  { label: 'About', icon: 'pi pi-info-circle', to: '/about' },
+]);
 
 const selectedFile = ref(null)
 const coinsList = ref([])
@@ -11,6 +21,10 @@ const db = ref(null);
 const status = ref('');
 
 let SQL = null;
+
+const navigateTo = (path) => {
+  menuVisible.value = false;
+};
 
 onMounted(async () => {
   try {
@@ -65,6 +79,28 @@ const handleFileUpload = async (file) => {
 </script>
 
 <template>
+  <Menubar  class="p-menubar-fixed-top">
+    <template #start>
+        <Button icon="pi pi-bars" class="mr-2" severity="secondary"  @click="menuVisible = true" />
+    </template>
+  </Menubar>
+
+  <Drawer v-model:visible="menuVisible">
+    <div class="sidebar-content">
+      <div class="menu-section">
+        <div
+          v-for="item in menuItems"
+          :key="item.label"
+          class="menu-item"
+          @click="navigateTo(item.to)"
+        >
+          <i :class="item.icon" class="menu-icon"></i>
+          <span>{{ item.label }}</span>
+        </div>
+      </div>
+    </div>
+  </Drawer>
+
   <main>
     <div v-if="!selectedFile" class="select-view">
       <FileUploader :handleFile="handleFileUpload" />
@@ -82,26 +118,48 @@ header {
   line-height: 1.5;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
 @media (min-width: 1024px) {
   header {
     display: flex;
     place-items: center;
     padding-right: calc(var(--section-gap) / 2);
   }
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+.p-menubar-fixed-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.menu-section {
+  margin-bottom: 2rem;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-bottom: 0.5rem;
+}
+
+.menu-item:hover {
+  background-color: var(--surface-hover);
+}
+
+.menu-icon {
+  margin-right: 0.75rem;
+  color: var(--primary-color);
+}
+
+.content {
+  padding: 1.5rem;
+  background-color: var(--surface-ground);
+  min-height: calc(100vh - 64px);
 }
 </style>
