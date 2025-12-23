@@ -12,6 +12,18 @@ const status = ref('');
 
 let SQL = null;
 
+import { useRoute, useRouter } from 'vue-router'
+
+const router = useRouter()
+const route = useRoute()
+
+const drawer = ref(false)
+
+const goToHome = () => {
+  router.push('/')
+  drawer.value = false
+}
+
 onMounted(async () => {
   try {
     SQL = await initSqlJs({
@@ -62,32 +74,41 @@ const handleFileUpload = async (file) => {
 
   reader.readAsArrayBuffer(file);
 };
-
-const items = [
-  {
-    title: 'About',
-    value: 'about',
-  },
-];
-const drawer = ref(false);
 </script>
 
 <template>
   <v-layout>
-    <v-app-bar color="primary">
+    <v-app-bar color="primary" v-if="route.path === '/'">
       <v-app-bar-nav-icon
-        variant="text"
         @click.stop="drawer = !drawer"
       ></v-app-bar-nav-icon>
 
       <v-toolbar-title>OpenNumismat</v-toolbar-title>
     </v-app-bar>
+    <v-app-bar color="primary" v-else>
+      <v-app-bar-nav-icon
+        icon="mdi-chevron-left"
+        @click.stop="goToHome()"
+      ></v-app-bar-nav-icon>
+
+      <v-toolbar-title>About</v-toolbar-title>
+    </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" temporary>
-      <v-list :items="items"></v-list>
+      <v-list>
+        <v-list-item
+          prepend-icon="mdi-information"
+          title="About"
+          value="about"
+          @click="router.push('/about')"
+          :active="route.path === '/about'"
+        ></v-list-item>
+      </v-list>
     </v-navigation-drawer>
 
-    <v-main>
+    <router-view></router-view>
+
+    <v-main v-if="route.path !== '/about'">
       <div v-if="!selectedFile" class="select-view">
         <FileUploader :handleFile="handleFileUpload" />
         <p>Your file not will be uploaded to the internet. You can disable internet connection.</p>
