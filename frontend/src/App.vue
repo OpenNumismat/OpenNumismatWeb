@@ -62,19 +62,42 @@ const handleFileUpload = async (file) => {
 
   reader.readAsArrayBuffer(file);
 };
+
+const items = [
+  {
+    title: 'About',
+    value: 'about',
+  },
+];
+const drawer = ref(false);
 </script>
 
 <template>
-  <main>
-    <div v-if="!selectedFile" class="select-view">
-      <FileUploader :handleFile="handleFileUpload" />
-      <p>Your file not will be uploaded to the internet. You can disable internet connection.</p>
-    </div>
-    <div v-else class="file-view">
-      <CoinList :file_name="selectedFile.name" :coins_list="coinsList" />
-    </div>
-    <div v-if="status" class="status">{{ status }}</div>
-  </main>
+  <v-layout>
+    <v-app-bar color="primary">
+      <v-app-bar-nav-icon
+        variant="text"
+        @click.stop="drawer = !drawer"
+      ></v-app-bar-nav-icon>
+
+      <v-toolbar-title>OpenNumismat</v-toolbar-title>
+    </v-app-bar>
+
+    <v-navigation-drawer v-model="drawer" temporary>
+      <v-list :items="items"></v-list>
+    </v-navigation-drawer>
+
+    <v-main>
+      <div v-if="!selectedFile" class="select-view">
+        <FileUploader :handleFile="handleFileUpload" />
+        <p>Your file not will be uploaded to the internet. You can disable internet connection.</p>
+      </div>
+      <div v-else class="file-view">
+        <CoinList :file_name="selectedFile.name" :coins_list="coinsList" />
+      </div>
+      <div v-if="status" class="status">{{ status }}</div>
+    </v-main>
+  </v-layout>
 </template>
 
 <style scoped>
@@ -82,26 +105,11 @@ header {
   line-height: 1.5;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
 @media (min-width: 1024px) {
   header {
     display: flex;
     place-items: center;
     padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
   }
 }
 </style>
