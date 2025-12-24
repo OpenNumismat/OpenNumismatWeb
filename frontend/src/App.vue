@@ -1,8 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import initSqlJs from 'sql.js';
-import FileUploader from './components/FileUploader.vue'
-import CoinList from "@/components/CoinList.vue";
+import FileUploaderView from './components/FileUploaderView.vue'
+import CoinListView from "@/components/CoinListView.vue";
+import AboutView from "@/components/AboutView.vue";
 
 const selectedFile = ref(null)
 const coinsList = ref([])
@@ -12,17 +13,8 @@ const status = ref('');
 
 let SQL = null;
 
-import { useRoute, useRouter } from 'vue-router'
-
-const router = useRouter()
-const route = useRoute()
-
+const currentComponent = ref('OpenFile');
 const drawer = ref(false)
-
-const goToHome = () => {
-  router.push('/')
-  drawer.value = false
-}
 
 onMounted(async () => {
   try {
@@ -40,6 +32,8 @@ const handleFileUpload = async (file) => {
   if (!file) return;
 
   status.value = 'Loading database...';
+  currentComponent.value = 'CoinList';
+  selectedFile.value = file;
 
   const reader = new FileReader();
 
@@ -73,48 +67,51 @@ const handleFileUpload = async (file) => {
   };
 
   reader.readAsArrayBuffer(file);
-};
+}
 </script>
 
 <template>
   <v-layout>
-    <v-app-bar color="primary" v-if="route.path === '/'">
-      <v-app-bar-nav-icon
-        @click.stop="drawer = !drawer"
+    <v-app-bar color="primary">
+      <v-app-bar-nav-icon v-if="currentComponent === 'OpenFile' || currentComponent === 'CoinList'"
+        @click="drawer = !drawer"
+      ></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon  v-else
+        icon="mdi-chevron-left"
+        @click="currentComponent = 'OpenFile'"
       ></v-app-bar-nav-icon>
 
       <v-toolbar-title>OpenNumismat</v-toolbar-title>
-    </v-app-bar>
-    <v-app-bar color="primary" v-else>
-      <v-app-bar-nav-icon
-        icon="mdi-chevron-left"
-        @click.stop="goToHome()"
-      ></v-app-bar-nav-icon>
-
-      <v-toolbar-title>About</v-toolbar-title>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" temporary>
       <v-list>
         <v-list-item
+          prepend-icon="mdi-cloud-upload"
+          title="Open"
+          value="open"
+          @click="currentComponent = 'OpenFile'; drawer = false"
+          :active="currentComponent === 'OpenFile'"
+        ></v-list-item>
+        <v-list-item
           prepend-icon="mdi-information"
           title="About"
           value="about"
-          @click="router.push('/about')"
-          :active="route.path === '/about'"
+          @click="currentComponent = 'About'; drawer = false"
+          :active="currentComponent === 'About'"
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
 
-    <router-view></router-view>
-
-    <v-main v-if="route.path !== '/about'">
-      <div v-if="!selectedFile" class="select-view">
-        <FileUploader :handleFile="handleFileUpload" />
-        <p>Your file not will be uploaded to the internet. You can disable internet connection.</p>
+    <v-main>
+      <div v-if="currentComponent === 'OpenFile'">
+        <FileUploaderView :onFileUploaded="handleFileUpload" />
       </div>
-      <div v-else class="file-view">
-        <CoinList :file_name="selectedFile.name" :coins_list="coinsList" />
+      <div v-if="currentComponent === 'CoinList'">
+        <CoinListView :file_name="selectedFile.name" :coins_list="coinsList" />
+      </div>
+      <div v-if="currentComponent === 'About'">
+        <AboutView />
       </div>
       <div v-if="status" class="status">{{ status }}</div>
     </v-main>
