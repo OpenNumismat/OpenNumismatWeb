@@ -1,9 +1,26 @@
 <script setup>
+import {defineProps, onMounted, onUnmounted} from "vue";
+import {useRoute} from "vue-router";
 import { VFileUpload } from 'vuetify/labs/VFileUpload'
 
 const props = defineProps({
+  title: String,
   onFileUploaded: Function,
 });
+
+const emit = defineEmits(['update:title']);
+let oldTitle = null;
+
+const route = useRoute()
+
+onMounted(async () => {
+  oldTitle = props.title;
+  if (route.name === 'open')
+    emit('update:title', 'Open File');
+})
+onUnmounted(async () => {
+  emit('update:title', oldTitle);
+})
 
 function onFileChange(event) {
   console.log('Selected files:', event.target.files);

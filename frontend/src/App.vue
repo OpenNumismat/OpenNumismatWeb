@@ -9,6 +9,7 @@ import AboutView from "@/components/AboutView.vue";
 const selectedFile = ref(null)
 const coinsList = ref([])
 let isOpened = false;
+const title = ref('OpenNumismat')
 
 const db = ref(null);
 const status = ref('');
@@ -86,7 +87,7 @@ const handleFileUpload = async (file) => {
         @click="router.back()"
       ></v-app-bar-nav-icon>
 
-      <v-toolbar-title>OpenNumismat</v-toolbar-title>
+      <v-toolbar-title>{{ title }}</v-toolbar-title>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" temporary>
@@ -110,13 +111,13 @@ const handleFileUpload = async (file) => {
 
     <v-main>
       <div v-if="(route.name === 'home' && !isOpened) || route.name === 'open'">
-        <FileUploaderView :onFileUploaded="handleFileUpload" />
+        <FileUploaderView v-model:title="title" :onFileUploaded="handleFileUpload" />
       </div>
       <div v-if="route.name === 'home' && isOpened">
-        <CoinListView :file_name="selectedFile.name" :coins_list="coinsList" />
+        <CoinListView v-model:title="title" :file_name="selectedFile.name" :coins_list="coinsList" />
       </div>
       <div v-if="route.name === 'about'">
-        <AboutView />
+        <AboutView v-model:title="title" />
       </div>
       <div v-if="status" class="status">{{ status }}</div>
     </v-main>

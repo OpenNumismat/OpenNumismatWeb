@@ -1,5 +1,21 @@
 <script setup>
+import {defineProps, onMounted, onUnmounted} from "vue";
+
 const appVersion = import.meta.env.VITE_APP_VERSION;
+
+const props = defineProps({
+  title: String,
+});
+const emit = defineEmits(['update:title']);
+let oldTitle = null;
+
+onMounted(async () => {
+  oldTitle = props.title;
+  emit('update:title', 'About');
+})
+onUnmounted(async () => {
+  emit('update:title', oldTitle);
+})
 </script>
 
 <template>

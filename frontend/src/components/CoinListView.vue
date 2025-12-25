@@ -1,7 +1,8 @@
 <script setup>
-import { defineProps } from 'vue';
+import {defineProps, onMounted, onUnmounted} from "vue";
 
-defineProps({
+const props = defineProps({
+  title: String,
   file_name: {
     type: String,
     required: true,
@@ -12,6 +13,17 @@ defineProps({
   },
 });
 
+const emit = defineEmits(['update:title']);
+let oldTitle = null;
+
+onMounted(async () => {
+  oldTitle = props.title;
+  emit('update:title', props.file_name);
+})
+onUnmounted(async () => {
+  emit('update:title', oldTitle);
+})
+
 function arrayBufferToBase64( buffer ) {
   let binary = '';
   const bytes = new Uint8Array( buffer );
@@ -19,7 +31,6 @@ function arrayBufferToBase64( buffer ) {
   for (let i = 0; i < len; i++) {
     binary += String.fromCharCode( bytes[ i ] );
   }
-//  return window.btoa( binary );
   const base64String = window.btoa( binary );
   return `data:image/png;base64,${base64String}`;
 }
@@ -45,8 +56,6 @@ function generateDescription( coin_data ) {
 </script>
 
 <template>
-  <h2 class="file-name">{{ file_name }}</h2>
-
   <div>
     <table>
       <tr v-for="coin_data in coins_list">
