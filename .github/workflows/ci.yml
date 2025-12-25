@@ -3,6 +3,12 @@ name: CI
 on:
   push:
     branches: [ main ]
+  workflow_dispatch: # allow manual start
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: ${{ github.workflow }}
@@ -21,5 +27,10 @@ jobs:
         with:
           node-version: 24
 
-      - working-directory: frontend
-        run: npm i && npm run build
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build
+        working-directory: frontend
+        run: npm run build
