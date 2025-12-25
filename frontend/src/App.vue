@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import initSqlJs from 'sql.js';
 import FileUploaderView from './components/FileUploaderView.vue'
 import CoinListView from "@/components/CoinListView.vue";
@@ -7,14 +8,17 @@ import AboutView from "@/components/AboutView.vue";
 
 const selectedFile = ref(null)
 const coinsList = ref([])
+let isOpened = false;
 
 const db = ref(null);
 const status = ref('');
 
 let SQL = null;
 
-const currentComponent = ref('OpenFile');
 const drawer = ref(false)
+
+const router = useRouter()
+const route = useRoute()
 
 onMounted(async () => {
   try {
@@ -32,7 +36,8 @@ const handleFileUpload = async (file) => {
   if (!file) return;
 
   status.value = 'Loading database...';
-  currentComponent.value = 'CoinList';
+  router.replace('/')
+  isOpened = true;
   selectedFile.value = file;
 
   const reader = new FileReader();
@@ -73,12 +78,12 @@ const handleFileUpload = async (file) => {
 <template>
   <v-layout>
     <v-app-bar color="primary">
-      <v-app-bar-nav-icon v-if="currentComponent === 'OpenFile' || currentComponent === 'CoinList'"
+      <v-app-bar-nav-icon v-if="route.name === 'home' || (route.name === 'open' && !isOpened)"
         @click="drawer = !drawer"
       ></v-app-bar-nav-icon>
       <v-app-bar-nav-icon  v-else
         icon="mdi-chevron-left"
-        @click="currentComponent = 'OpenFile'"
+        @click="router.back()"
       ></v-app-bar-nav-icon>
 
       <v-toolbar-title>OpenNumismat</v-toolbar-title>
@@ -90,27 +95,27 @@ const handleFileUpload = async (file) => {
           prepend-icon="mdi-cloud-upload"
           title="Open"
           value="open"
-          @click="currentComponent = 'OpenFile'; drawer = false"
-          :active="currentComponent === 'OpenFile'"
+          @click="router.push('/open'); drawer = false"
+          :active="route.name === 'open'"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-information"
           title="About"
           value="about"
-          @click="currentComponent = 'About'; drawer = false"
-          :active="currentComponent === 'About'"
+          @click="router.push('about'); drawer = false"
+          :active="route.name === 'about'"
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
 
     <v-main>
-      <div v-if="currentComponent === 'OpenFile'">
+      <div v-if="(route.name === 'home' && !isOpened) || route.name === 'open'">
         <FileUploaderView :onFileUploaded="handleFileUpload" />
       </div>
-      <div v-if="currentComponent === 'CoinList'">
+      <div v-if="route.name === 'home' && isOpened">
         <CoinListView :file_name="selectedFile.name" :coins_list="coinsList" />
       </div>
-      <div v-if="currentComponent === 'About'">
+      <div v-if="route.name === 'about'">
         <AboutView />
       </div>
       <div v-if="status" class="status">{{ status }}</div>
