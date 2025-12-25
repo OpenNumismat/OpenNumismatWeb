@@ -56,22 +56,23 @@ function generateDescription( coin_data ) {
 </script>
 
 <template>
-  <div>
-    <table>
-      <tr v-for="coin_data in coins_list">
-        <td class="image" :data-id="coin_data[0]"><img :src="arrayBufferToBase64(coin_data[1])"></td>
-        <td class="data">
-          <div class="title">
-            {{ coin_data[2] }}&nbsp;
-          </div>
-          <div class="description">
-            {{ generateDescription(coin_data).join(', ') }}&nbsp;
-          </div>
-        </td>
-        <td>{{ coin_data[3] }}</td>
-      </tr>
-    </table>
-  </div>
+  <v-container>
+    <v-list lines="two">
+      <v-list-item
+        v-for="coin in coins_list"
+        :key="coin[0]"
+        :subtitle="generateDescription(coin).join(', ')"
+        :title="coin[2]"
+      >
+        <template v-slot:prepend>
+          <v-img :src="arrayBufferToBase64(coin[1])" :width="100" />
+        </template>
+        <template v-slot:append>
+          {{ coin[3] }}
+        </template>
+      </v-list-item>
+    </v-list>
+  </v-container>
 </template>
 
 <style scoped>
