@@ -1,78 +1,38 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import initSqlJs from 'sql.js';
-import FileUploaderView from './components/FileUploaderView.vue'
+import {ref} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
+import FileUploaderView from '@/components/FileUploaderView.vue'
 import CoinListView from "@/components/CoinListView.vue";
 import AboutView from "@/components/AboutView.vue";
+import {useSQLite} from "@/composables/useSQLite.js";
+
+const {isLoading,
+    error,
+    status,
+    openDatabase,
+    executeQuery} = useSQLite()
 
 const selectedFile = ref(null)
 const coinsList = ref([])
 let isOpened = false;
 const title = ref('OpenNumismat')
 
-const db = ref(null);
-const status = ref('');
-
-let SQL = null;
-
 const drawer = ref(false)
 
 const router = useRouter()
 const route = useRoute()
 
-onMounted(async () => {
-  try {
-    SQL = await initSqlJs({
-      locateFile: file => `https://sql.js.org/dist/${file}`
-    });
-    status.value = 'SQL.js loaded successfully';
-  } catch (err) {
-    console.error('Failed to load SQL.js:', err);
-    status.value = 'Failed to load SQL.js';
-  }
-});
-
 const handleFileUpload = async (file) => {
-  if (!file) return;
+  if (!file)
+    return;
 
-  status.value = 'Loading database...';
-  router.replace('/')
-  isOpened = true;
+  await openDatabase(file)
+
   selectedFile.value = file;
+  isOpened = true;
+  await router.replace('/')
 
-  const reader = new FileReader();
-
-  reader.onload = async (e) => {
-    try {
-      const arrayBuffer = e.target.result;
-      const uint8Array = new Uint8Array(arrayBuffer);
-
-      // Load database
-      db.value = new SQL.Database(uint8Array);
-
-      status.value = `Database loaded successfully: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
-
-      const coins = db.value.exec(`
-        SELECT coins.id, images.image, title, status, subjectshort, value, unit, year, mintmark, series, country
-        FROM coins LEFT OUTER JOIN images on images.id = coins.image
-      `);
-      coinsList.value = coins.length > 0
-        ? coins[0].values
-        : [];
-
-      selectedFile.value = file;
-    } catch (err) {
-      console.error('Error loading database:', err);
-      status.value = 'Error loading database';
-    }
-  };
-
-  reader.onerror = () => {
-    status.value = `Error reading file`;
-  };
-
-  reader.readAsArrayBuffer(file);
+  coinsList.value = await executeQuery("")
 }
 </script>
 
