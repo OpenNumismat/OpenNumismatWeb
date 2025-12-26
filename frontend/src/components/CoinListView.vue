@@ -1,5 +1,8 @@
 <script setup>
 import {defineProps, onMounted, onUnmounted} from "vue";
+import {useRouter} from "vue-router";
+
+const router = useRouter()
 
 const props = defineProps({
   title: String,
@@ -63,6 +66,7 @@ function generateDescription( coin_data ) {
         :key="coin[0]"
         :subtitle="generateDescription(coin).join(', ')"
         :title="coin[2]"
+        @click="router.push('/coin/' + coin[0])"
       >
         <template v-slot:prepend>
           <v-img :src="arrayBufferToBase64(coin[1])" :width="100" />

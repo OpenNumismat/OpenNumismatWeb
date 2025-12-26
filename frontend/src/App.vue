@@ -1,10 +1,11 @@
 <script setup>
 import {ref} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
+import {useSQLite} from "@/composables/useSQLite.js";
 import FileUploaderView from '@/components/FileUploaderView.vue'
 import CoinListView from "@/components/CoinListView.vue";
 import AboutView from "@/components/AboutView.vue";
-import {useSQLite} from "@/composables/useSQLite.js";
+import CoinView from "@/components/CoinView.vue";
 
 const {isLoading,
     error,
@@ -32,7 +33,11 @@ const handleFileUpload = async (file) => {
   isOpened = true;
   await router.replace('/')
 
-  coinsList.value = await executeQuery("")
+  const sql = `
+      SELECT coins.id, images.image, title, status, subjectshort, value, unit, year, mintmark, series, country
+      FROM coins LEFT OUTER JOIN images ON images.id = coins.image
+    `
+  coinsList.value = await executeQuery(sql)
 }
 </script>
 
@@ -75,6 +80,9 @@ const handleFileUpload = async (file) => {
       </div>
       <div v-if="route.name === 'home' && isOpened">
         <CoinListView v-model:title="title" :file_name="selectedFile.name" :coins_list="coinsList" />
+      </div>
+      <div v-if="route.name === 'coin' && isOpened">
+        <CoinView v-model:title="title" />
       </div>
       <div v-if="route.name === 'about'">
         <AboutView v-model:title="title" />

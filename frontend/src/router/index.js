@@ -6,6 +6,10 @@ const routes = [
     name: 'home',
   },
   {
+    path: '/coin/:id',
+    name: 'coin',
+  },
+  {
     path: '/open',
     name: 'open',
   },

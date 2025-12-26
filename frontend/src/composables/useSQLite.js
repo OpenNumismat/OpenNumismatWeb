@@ -88,10 +88,7 @@ export function useSQLite() {
     error.value = null
     status.value = 'Executing query...';
 
-    const result = db.exec(`
-      SELECT coins.id, images.image, title, status, subjectshort, value, unit, year, mintmark, series, country
-      FROM coins LEFT OUTER JOIN images on images.id = coins.image
-    `);
+    const result = db.exec(sql, params);
     console.log(result[0].values)
     const results = result.length > 0
       ? result[0].values
