@@ -6,6 +6,7 @@ import FileUploaderView from '@/components/FileUploaderView.vue'
 import CoinListView from "@/components/CoinListView.vue";
 import AboutView from "@/components/AboutView.vue";
 import CoinView from "@/components/CoinView.vue";
+import ImagesView from "@/components/ImagesView.vue";
 
 const {isLoading,
     error,
@@ -83,6 +84,9 @@ const handleFileUpload = async (file) => {
       </div>
       <div v-if="route.name === 'coin' && isOpened">
         <CoinView v-model:title="title" />
+      </div>
+      <div v-if="route.name === 'images' && isOpened">
+        <ImagesView />
       </div>
       <div v-if="route.name === 'about'">
         <AboutView v-model:title="title" />

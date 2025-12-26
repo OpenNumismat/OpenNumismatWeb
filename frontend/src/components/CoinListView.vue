@@ -1,6 +1,7 @@
 <script setup>
 import {defineProps, onMounted, onUnmounted} from "vue";
 import {useRouter} from "vue-router";
+import {arrayBufferToBase64} from "@/utils/bytes2img.js"
 
 const router = useRouter()
 
@@ -26,17 +27,6 @@ onMounted(async () => {
 onUnmounted(async () => {
   emit('update:title', oldTitle);
 })
-
-function arrayBufferToBase64( buffer ) {
-  let binary = '';
-  const bytes = new Uint8Array( buffer );
-  const len = bytes.byteLength;
-  for (let i = 0; i < len; i++) {
-    binary += String.fromCharCode( bytes[ i ] );
-  }
-  const base64String = window.btoa( binary );
-  return `data:image/png;base64,${base64String}`;
-}
 
 function generateDescription( coin_data ) {
   let desc = [];
