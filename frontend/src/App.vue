@@ -76,21 +76,16 @@ const handleFileUpload = async (file) => {
     </v-navigation-drawer>
 
     <v-main>
-      <div v-if="(route.name === 'home' && !isOpened) || route.name === 'open'">
-        <FileUploaderView v-model:title="title" :onFileUploaded="handleFileUpload" />
-      </div>
-      <div v-if="route.name === 'home' && isOpened">
-        <CoinListView v-model:title="title" :file_name="selectedFile.name" :coins_list="coinsList" />
-      </div>
-      <div v-if="route.name === 'coin' && isOpened">
-        <CoinView v-model:title="title" />
-      </div>
-      <div v-if="route.name === 'images' && isOpened">
-        <ImagesView />
-      </div>
-      <div v-if="route.name === 'about'">
-        <AboutView v-model:title="title" />
-      </div>
+      <FileUploaderView v-if="(route.name === 'home' && !isOpened) || route.name === 'open'"
+        v-model:title="title" :onFileUploaded="handleFileUpload" />
+      <KeepAlive>
+        <CoinListView v-if="route.name === 'home' && isOpened"
+          v-model:title="title" :file_name="selectedFile.name" :coins_list="coinsList" />
+      </KeepAlive>
+      <CoinView v-if="route.name === 'coin' && isOpened"
+        v-model:title="title" />
+      <ImagesView v-if="route.name === 'images' && isOpened" />
+      <AboutView v-model:title="title" v-if="route.name === 'about'" />
       <div v-if="status" class="status">{{ status }}</div>
     </v-main>
   </v-layout>
