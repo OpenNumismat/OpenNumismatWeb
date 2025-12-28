@@ -1,5 +1,5 @@
 <script setup>
-import {defineProps, onMounted, onUnmounted} from "vue";
+import {onMounted, onUnmounted} from "vue";
 
 const appVersion = import.meta.env.VITE_APP_VERSION;
 

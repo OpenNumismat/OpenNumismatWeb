@@ -1,5 +1,5 @@
 <script setup>
-import {defineProps, onMounted, onUnmounted, ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {useSQLite} from "@/composables/useSQLite.js";
 import {arrayBufferToBase64} from "@/utils/bytes2img.js"

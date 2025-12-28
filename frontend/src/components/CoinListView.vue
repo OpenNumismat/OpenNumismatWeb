@@ -1,5 +1,5 @@
 <script setup>
-import {defineProps, onMounted, onUnmounted} from "vue";
+import {onMounted, onUnmounted} from "vue";
 import {useRouter} from "vue-router";
 import {arrayBufferToBase64} from "@/utils/bytes2img.js"
 
