@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from 'vue'
+import {onMounted, ref} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {useSQLite} from "@/composables/useSQLite.js";
 import FileUploaderView from '@/components/FileUploaderView.vue'
@@ -23,6 +23,10 @@ const drawer = ref(false)
 
 const router = useRouter()
 const route = useRoute()
+
+onMounted(async () => {
+  await router.replace('/')
+})
 
 const handleFileUpload = async (file) => {
   if (!file)
