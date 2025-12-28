@@ -18,6 +18,10 @@ const routes = [
     name: 'open',
   },
   {
+    path: '/settings',
+    name: 'settings',
+  },
+  {
     path: '/about',
     name: 'about',
   },

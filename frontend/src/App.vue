@@ -4,6 +4,7 @@ import {useRoute, useRouter} from 'vue-router'
 import {useSQLite} from "@/composables/useSQLite.js";
 import FileUploaderView from '@/components/FileUploaderView.vue'
 import CoinListView from "@/components/CoinListView.vue";
+import SettingsView from "@/components/SettingsView.vue";
 import AboutView from "@/components/AboutView.vue";
 import CoinView from "@/components/CoinView.vue";
 import ImagesView from "@/components/ImagesView.vue";
@@ -70,6 +71,13 @@ const handleFileUpload = async (file) => {
           :active="route.name === 'open'"
         ></v-list-item>
         <v-list-item
+          prepend-icon="mdi-cog"
+          title="Settings"
+          value="settings"
+          @click="router.push('/settings'); drawer = false"
+          :active="route.name === 'settings'"
+        ></v-list-item>
+        <v-list-item
           prepend-icon="mdi-information"
           title="About"
           value="about"
@@ -89,6 +97,7 @@ const handleFileUpload = async (file) => {
       <CoinView v-if="route.name === 'coin' && isOpened"
         v-model:title="title" />
       <ImagesView v-if="route.name === 'images' && isOpened" />
+      <SettingsView v-model:title="title" v-if="route.name === 'settings'" />
       <AboutView v-model:title="title" v-if="route.name === 'about'" />
       <div v-if="status" class="status">{{ status }}</div>
     </v-main>
