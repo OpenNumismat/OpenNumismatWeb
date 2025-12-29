@@ -1,7 +1,9 @@
 <script setup>
 import {onMounted, onUnmounted, ref} from "vue";
 import { useLocaleStore } from '@/stores/locale'
+import { useThemeStore } from '@/stores/theme'
 
+const themeStore = useThemeStore()
 const localeStore = useLocaleStore()
 
 const langs = ref([
@@ -35,10 +37,6 @@ onMounted(async () => {
 onUnmounted(async () => {
   emit('update:title', oldTitle);
 })
-
-const changeLanguage = (lang) => {
-  localeStore.setLocale(lang)
-}
 </script>
 
 <template>
@@ -46,12 +44,13 @@ const changeLanguage = (lang) => {
     <v-list>
       <v-list-item>
         <v-btn-toggle
+            v-model="themeStore.currentTheme"
             rounded="xl"
             border
         >
-          <v-btn icon="mdi-weather-night"></v-btn>
-          <v-btn icon="mdi-brightness-auto"></v-btn>
-          <v-btn icon="mdi-weather-sunny"></v-btn>
+          <v-btn value="dark" icon="mdi-weather-night"></v-btn>
+          <v-btn value="auto" icon="mdi-brightness-auto"></v-btn>
+          <v-btn value="light" icon="mdi-weather-sunny"></v-btn>
         </v-btn-toggle>
       </v-list-item>
       <v-list-item>
@@ -60,7 +59,6 @@ const changeLanguage = (lang) => {
             :items="langs"
             item-title="name"
             item-value="lang"
-            @update:modelValue="changeLanguage"
         ></v-select>
       </v-list-item>
     </v-list>
