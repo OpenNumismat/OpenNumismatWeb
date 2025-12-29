@@ -1,7 +1,9 @@
 <script setup>
 import {onMounted, ref} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
+import {useTheme} from 'vuetify'
 import {useSQLite} from "@/composables/useSQLite.js";
+import {useThemeStore} from '@/stores/theme'
 import FileUploaderView from '@/components/FileUploaderView.vue'
 import CoinListView from "@/components/CoinListView.vue";
 import SettingsView from "@/components/SettingsView.vue";
@@ -25,7 +27,12 @@ const drawer = ref(false)
 const router = useRouter()
 const route = useRoute()
 
+const themeStore = useThemeStore()
+const theme = useTheme()
+
 onMounted(async () => {
+  theme.change(themeStore.currentTheme)
+
   await router.replace('/')
 })
 

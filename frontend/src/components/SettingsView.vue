@@ -1,10 +1,12 @@
 <script setup>
 import {onMounted, onUnmounted, ref} from "vue";
+import { useTheme } from 'vuetify'
 import { useLocaleStore } from '@/stores/locale'
 import { useThemeStore } from '@/stores/theme'
 
 const themeStore = useThemeStore()
 const localeStore = useLocaleStore()
+const appTheme = useTheme()
 
 const langs = ref([
   {lang: 'bg', name: 'Български'},
@@ -37,6 +39,11 @@ onMounted(async () => {
 onUnmounted(async () => {
   emit('update:title', oldTitle);
 })
+
+const handleThemeChange = (theme) => {
+  themeStore.setTheme(theme)
+  appTheme.change(theme)
+}
 </script>
 
 <template>
@@ -47,9 +54,10 @@ onUnmounted(async () => {
             v-model="themeStore.currentTheme"
             rounded="xl"
             border
+            @update:model-value="handleThemeChange"
         >
           <v-btn value="dark" icon="mdi-weather-night"></v-btn>
-          <v-btn value="auto" icon="mdi-brightness-auto"></v-btn>
+          <v-btn value="system" icon="mdi-brightness-auto"></v-btn>
           <v-btn value="light" icon="mdi-weather-sunny"></v-btn>
         </v-btn-toggle>
       </v-list-item>
