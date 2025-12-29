@@ -12,6 +12,7 @@ import * as directives from 'vuetify/directives'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import colors from 'vuetify/util/colors'
 import { md3 } from 'vuetify/blueprints'
+import { bg, ca, de, el, es, fa, fr, it, nl, pl, pt, ru, tr, uk, } from 'vuetify/locale'
 
 // Components
 import App from './App.vue'
@@ -24,6 +25,10 @@ const vuetify = createVuetify({
   components,
   directives,
   blueprint: md3,
+  locale: {
+    locale: 'en',
+    messages: { bg, ca, de, el, es, fa, fr, it, nl, pl, pt, ru, tr, uk, },
+  },
   theme: {
     defaultTheme: 'dark',
     themes: {

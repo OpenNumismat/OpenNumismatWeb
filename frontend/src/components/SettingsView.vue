@@ -1,12 +1,13 @@
 <script setup>
 import {onMounted, onUnmounted, ref} from "vue";
-import { useTheme } from 'vuetify'
+import { useLocale, useTheme } from 'vuetify'
 import { useLocaleStore } from '@/stores/locale'
 import { useThemeStore } from '@/stores/theme'
 
 const themeStore = useThemeStore()
-const localeStore = useLocaleStore()
 const appTheme = useTheme()
+const localeStore = useLocaleStore()
+const appLocale = useLocale()
 
 const langs = ref([
   {lang: 'bg', name: 'Български'},
@@ -40,6 +41,11 @@ onUnmounted(async () => {
   emit('update:title', oldTitle);
 })
 
+const handleLocaleChange = (locale) => {
+  localeStore.setLocale(locale)
+  appLocale.current.value = locale
+}
+
 const handleThemeChange = (theme) => {
   themeStore.setTheme(theme)
   appTheme.change(theme)
@@ -67,6 +73,7 @@ const handleThemeChange = (theme) => {
             :items="langs"
             item-title="name"
             item-value="lang"
+            @update:model-value="handleLocaleChange"
         ></v-select>
       </v-list-item>
     </v-list>

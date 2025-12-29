@@ -1,9 +1,10 @@
 <script setup>
 import {onMounted, ref} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
-import {useTheme} from 'vuetify'
+import {useLocale, useTheme} from 'vuetify'
 import {useSQLite} from "@/composables/useSQLite.js";
 import {useThemeStore} from '@/stores/theme'
+import {useLocaleStore} from '@/stores/locale'
 import FileUploaderView from '@/components/FileUploaderView.vue'
 import CoinListView from "@/components/CoinListView.vue";
 import SettingsView from "@/components/SettingsView.vue";
@@ -29,9 +30,12 @@ const route = useRoute()
 
 const themeStore = useThemeStore()
 const theme = useTheme()
+const localeStore = useLocaleStore()
+const appLocale = useLocale()
 
 onMounted(async () => {
   theme.change(themeStore.currentTheme)
+  appLocale.current.value = localeStore.currentLocale
 
   await router.replace('/')
 })
