@@ -9,24 +9,6 @@ const appTheme = useTheme()
 const localeStore = useLocaleStore()
 const appLocale = useLocale()
 
-const langs = ref([
-  {lang: 'bg', name: 'Български'},
-  {lang: 'ca', name: 'Català'},
-  {lang: 'de', name: 'Deutsch'},
-  {lang: 'en', name: 'English'},
-  {lang: 'el', name: 'Ελληνικά'},
-  {lang: 'es', name: 'Español'},
-  {lang: 'fa', name: 'فارسی'},
-  {lang: 'fr', name: 'Français'},
-  {lang: 'it', name: 'Italiano'},
-  {lang: 'nl', name: 'Nederlands'},
-  {lang: 'pl', name: 'Polski'},
-  {lang: 'pt', name: 'Português'},
-  {lang: 'ru', name: 'Русский'},
-  {lang: 'tr', name: 'Türkçe'},
-  {lang: 'uk', name: 'Український'},
-]);
-
 const props = defineProps({
   title: String,
 });
@@ -70,7 +52,7 @@ const handleThemeChange = (theme) => {
       <v-list-item>
         <v-select
             v-model="localeStore.currentLocale"
-            :items="langs"
+            :items="localeStore.availableLanguages"
             item-title="name"
             item-value="lang"
             @update:model-value="handleLocaleChange"

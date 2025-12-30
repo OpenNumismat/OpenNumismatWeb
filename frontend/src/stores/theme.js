@@ -6,8 +6,6 @@ export const useThemeStore = defineStore('theme', () => {
 
   const setTheme = (theme) => {
     currentTheme.value = theme
-
-    localStorage.setItem('app-theme', theme)
   }
 
   return {
