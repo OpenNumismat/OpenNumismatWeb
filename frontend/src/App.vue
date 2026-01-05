@@ -72,21 +72,21 @@ const handleFileUpload = async (file) => {
       <v-list>
         <v-list-item
           prepend-icon="mdi-cloud-upload"
-          title="Open"
+          :title="$t('title_open')"
           value="open"
           @click="router.push('/open'); drawer = false"
           :active="route.name === 'open'"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-cog"
-          title="Settings"
+          :title="$t('title_settings')"
           value="settings"
           @click="router.push('/settings'); drawer = false"
           :active="route.name === 'settings'"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-information"
-          title="About"
+          :title="$t('title_about')"
           value="about"
           @click="router.push('about'); drawer = false"
           :active="route.name === 'about'"
