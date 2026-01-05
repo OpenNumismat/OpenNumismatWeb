@@ -6,17 +6,19 @@ import { createApp } from 'vue'
 // Vuetify
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
+import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n'
 import { createPinia } from 'pinia'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import colors from 'vuetify/util/colors'
 import { md3 } from 'vuetify/blueprints'
-import { bg, ca, de, el, es, fa, fr, it, nl, pl, pt, ru, tr, uk, } from 'vuetify/locale'
+import { useI18n } from 'vue-i18n'
 
 // Components
 import App from './App.vue'
 import router from './router'
+import i18n from './i18n'
 
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
@@ -26,8 +28,7 @@ const vuetify = createVuetify({
   directives,
   blueprint: md3,
   locale: {
-    locale: 'en',
-    messages: { bg, ca, de, el, es, fa, fr, it, nl, pl, pt, ru, tr, uk, },
+    adapter: createVueI18nAdapter({ i18n, useI18n }),
   },
   theme: {
     defaultTheme: 'dark',
@@ -49,6 +50,7 @@ const vuetify = createVuetify({
 })
 
 const app = createApp(App)
+app.use(i18n)
 app.use(pinia)
 app.use(router)
 app.use(vuetify)

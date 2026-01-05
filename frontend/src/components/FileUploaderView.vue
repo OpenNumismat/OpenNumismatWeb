@@ -1,6 +1,6 @@
 <script setup>
-import {onMounted, onUnmounted} from "vue";
-import {useRoute} from "vue-router";
+import {onMounted, onUnmounted} from "vue"
+import {useRoute} from "vue-router"
 import { VFileUpload } from 'vuetify/labs/VFileUpload'
 
 const props = defineProps({
@@ -34,7 +34,7 @@ function onFileChange(event) {
 <template>
   <v-container>
     <v-file-upload density="default" accept=".db" @change="onFileChange"></v-file-upload>
-    <p>Your file not will be uploaded to the internet. You can disable internet connection.</p>
+    <p>{{ $t('uploading_safety_warranty') }}</p>
   </v-container>
 </template>
 
