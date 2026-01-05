@@ -1,13 +1,16 @@
 <script setup>
-import {onMounted, onUnmounted, ref} from "vue";
-import { useLocale, useTheme } from 'vuetify'
-import { useLocaleStore } from '@/stores/locale'
+import {onMounted, onUnmounted} from "vue";
+import { useTheme } from 'vuetify'
 import { useThemeStore } from '@/stores/theme'
+import { languageList, setLocale } from '@/i18n'
+
+const languageItems = Object.entries(languageList).map(([key, value]) => ({
+  lang: key,
+  name: value
+}))
 
 const themeStore = useThemeStore()
 const appTheme = useTheme()
-const localeStore = useLocaleStore()
-const appLocale = useLocale()
 
 const props = defineProps({
   title: String,
@@ -22,11 +25,6 @@ onMounted(async () => {
 onUnmounted(async () => {
   emit('update:title', oldTitle);
 })
-
-const handleLocaleChange = (locale) => {
-  localeStore.setLocale(locale)
-  appLocale.current.value = locale
-}
 
 const handleThemeChange = (theme) => {
   themeStore.setTheme(theme)
@@ -51,12 +49,13 @@ const handleThemeChange = (theme) => {
       </v-list-item>
       <v-list-item>
         <v-select
-            v-model="localeStore.currentLocale"
-            :items="localeStore.availableLanguages"
+            v-model="$i18n.locale"
+            :items="languageItems"
             item-title="name"
             item-value="lang"
-            @update:model-value="handleLocaleChange"
-        ></v-select>
+            @update:model-value="setLocale"
+        >
+        </v-select>
       </v-list-item>
     </v-list>
   </v-container>
