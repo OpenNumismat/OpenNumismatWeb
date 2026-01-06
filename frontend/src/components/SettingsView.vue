@@ -1,8 +1,10 @@
 <script setup>
-import {onMounted, onUnmounted} from "vue";
+import {onMounted, onUnmounted, nextTick} from "vue";
 import { useTheme } from 'vuetify'
 import { useThemeStore } from '@/stores/theme'
 import { languageList, setLocale } from '@/i18n'
+import i18n from '../i18n'
+import {appTitle} from "@/composables/appTitle.js"
 
 const languageItems = Object.entries(languageList).map(([key, value]) => ({
   lang: key,
@@ -12,18 +14,11 @@ const languageItems = Object.entries(languageList).map(([key, value]) => ({
 const themeStore = useThemeStore()
 const appTheme = useTheme()
 
-const props = defineProps({
-  title: String,
-});
-const emit = defineEmits(['update:title']);
-let oldTitle = null;
-
 onMounted(async () => {
-  oldTitle = props.title;
-  emit('update:title', 'Settings');
+  appTitle.pushTitle(i18n.global.t('title_settings'))
 })
 onUnmounted(async () => {
-  emit('update:title', oldTitle);
+  appTitle.popTitle()
 })
 
 const handleThemeChange = (theme) => {

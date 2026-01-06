@@ -2,24 +2,25 @@
 import {onMounted, onUnmounted} from "vue"
 import {useRoute} from "vue-router"
 import { VFileUpload } from 'vuetify/labs/VFileUpload'
+import i18n from '../i18n'
+import {appTitle} from "@/composables/appTitle.js"
 
 const props = defineProps({
-  title: String,
   onFileUploaded: Function,
 });
 
-const emit = defineEmits(['update:title']);
-let oldTitle = null;
-
 const route = useRoute()
+let titleChanged = false
 
 onMounted(async () => {
-  oldTitle = props.title;
-  if (route.name === 'open')
-    emit('update:title', 'Open File');
+  if (route.name === 'open') {
+    titleChanged = true
+    appTitle.pushTitle(i18n.global.t('title_open'))
+  }
 })
 onUnmounted(async () => {
-  emit('update:title', oldTitle);
+  if (titleChanged)
+    appTitle.popTitle()
 })
 
 function onFileChange(event) {

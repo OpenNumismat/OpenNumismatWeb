@@ -3,6 +3,7 @@ import {onMounted, onUnmounted, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {useSQLite} from "@/composables/useSQLite.js";
 import {arrayBufferToBase64} from "@/utils/bytes2img.js"
+import {appTitle} from "@/composables/appTitle.js"
 
 const router = useRouter()
 const route = useRoute()
@@ -13,12 +14,6 @@ const {isLoading,
     openDatabase,
     executeQuery} = useSQLite()
 
-const props = defineProps({
-  title: String,
-});
-
-const emit = defineEmits(['update:title']);
-let oldTitle = null;
 const coinData = ref([])
 
 const infoFields = ['coins.title', 'obverseimg.image', 'reverseimg.image',
@@ -39,11 +34,10 @@ onMounted(async () => {
   const results = await executeQuery(sql, [id,])
   coinData.value = results[0]
 
-  oldTitle = props.title;
-  emit('update:title', coinData.value[0]);
+  appTitle.pushTitle(coinData.value[0])
 })
 onUnmounted(async () => {
-  emit('update:title', oldTitle);
+  appTitle.popTitle()
 })
 </script>
 

@@ -2,11 +2,11 @@
 import {onMounted, onUnmounted} from "vue";
 import {useRouter} from "vue-router";
 import {arrayBufferToBase64} from "@/utils/bytes2img.js"
+import {appTitle} from "@/composables/appTitle.js"
 
 const router = useRouter()
 
 const props = defineProps({
-  title: String,
   file_name: {
     type: String,
     required: true,
@@ -17,15 +17,11 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['update:title']);
-let oldTitle = null;
-
 onMounted(async () => {
-  oldTitle = props.title;
-  emit('update:title', props.file_name);
+  appTitle.pushTitle(props.file_name)
 })
 onUnmounted(async () => {
-  emit('update:title', oldTitle);
+  appTitle.popTitle()
 })
 
 function generateDescription( coin_data ) {

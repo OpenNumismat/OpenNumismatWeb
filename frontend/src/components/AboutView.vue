@@ -1,20 +1,15 @@
 <script setup>
 import {onMounted, onUnmounted} from "vue";
+import i18n from '../i18n'
+import {appTitle} from "@/composables/appTitle.js"
 
 const appVersion = import.meta.env.VITE_APP_VERSION;
 
-const props = defineProps({
-  title: String,
-});
-const emit = defineEmits(['update:title']);
-let oldTitle = null;
-
 onMounted(async () => {
-  oldTitle = props.title;
-  emit('update:title', 'About');
+  appTitle.pushTitle(i18n.global.t('title_about'))
 })
 onUnmounted(async () => {
-  emit('update:title', oldTitle);
+  appTitle.popTitle()
 })
 </script>
 

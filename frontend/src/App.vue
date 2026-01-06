@@ -1,8 +1,9 @@
 <script setup>
-import {onMounted, ref} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {useTheme} from 'vuetify'
 import {useSQLite} from "@/composables/useSQLite.js";
+import {appTitle} from "@/composables/appTitle.js";
 import {useThemeStore} from '@/stores/theme'
 import FileUploaderView from '@/components/FileUploaderView.vue'
 import CoinListView from "@/components/CoinListView.vue";
@@ -15,12 +16,11 @@ const {isLoading,
     error,
     status,
     openDatabase,
-    executeQuery} = useSQLite()
+    executeQuery, tt} = useSQLite()
 
 const selectedFile = ref(null)
 const coinsList = ref([])
 let isOpened = false;
-const title = ref('OpenNumismat')
 
 const drawer = ref(false)
 
@@ -65,7 +65,7 @@ const handleFileUpload = async (file) => {
         @click="router.back()"
       ></v-app-bar-nav-icon>
 
-      <v-toolbar-title>{{ title }}</v-toolbar-title>
+      <v-toolbar-title>{{ appTitle.title }}</v-toolbar-title>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" temporary>
@@ -96,16 +96,15 @@ const handleFileUpload = async (file) => {
 
     <v-main>
       <FileUploaderView v-if="(route.name === 'home' && !isOpened) || route.name === 'open'"
-        v-model:title="title" :onFileUploaded="handleFileUpload" />
+        :onFileUploaded="handleFileUpload" />
       <KeepAlive>
         <CoinListView v-if="route.name === 'home' && isOpened"
-          v-model:title="title" :file_name="selectedFile.name" :coins_list="coinsList" />
+          :file_name="selectedFile.name" :coins_list="coinsList" />
       </KeepAlive>
-      <CoinView v-if="route.name === 'coin' && isOpened"
-        v-model:title="title" />
+      <CoinView v-if="route.name === 'coin' && isOpened" />
       <ImagesView v-if="route.name === 'images' && isOpened" />
-      <SettingsView v-model:title="title" v-if="route.name === 'settings'" />
-      <AboutView v-model:title="title" v-if="route.name === 'about'" />
+      <SettingsView v-if="route.name === 'settings'" />
+      <AboutView v-if="route.name === 'about'" />
       <div v-if="status" class="status">{{ status }}</div>
     </v-main>
   </v-layout>
