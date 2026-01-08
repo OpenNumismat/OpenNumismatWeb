@@ -5,5 +5,8 @@
   "title_about": "About",
   "status_view_text": "Text",
   "status_view_icon": "Icon",
-  "status_view_full": "Icon + Text"
+  "status_view_full": "Icon + Text",
+  "settings_theme": "Theme",
+  "settings_language": "Language",
+  "settings_status": "Show status as"
 }
