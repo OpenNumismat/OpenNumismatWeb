@@ -65,7 +65,7 @@ const handleFileUpload = async (file) => {
 </script>
 
 <template>
-  <v-layout>
+  <v-app>
     <v-app-bar color="primary">
       <v-app-bar-nav-icon v-if="route.name === 'home' || (route.name === 'open' && !isOpened)"
         @click="drawer = !drawer"
@@ -118,7 +118,7 @@ const handleFileUpload = async (file) => {
       <AboutView v-if="route.name === 'about'" />
       <div v-if="status" class="status">{{ status }}</div>
     </v-main>
-  </v-layout>
+  </v-app>
 </template>
 
 <style scoped>
