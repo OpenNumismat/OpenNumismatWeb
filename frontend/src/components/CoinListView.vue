@@ -1,28 +1,52 @@
 <script setup>
-import {onMounted, onUnmounted} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import {useRouter} from "vue-router";
 import {arrayBufferToBase64} from "@/utils/bytes2img.js"
-import {appTitle} from "@/composables/appTitle.js"
 import StatusItem from "./StatusItem.vue"
 
 const router = useRouter()
 
 const props = defineProps({
-  file_name: {
-    type: String,
+  coins_list: {
+    type: Array,
     required: true,
   },
-  coins_list: {
+  settings: {
     type: Array,
     required: true,
   },
 });
 
+const statuses = ref({
+  'demo': 'demo',
+  'pass': 'pass',
+  'owned': 'owned',
+  'ordered': 'ordered',
+  'sold': 'sold',
+  'sale': 'sale',
+  'wish': 'wish',
+  'missing': 'missing',
+  'bidding': 'bidding',
+  'duplicate': 'duplicate',
+  'replacement': 'replacement',
+})
+
 onMounted(async () => {
-  appTitle.pushTitle(props.file_name)
 })
 onUnmounted(async () => {
-  appTitle.popTitle()
+})
+
+const onOpenFile = () => {
+  props.settings.forEach((val) => {
+    Object.keys(statuses.value).forEach(key => {
+      if (val[0] === key + '_status_title')
+        statuses.value[key] = val[1]
+    })
+  })
+}
+
+defineExpose({
+  onOpenFile
 })
 
 function generateDescription( coin_data ) {
@@ -59,7 +83,7 @@ function generateDescription( coin_data ) {
           <v-img :src="arrayBufferToBase64(coin[1])" :width="100" />
         </template>
         <template v-slot:append>
-          <StatusItem :status="coin[3]"/>
+          <StatusItem :status="coin[3]" :statuses="statuses"/>
         </template>
       </v-list-item>
     </v-list>

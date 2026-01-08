@@ -16,13 +16,15 @@ const {isLoading,
     error,
     status,
     openDatabase,
-    executeQuery, tt} = useSQLite()
+    executeQuery} = useSQLite()
 
 const selectedFile = ref(null)
 const coinsList = ref([])
+const settingsDb = ref([])
 let isOpened = false;
 
 const drawer = ref(false)
+const coinListViewRef = ref(null)
 
 const router = useRouter()
 const route = useRoute()
@@ -45,12 +47,20 @@ const handleFileUpload = async (file) => {
   selectedFile.value = file;
   isOpened = true;
   await router.replace('/')
+  appTitle.pushTitle(file.name)
+
+  const sql_settings = `
+      SELECT * FROM settings
+    `
+  settingsDb.value = await executeQuery(sql_settings)
 
   const sql = `
       SELECT coins.id, images.image, title, status, subjectshort, value, unit, year, mintmark, series, country
       FROM coins LEFT OUTER JOIN images ON images.id = coins.image
     `
   coinsList.value = await executeQuery(sql)
+
+  coinListViewRef.value.onOpenFile()
 }
 </script>
 
@@ -99,7 +109,8 @@ const handleFileUpload = async (file) => {
         :onFileUploaded="handleFileUpload" />
       <KeepAlive>
         <CoinListView v-if="route.name === 'home' && isOpened"
-          :file_name="selectedFile.name" :coins_list="coinsList" />
+          :coins_list="coinsList" :settings="settingsDb"
+          ref="coinListViewRef" />
       </KeepAlive>
       <CoinView v-if="route.name === 'coin' && isOpened" />
       <ImagesView v-if="route.name === 'images' && isOpened" />
