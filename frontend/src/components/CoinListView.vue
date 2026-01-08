@@ -70,7 +70,7 @@ function generateDescription( coin_data ) {
 </script>
 
 <template>
-  <v-container>
+  <v-container class="pa-0 ma-0">
     <v-list lines="two">
       <v-list-item
         v-for="coin in coins_list"
@@ -78,6 +78,7 @@ function generateDescription( coin_data ) {
         :subtitle="generateDescription(coin).join(', ')"
         :title="coin[2]"
         @click="router.push('/coin/' + coin[0])"
+        class="pa-1"
       >
         <template v-slot:prepend>
           <v-img :src="arrayBufferToBase64(coin[1])" :width="100" />
@@ -91,5 +92,7 @@ function generateDescription( coin_data ) {
 </template>
 
 <style scoped>
-
+:deep(.v-list-item__spacer) {
+  width: 6px !important;
+}
 </style>

@@ -8,13 +8,13 @@ const props = defineProps(['status', 'statuses'])
 
 <template>
   <template v-if="statusStore.currentStatusView === 'icon'">
-    <v-img :src="`/${props.status}.png`" :width="16" />
+    <v-img :src="`${props.status}.png`" :width="16" />
   </template>
   <template v-if="statusStore.currentStatusView === 'text'">
     {{ statuses[props.status] }}
   </template>
   <template v-if="statusStore.currentStatusView === 'full'">
-    <v-img :src="`${props.status}.png`" :width="16" />
+    <v-img :src="`${props.status}.png`" :width="16" class="mr-1" />
     {{ statuses[props.status] }}
   </template>
 </template>
