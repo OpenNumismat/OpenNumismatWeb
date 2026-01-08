@@ -2,6 +2,7 @@
 import {onMounted, onUnmounted, nextTick} from "vue";
 import { useTheme } from 'vuetify'
 import { useThemeStore } from '@/stores/theme'
+import { useStatusStore } from '@/stores/status'
 import { languageList, setLocale } from '@/i18n'
 import i18n from '../i18n'
 import {appTitle} from "@/composables/appTitle.js"
@@ -10,6 +11,13 @@ const languageItems = Object.entries(languageList).map(([key, value]) => ({
   lang: key,
   name: value
 }))
+
+const statusItems = [
+  {value: 'text', title: 'status_view_text'},
+  {value: 'icon', title: 'status_view_icon'},
+  {value: 'full', title: 'status_view_full'},
+]
+const statusStore = useStatusStore()
 
 const themeStore = useThemeStore()
 const appTheme = useTheme()
@@ -51,6 +59,18 @@ const handleThemeChange = (theme) => {
             @update:model-value="setLocale"
         >
         </v-select>
+      </v-list-item>
+      <v-list-item>
+        <v-btn-toggle
+            v-model="statusStore.currentStatusView"
+            rounded="xl"
+            border
+        >
+          <v-btn
+              v-for="item in statusItems" :key="item.value" :value="item.value">
+            {{ i18n.global.t(item.title) }}
+          </v-btn>
+        </v-btn-toggle>
       </v-list-item>
     </v-list>
   </v-container>

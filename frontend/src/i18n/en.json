@@ -2,5 +2,8 @@
   "uploading_safety_warranty": "Your file not will be uploaded to the internet. You can disable internet connection.",
   "title_open": "Open",
   "title_settings": "Settings",
-  "title_about": "About"
+  "title_about": "About",
+  "status_view_text": "Text",
+  "status_view_icon": "Icon",
+  "status_view_full": "Icon + Text"
 }

@@ -3,6 +3,7 @@ import {onMounted, onUnmounted} from "vue";
 import {useRouter} from "vue-router";
 import {arrayBufferToBase64} from "@/utils/bytes2img.js"
 import {appTitle} from "@/composables/appTitle.js"
+import StatusItem from "./StatusItem.vue"
 
 const router = useRouter()
 
@@ -58,7 +59,7 @@ function generateDescription( coin_data ) {
           <v-img :src="arrayBufferToBase64(coin[1])" :width="100" />
         </template>
         <template v-slot:append>
-          {{ coin[3] }}
+          <StatusItem :status="coin[3]"/>
         </template>
       </v-list-item>
     </v-list>
