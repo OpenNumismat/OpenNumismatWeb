@@ -20,17 +20,18 @@ export function useSQLite() {
 
     isLoading.value = true
     error.value = null
+    status.value = 'Loading SQL.js'
 
     try {
       SQL = await initSqlJs({
         locateFile: file => `https://sql.js.org/dist/${file}`
       });
-      status.value = 'SQL.js loaded successfully';
       isInitialized = true
     }
     catch (err) {
       console.error('Failed to load SQL.js:', err);
-      status.value = 'Failed to load SQL.js';
+      status.value = 'Failed to load SQL.js'
+      error.value = err
     }
     finally {
       isLoading.value = false
@@ -44,7 +45,6 @@ export function useSQLite() {
 
       isLoading.value = true
       error.value = null
-
       status.value = 'Loading database...';
 
       const reader = new FileReader();
@@ -62,7 +62,8 @@ export function useSQLite() {
         }
         catch (err) {
           console.error('Error loading database:', err);
-          status.value = 'Error loading database';
+          status.value = 'Error loading database'
+          error.value = err
           reject()
         }
         finally {
@@ -70,8 +71,9 @@ export function useSQLite() {
         }
       }
 
-      reader.onerror = () => {
-        status.value = `Error reading file`;
+      reader.onerror = (err) => {
+        status.value = 'Error reading file'
+        error.value = e.target.error
         isLoading.value = false
         reject()
       }
@@ -87,15 +89,23 @@ export function useSQLite() {
     isLoading.value = true
     error.value = null
     status.value = 'Executing query...';
+    let results = null
 
-    const result = db.exec(sql, params);
-    console.log(result[0].values)
-    const results = result.length > 0
-      ? result[0].values
-      : [];
-
-    isLoading.value = false
-    status.value = 'Done';
+    try {
+      const result = db.exec(sql, params);
+      console.log(result[0].values)
+      results = result.length > 0
+        ? result[0].values
+        : [];
+    }
+    catch (err) {
+      console.error('Failed execute query:', err);
+      status.value = 'Failed execute query'
+      error.value = err
+    }
+    finally {
+      isLoading.value = false
+    }
 
     return results
   }

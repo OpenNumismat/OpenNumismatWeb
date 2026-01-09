@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from 'vue'
+import {onMounted, ref, computed} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {useTheme} from 'vuetify'
 import {useSQLite} from "@/composables/useSQLite.js";
@@ -22,6 +22,10 @@ const selectedFile = ref(null)
 const coinsList = ref([])
 const settingsDb = ref([])
 let isOpened = false;
+const hasError = computed({
+  get: () => error.value !== null,
+  set: (_) => error.value = null,
+})
 
 const drawer = ref(false)
 const coinListViewRef = ref(null)
@@ -133,6 +137,32 @@ const handleFileUpload = async (file) => {
           </div>
         </v-overlay>
       </div>
+<!-- Alternative alert message
+      <v-alert
+        v-model="hasError"
+        border="start"
+        icon="$error"
+        color="error"
+        :title="status"
+        variant="tonal"
+        closable
+        @click:close="hasError = false"
+      >
+        {{ error }}
+      </v-alert>
+-->
+      <v-snackbar v-model="hasError" :timeout="15000" color="error" variant="tonal">
+        <div class="text-subtitle-1 pb-2">{{ status }}</div>
+        <p>{{ error }}</p>
+
+        <template v-slot:actions>
+          <v-btn
+            icon="mdi-close"
+            variant="text"
+            @click="hasError = false"
+          ></v-btn>
+        </template>
+      </v-snackbar>
 
     </v-main>
   </v-app>
