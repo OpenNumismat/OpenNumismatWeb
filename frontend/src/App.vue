@@ -11,6 +11,7 @@ import SettingsView from "@/components/SettingsView.vue";
 import AboutView from "@/components/AboutView.vue";
 import CoinView from "@/components/CoinView.vue";
 import ImagesView from "@/components/ImagesView.vue";
+import i18n from './i18n'
 
 const {isLoading,
     error,
@@ -20,11 +21,15 @@ const {isLoading,
 
 const selectedFile = ref(null)
 const coinsList = ref([])
-const settingsDb = ref([])
 let isOpened = false;
 const hasError = computed({
   get: () => error.value !== null,
   set: (_) => error.value = null,
+})
+const warning = ref(null)
+const hasWarning = computed({
+  get: () => warning.value !== null,
+  set: (_) => warning.value = null,
 })
 
 const drawer = ref(false)
@@ -42,6 +47,52 @@ onMounted(async () => {
   await router.replace('/')
 })
 
+const collectionSettings = ref({})
+
+const initSettings = async () => {
+    collectionSettings.value = {};
+    collectionSettings.value.version = 0;
+    collectionSettings.value.password = '';
+    collectionSettings.value.type = null;
+    collectionSettings.value.convert_fraction = true;
+    collectionSettings.value.enable_bc = true;
+    collectionSettings.value.statuses = {
+      'demo': 'demo',
+      'pass': 'pass',
+      'owned': 'owned',
+      'ordered': 'ordered',
+      'sold': 'sold',
+      'sale': 'sale',
+      'wish': 'wish',
+      'missing': 'missing',
+      'bidding': 'bidding',
+      'duplicate': 'duplicate',
+      'replacement': 'replacement',
+  };
+}
+
+const checkDbVersion = async (settings) => {
+    status.value = 'Check collection'
+
+    if (settings.value.type !== 'OpenNumismat') {
+      error.value = i18n.global.t('wrong_version');
+      return false;
+    }
+
+    if (settings.value.version < 6) {
+      error.value = i18n.global.t('too_old_version');
+      return false;
+    }
+    else if (settings.value.version < 10) {
+      warning.value = i18n.global.t('old_version');
+    }
+    else if (settings.value.version > 10) {
+      warning.value = i18n.global.t('newest_version');
+    }
+
+    return true;
+}
+
 const handleFileUpload = async (file) => {
   if (!file)
     return;
@@ -56,15 +107,39 @@ const handleFileUpload = async (file) => {
   const sql_settings = `
       SELECT * FROM settings
     `
-  settingsDb.value = await executeQuery(sql_settings)
+  const settingsDb = await executeQuery(sql_settings)
 
-  const sql = `
-      SELECT coins.id, images.image, title, status, subjectshort, value, unit, year, mintmark, series, country
-      FROM coins LEFT OUTER JOIN images ON images.id = coins.image
-    `
-  coinsList.value = await executeQuery(sql)
+  await initSettings()
 
-  coinListViewRef.value.onOpenFile()
+  settingsDb.forEach(function(elem) {
+      if (elem[0] === 'Version')
+          collectionSettings.value.version = Number(elem[1]);
+      else if (elem[0] === 'Password')
+          collectionSettings.value.password = elem[1];
+      else if (elem[0] === 'Type')
+          collectionSettings.value.type = elem[1];
+      else if (elem[0] === 'convert_fraction')
+          collectionSettings.value.convert_fraction = Boolean(elem[1]);
+      else if (elem[0] === 'enable_bc')
+          collectionSettings.value.enable_bc = Boolean(elem[1]);
+      else {
+        Object.keys(collectionSettings.value.statuses).forEach(key => {
+          if (elem[0] === key + '_status_title')
+            collectionSettings.value.statuses[key] = elem[1]
+        })
+      }
+  })
+
+  const versionValid = await checkDbVersion(collectionSettings);
+  if (versionValid) {
+    const sql = `
+        SELECT coins.id, images.image, title, status, subjectshort, value, unit, year, mintmark, series, country
+        FROM coins LEFT OUTER JOIN images ON images.id = coins.image
+      `
+    coinsList.value = await executeQuery(sql)
+
+    coinListViewRef.value.onOpenFile()
+  }
 }
 </script>
 
@@ -113,7 +188,7 @@ const handleFileUpload = async (file) => {
         :onFileUploaded="handleFileUpload" />
       <KeepAlive>
         <CoinListView v-if="route.name === 'home' && isOpened"
-          :coins_list="coinsList" :settings="settingsDb"
+          :coins_list="coinsList" :settings="collectionSettings"
           ref="coinListViewRef" />
       </KeepAlive>
       <CoinView v-if="route.name === 'coin' && isOpened" />
@@ -160,6 +235,17 @@ const handleFileUpload = async (file) => {
             icon="mdi-close"
             variant="text"
             @click="hasError = false"
+          ></v-btn>
+        </template>
+      </v-snackbar>
+      <v-snackbar v-model="hasWarning" :timeout="10000" color="warning" variant="tonal">
+        <div class="text-subtitle-1 pb-2">{{ warning }}</div>
+
+        <template v-slot:actions>
+          <v-btn
+            icon="mdi-close"
+            variant="text"
+            @click="hasWarning = false"
           ></v-btn>
         </template>
       </v-snackbar>

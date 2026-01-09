@@ -8,5 +8,9 @@
   "status_view_full": "Icon + Text",
   "settings_theme": "Theme",
   "settings_language": "Language",
-  "settings_status": "Show status as"
+  "settings_status": "Show status as",
+  "wrong_version": "File has wrong or unknown format",
+  "too_old_version": "File has an too old version. Please update it with desktop version of OpenNumismat",
+  "old_version": "File has an old version. Please update it with desktop version of OpenNumismat",
+  "newest_version": "File has a newest version than app"
 }

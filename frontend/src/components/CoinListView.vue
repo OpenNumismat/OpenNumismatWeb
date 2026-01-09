@@ -12,24 +12,10 @@ const props = defineProps({
     required: true,
   },
   settings: {
-    type: Array,
+    type: Object,
     required: true,
   },
 });
-
-const statuses = ref({
-  'demo': 'demo',
-  'pass': 'pass',
-  'owned': 'owned',
-  'ordered': 'ordered',
-  'sold': 'sold',
-  'sale': 'sale',
-  'wish': 'wish',
-  'missing': 'missing',
-  'bidding': 'bidding',
-  'duplicate': 'duplicate',
-  'replacement': 'replacement',
-})
 
 onMounted(async () => {
 })
@@ -37,12 +23,6 @@ onUnmounted(async () => {
 })
 
 const onOpenFile = () => {
-  props.settings.forEach((val) => {
-    Object.keys(statuses.value).forEach(key => {
-      if (val[0] === key + '_status_title')
-        statuses.value[key] = val[1]
-    })
-  })
 }
 
 defineExpose({
@@ -84,7 +64,7 @@ function generateDescription( coin_data ) {
           <v-img :src="arrayBufferToBase64(coin[1])" :width="100" />
         </template>
         <template v-slot:append>
-          <StatusItem :status="coin[3]" :statuses="statuses"/>
+          <StatusItem :status="coin[3]" :statuses="settings.statuses"/>
         </template>
       </v-list-item>
     </v-list>
