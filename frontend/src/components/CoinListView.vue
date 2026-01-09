@@ -61,7 +61,7 @@ function generateDescription( coin_data ) {
         class="pa-1"
       >
         <template v-slot:prepend>
-          <v-img :src="arrayBufferToBase64(coin[1])" :width="100" />
+          <v-img :src="arrayBufferToBase64(coin[1])" :width="100" max-height="56" />
         </template>
         <template v-slot:append>
           <StatusItem :status="coin[3]" :statuses="settings.statuses"/>

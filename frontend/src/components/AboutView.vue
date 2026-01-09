@@ -18,9 +18,9 @@ onUnmounted(async () => {
     <v-card>
       <v-card-title>OpenNumismat Web {{ appVersion }}</v-card-title>
       <v-card-text>
-        <p>Copyright (C) 2025 Vitaly Ignatov</p>
+        <p>Copyright (C) 2026 Vitaly Ignatov</p>
         <p>OpenNumismat Web is freeware licensed under a GPLv3</p>
-        <p>Homepage: https://opennumismat.github.io</p>
+        <p>Homepage: <a href="https://opennumismat.github.io">https://opennumismat.github.io</a></p>
       </v-card-text>
     </v-card>
   </v-container>

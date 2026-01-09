@@ -42,18 +42,25 @@ onUnmounted(async () => {
 </script>
 
 <template>
-  <v-img :src="arrayBufferToBase64(coinData[infoFieldIndex('obverseimg.image')])"
-         :width="200"
-         @click="router.push('/images/' + route.params['id'])" />
-  <v-img :src="arrayBufferToBase64(coinData[infoFieldIndex('reverseimg.image')])"
-         :width="200"
-         @click="router.push('/images/' + route.params['id'])" />
-  {{ coinData[infoFieldIndex('status')] }}
-  {{ coinData[infoFieldIndex('country')] }}
-  {{ coinData[infoFieldIndex('type')] }}
+  <v-container>
+    <v-row>
+      <v-img :src="arrayBufferToBase64(coinData[infoFieldIndex('obverseimg.image')])"
+            :width="200"
+            @click="router.push('/images/' + route.params['id'])" />
+      <v-img :src="arrayBufferToBase64(coinData[infoFieldIndex('reverseimg.image')])"
+            :width="200"
+            @click="router.push('/images/' + route.params['id'])" />
+    </v-row>
 
-  {{ coinData[infoFieldIndex('features')] }}
-  {{ coinData[infoFieldIndex('subject')] }}
+    <v-container>
+      {{ coinData[infoFieldIndex('status')] }}
+      {{ coinData[infoFieldIndex('country')] }}
+      {{ coinData[infoFieldIndex('type')] }}
+
+      <p>{{ coinData[infoFieldIndex('features')] }}</p>
+      <p>{{ coinData[infoFieldIndex('subject')] }}</p>
+    </v-container>
+  </v-container>
 </template>
 
 <style scoped>
