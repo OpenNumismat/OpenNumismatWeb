@@ -2,5 +2,15 @@
   "uploading_safety_warranty": "Ваш файл не будет загружен в Интернет. Вы можете отключить подключение к Интернету.",
   "title_open": "Открыть",
   "title_settings": "Настройки",
-  "title_about": "О программе"
+  "title_about": "О программе",
+  "status_view_text": "Текст",
+  "status_view_icon": "Иконка",
+  "status_view_full": "Icon + Text",
+  "settings_theme": "Theme",
+  "settings_language": "Язык",
+  "settings_status": "Show status as",
+  "wrong_version": "Файл имеет неправильный или неизвестный формат",
+  "too_old_version": "File has an too old version. Please update it with desktop version of OpenNumismat",
+  "old_version": "Файл старой версии. Обновите его с помощью настольной версии OpenNumismat",
+  "newest_version": "Файл более новой версии чем приложение"
 }
