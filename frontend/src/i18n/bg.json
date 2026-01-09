@@ -2,5 +2,15 @@
   "uploading_safety_warranty": "Вашият файл няма да бъде качен в интернет. Можете да деактивирате интернет връзката.",
   "title_open": "Отваряне",
   "title_settings": "Настройки",
-  "title_about": "Относно"
+  "title_about": "Относно",
+  "status_view_text": "Текст",
+  "status_view_icon": "Икона",
+  "status_view_full": "Icon + Text",
+  "settings_theme": "Theme",
+  "settings_language": "Език",
+  "settings_status": "Show status as",
+  "wrong_version": "Файлът е с неправилен или неизвестен формат",
+  "too_old_version": "File has an too old version. Please update it with desktop version of OpenNumismat",
+  "old_version": "Файлът е с по-стара версия. Моля, актуализирайте го с десктоп версията на OpenNumismat",
+  "newest_version": "Файлът е с по-висока версия от програмата"
 }
