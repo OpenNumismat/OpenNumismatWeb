@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch} from 'vue'
+import {onMounted, ref} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {useTheme} from 'vuetify'
 import {useSQLite} from "@/composables/useSQLite.js";
@@ -116,7 +116,24 @@ const handleFileUpload = async (file) => {
       <ImagesView v-if="route.name === 'images' && isOpened" />
       <SettingsView v-if="route.name === 'settings'" />
       <AboutView v-if="route.name === 'about'" />
-      <div v-if="status" class="status">{{ status }}</div>
+
+      <div class="text-center">
+        <v-overlay 
+          v-model="isLoading" 
+          class="align-center justify-center"
+          persistent
+        >
+          <div class="d-flex flex-column align-center">
+            <v-progress-circular
+              color="primary"
+              indeterminate
+              size="64"
+            ></v-progress-circular>
+            <span class="mt-4 text-white">{{ status }}</span>
+          </div>
+        </v-overlay>
+      </div>
+
     </v-main>
   </v-app>
 </template>
