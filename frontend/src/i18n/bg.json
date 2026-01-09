@@ -10,7 +10,7 @@
   "settings_language": "Език",
   "settings_status": "Показване на състоянието като",
   "wrong_version": "Файлът е с неправилен или неизвестен формат",
-  "too_old_version": "File has an too old version. Please update it with desktop version of OpenNumismat",
+  "too_old_version": "Файлът е твърде стара версия. Моля, актуализирайте го с настолната версия на OpenNumismat.",
   "old_version": "Файлът е с по-стара версия. Моля, актуализирайте го с десктоп версията на OpenNumismat",
   "newest_version": "Файлът е с по-висока версия от програмата"
 }
