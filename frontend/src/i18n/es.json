@@ -2,5 +2,15 @@
   "uploading_safety_warranty": "Su archivo no será subido a Internet. Puede deshabilitar la conexión a Internet.",
   "title_open": "Abrir",
   "title_settings": "Configuración",
-  "title_about": "Acerca de"
+  "title_about": "Acerca de",
+  "status_view_text": "Texto",
+  "status_view_icon": "Icono",
+  "status_view_full": "Icon + Text",
+  "settings_theme": "Theme",
+  "settings_language": "Idioma",
+  "settings_status": "Show status as",
+  "wrong_version": "El archivo tiene un formato erróneo o desconocido",
+  "too_old_version": "File has an too old version. Please update it with desktop version of OpenNumismat",
+  "old_version": "El archivo es de una versión antigua. Por favor, actualícelo con la versión de escritorio de OpenNumismat",
+  "newest_version": "El archivo tiene una versión más nueva que la app"
 }
