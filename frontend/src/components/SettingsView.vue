@@ -1,8 +1,9 @@
 <script setup>
-import {onMounted, onUnmounted, nextTick} from "vue";
+import {onMounted, onUnmounted} from "vue";
 import { useTheme } from 'vuetify'
 import { useThemeStore } from '@/stores/theme'
 import { useStatusStore } from '@/stores/status'
+import { useImageViewStore } from '@/stores/imageView'
 import { languageList, setLocale } from '@/i18n'
 import i18n from '../i18n'
 import {appTitle} from "@/composables/appTitle.js"
@@ -18,6 +19,14 @@ const statusItems = [
   {value: 'full', title: 'status_view_full'},
 ]
 const statusStore = useStatusStore()
+
+const imageViewItems = [
+  {value: 'image', title: 'image_view_image'},
+  {value: 'obverse', title: 'image_view_obverse'},
+  {value: 'reverse', title: 'image_view_reverse'},
+  {value: 'both', title: 'image_view_both'},
+]
+const imageViewStore = useImageViewStore()
 
 const themeStore = useThemeStore()
 const appTheme = useTheme()
@@ -81,6 +90,18 @@ const handleThemeChange = (theme) => {
                 {{ i18n.global.t(item.title) }}
               </v-btn>
             </v-btn-toggle>
+          </v-list-item-action>
+        </template>
+      </v-list-item>
+      <v-list-item :title="i18n.global.t('settings_image_view')">
+        <template v-slot:append>
+          <v-list-item-action start>
+            <v-select
+                v-model="imageViewStore.currentImageView"
+                :items="imageViewItems"
+                :item-title="item => i18n.global.t(item.title)"
+            >
+            </v-select>
           </v-list-item-action>
         </template>
       </v-list-item>
