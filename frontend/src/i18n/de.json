@@ -2,5 +2,20 @@
   "uploading_safety_warranty": "Ihre Datei wird nicht auf einen Server geladen. Sie können die Internetverbindung deaktivieren.",
   "title_open": "Öffnen",
   "title_settings": "Einstellungen",
-  "title_about": "Über"
+  "title_about": "Über",
+  "status_view_text": "Text",
+  "status_view_icon": "Icon/Piktogramm",
+  "status_view_full": "Icon + Text",
+  "settings_theme": "Theme",
+  "settings_language": "Sprache",
+  "settings_status": "Show status as",
+  "settings_image_view": "Show images in list",
+  "image_view_image": "Image (faster)",
+  "image_view_obverse": "Vorderseite",
+  "image_view_reverse": "Rückseite",
+  "image_view_both": "Beide",
+  "wrong_version": "Datei hat unbekanntes Format",
+  "too_old_version": "File has an too old version. Please update it with desktop version of OpenNumismat",
+  "old_version": "Datei hat eine alte Version. Bitte mit der Desktop-Version von OpenNumismat aktualisieren",
+  "newest_version": "Datei hat neuere Version als App"
 }
