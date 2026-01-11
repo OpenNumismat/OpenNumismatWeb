@@ -82,7 +82,7 @@ const loadImage = async (index, coinId) => {
   const results = await executeQuery(sql, [coinId,])
   let img
   if (imageViewStore.currentImageView === 'both') {
-    const maxHeight = 100 // Step-down scaling for better quality
+    const maxHeight = 54*4 // Step-down scaling for better quality
     let aspectRatio
     let img1 = null, img2 = null
     let newWidth1 = 0, newWidth2 = 0
