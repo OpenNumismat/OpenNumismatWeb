@@ -1,19 +1,17 @@
 <script setup>
-import { useStatusStore } from '@/stores/status'
-
-const statusStore = useStatusStore()
+import { statusPresentation } from "@/composables/useSettings";
 
 const props = defineProps(['status', 'statuses'])
 </script>
 
 <template>
-  <template v-if="statusStore.currentStatusView === 'icon'">
+  <template v-if="statusPresentation === 'icon'">
     <v-img :src="`${props.status}.png`" :width="16" />
   </template>
-  <template v-if="statusStore.currentStatusView === 'text'">
+  <template v-if="statusPresentation === 'text'">
     {{ statuses[props.status] }}
   </template>
-  <template v-if="statusStore.currentStatusView === 'full'">
+  <template v-if="statusPresentation === 'full'">
     <v-img :src="`${props.status}.png`" :width="16" class="mr-1" />
     {{ statuses[props.status] }}
   </template>
