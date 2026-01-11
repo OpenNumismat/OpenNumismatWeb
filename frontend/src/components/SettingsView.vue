@@ -1,12 +1,10 @@
 <script setup>
 import {onMounted, onUnmounted} from "vue";
 import { useTheme } from 'vuetify'
-import { useThemeStore } from '@/stores/theme'
-import { useStatusStore } from '@/stores/status'
-import { useImageViewStore } from '@/stores/imageView'
 import { languageList, setLocale } from '@/i18n'
 import i18n from '../i18n'
 import {appTitle} from "@/composables/appTitle.js"
+import { imagePresentation, statusPresentation, currentTheme } from "@/composables/useSettings";
 
 const languageItems = Object.entries(languageList).map(([key, value]) => ({
   lang: key,
@@ -18,7 +16,6 @@ const statusItems = [
   {value: 'icon', title: 'status_view_icon'},
   {value: 'full', title: 'status_view_full'},
 ]
-const statusStore = useStatusStore()
 
 const imageViewItems = [
   {value: 'image', title: 'image_view_image'},
@@ -26,9 +23,7 @@ const imageViewItems = [
   {value: 'reverse', title: 'image_view_reverse'},
   {value: 'both', title: 'image_view_both'},
 ]
-const imageViewStore = useImageViewStore()
 
-const themeStore = useThemeStore()
 const appTheme = useTheme()
 
 onMounted(async () => {
@@ -39,7 +34,6 @@ onUnmounted(async () => {
 })
 
 const handleThemeChange = (theme) => {
-  themeStore.setTheme(theme)
   appTheme.change(theme)
 }
 </script>
@@ -51,7 +45,7 @@ const handleThemeChange = (theme) => {
         <template v-slot:append>
           <v-list-item-action start>
             <v-btn-toggle
-                v-model="themeStore.currentTheme"
+                v-model="currentTheme"
                 rounded="xl"
                 border
                 @update:model-value="handleThemeChange"
@@ -81,7 +75,7 @@ const handleThemeChange = (theme) => {
         <template v-slot:append>
           <v-list-item-action start>
             <v-btn-toggle
-                v-model="statusStore.currentStatusView"
+                v-model="statusPresentation"
                 rounded="xl"
                 border
             >
@@ -97,7 +91,7 @@ const handleThemeChange = (theme) => {
         <template v-slot:append>
           <v-list-item-action start>
             <v-select
-                v-model="imageViewStore.currentImageView"
+                v-model="imagePresentation"
                 :items="imageViewItems"
                 :item-title="item => i18n.global.t(item.title)"
             >

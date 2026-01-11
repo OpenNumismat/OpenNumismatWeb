@@ -4,7 +4,6 @@ import {useRoute, useRouter} from 'vue-router'
 import {useTheme} from 'vuetify'
 import {useSQLite} from "@/composables/useSQLite.js";
 import {appTitle} from "@/composables/appTitle.js";
-import {useThemeStore} from '@/stores/theme'
 import FileUploaderView from '@/components/FileUploaderView.vue'
 import CoinListView from "@/components/CoinListView.vue";
 import SettingsView from "@/components/SettingsView.vue";
@@ -12,6 +11,7 @@ import AboutView from "@/components/AboutView.vue";
 import CoinView from "@/components/CoinView.vue";
 import ImagesView from "@/components/ImagesView.vue";
 import i18n from './i18n'
+import { currentTheme } from "@/composables/useSettings";
 
 const {isLoading,
     error,
@@ -38,11 +38,10 @@ const coinListViewRef = ref(null)
 const router = useRouter()
 const route = useRoute()
 
-const themeStore = useThemeStore()
-const theme = useTheme()
+const appTheme = useTheme()
 
 onMounted(async () => {
-  theme.change(themeStore.currentTheme)
+  appTheme.change(currentTheme.value)
 
   await router.replace('/')
 })

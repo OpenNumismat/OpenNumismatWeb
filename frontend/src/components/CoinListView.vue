@@ -4,10 +4,9 @@ import {useRouter} from "vue-router";
 import {arrayBufferToBase64} from "@/utils/bytes2img.js"
 import StatusItem from "./StatusItem.vue"
 import {useSQLite} from "@/composables/useSQLite.js"
-import { useImageViewStore } from '@/stores/imageView'
+import { imagePresentation } from "@/composables/useSettings";
 
 const router = useRouter()
-const imageViewStore = useImageViewStore()
 
 const {isLoading,
     error,
@@ -62,12 +61,12 @@ const images = ref([])
 
 const loadImage = async (index, coinId) => {
   let sql
-  if (imageViewStore.currentImageView === 'obverse') {
+  if (imagePresentation.value === 'obverse') {
     sql = `SELECT obverseimg.image FROM coins
         LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
         WHERE coins.id=?`
   }
-  else if (imageViewStore.currentImageView === 'reverse') {
+  else if (imagePresentation.value === 'reverse') {
     sql = `SELECT reverseimg.image FROM coins
         LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id
         WHERE coins.id=?`
@@ -81,7 +80,7 @@ const loadImage = async (index, coinId) => {
 
   const results = await executeQuery(sql, [coinId,])
   let img
-  if (imageViewStore.currentImageView === 'both') {
+  if (imagePresentation.value === 'both') {
     const maxHeight = 54*4 // Step-down scaling for better quality
     let aspectRatio
     let img1 = null, img2 = null
@@ -135,17 +134,18 @@ const loadImage = async (index, coinId) => {
         @click="router.push('/coin/' + coin[0])"
         class="pa-1"
       >
-        <template v-slot:prepend v-if="imageViewStore.currentImageView === 'obverse'">
+        <template v-slot:prepend v-if="imagePresentation === 'obverse'">
+          <v-lazy :width="56">
+            <v-img :src="images[index]" :width="56" max-height="56" :tmp="loadImage(index, coin[0])" />
+          </v-lazy>
+          <p>11</p>
+        </template>
+        <template v-slot:prepend v-else-if="imagePresentation === 'reverse'">
           <v-lazy :width="56">
             <v-img :src="images[index]" :width="56" max-height="56" :tmp="loadImage(index, coin[0])" />
           </v-lazy>
         </template>
-        <template v-slot:prepend v-else-if="imageViewStore.currentImageView === 'reverse'">
-          <v-lazy :width="56">
-            <v-img :src="images[index]" :width="56" max-height="56" :tmp="loadImage(index, coin[0])" />
-          </v-lazy>
-        </template>
-        <template v-slot:prepend v-else-if="imageViewStore.currentImageView === 'both'">
+        <template v-slot:prepend v-else-if="imagePresentation === 'both'">
           <v-lazy :width="100">
             <v-img :src="images[index]" :width="100" max-height="56" :tmp="loadImage(index, coin[0])" />
           </v-lazy>
