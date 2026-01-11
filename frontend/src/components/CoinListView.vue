@@ -138,7 +138,6 @@ const loadImage = async (index, coinId) => {
           <v-lazy :width="56">
             <v-img :src="images[index]" :width="56" max-height="56" :tmp="loadImage(index, coin[0])" />
           </v-lazy>
-          <p>11</p>
         </template>
         <template v-slot:prepend v-else-if="imagePresentation === 'reverse'">
           <v-lazy :width="56">
