@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/OpenNumismatWeb/dev/sw.js', { scope: '/OpenNumismatWeb/dev/' })})}
