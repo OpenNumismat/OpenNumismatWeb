@@ -3,6 +3,10 @@ name: CI
 on:
   push:
     branches: [ main ]
+  workflow_run:
+    workflows: ["Bump version and create release"]
+    types:
+      - completed
   workflow_dispatch: # allow manual start
 
 concurrency:
@@ -16,6 +20,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+#      - name: Bump patch version
+#        uses: callowayproject/bump-my-version@master
+#        with:
+#          args: patch --no-commit --verbose
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install click==8.2 bump-my-version==0.32.2
+      - name: Bump patch version
+        run: bump-my-version bump patch --no-commit --verbose
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -26,6 +45,10 @@ jobs:
         working-directory: frontend
         run: npm ci
 
+      - name: Env
+        working-directory: frontend
+        run: echo "VITE_BASE_PATH=/OpenNumismatWeb/dev/" > .env.local
+
       - name: Build
         working-directory: frontend
         run: npm run build
@@ -35,3 +58,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./frontend/dist
+          destination_dir: dev
