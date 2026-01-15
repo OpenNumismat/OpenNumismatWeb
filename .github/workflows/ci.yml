@@ -27,7 +27,7 @@ jobs:
 #        uses: callowayproject/bump-my-version@master
 #        with:
 #          args: patch --no-commit --verbose
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
       - run: |
