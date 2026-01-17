@@ -5,6 +5,7 @@ import {arrayBufferToBase64} from "@/utils/bytes2img.js"
 import StatusItem from "./StatusItem.vue"
 import {useSQLite} from "@/composables/useSQLite.js"
 import { imagePresentation } from "@/composables/useSettings";
+import i18n from '../i18n'
 
 const router = useRouter()
 
@@ -94,7 +95,10 @@ function generateDescription( coin_data ) {
   if (coin_data[10])
     desc.push(coin_data[10]);
   if (coin_data[7]) {
-    desc.push(coin_data[7]);
+    if (coin_data[7] < 0 && props.settings.enable_bc)
+        desc.push((-coin_data[7]) + '\u00A0' + i18n.global.t('BC'));
+    else
+        desc.push(coin_data[7]);
   }
   if (coin_data[8])
     desc.push(coin_data[8]);
