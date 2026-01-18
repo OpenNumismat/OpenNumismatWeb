@@ -15,7 +15,7 @@ const props = defineProps(['status', 'statuses', 'statusPresentation', 'class'])
       <v-col cols="auto">
         <v-img :src="`${props.status}.png`" width="16"></v-img>
       </v-col>
-      <v-col class="ps-2" :class="$attrs.class">
+      <v-col class="ps-2" :class="props.class">
         {{ statuses[props.status] }}
       </v-col>
     </v-row>
