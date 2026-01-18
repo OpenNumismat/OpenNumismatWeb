@@ -1,6 +1,6 @@
 <script setup>
 
-const props = defineProps(['status', 'statuses', 'statusPresentation'])
+const props = defineProps(['status', 'statuses', 'statusPresentation', 'class'])
 </script>
 
 <template>

@@ -63,12 +63,10 @@ onUnmounted(async () => {
 
     <v-container>
       <dl class="v-row pt-3">
-        <template v-if="coinData[infoFieldIndex('status')]">
         <dt class="v-col-sm-3 pa-0">Status</dt>
         <dd class="v-col-sm-9 pa-0">
           <StatusItem :status="coinData[infoFieldIndex('status')]" :statuses="settings.statuses" statusPresentation="full" class="font-weight-bold" />
         </dd>
-        </template>
         <template v-if="coinData[infoFieldIndex('region')]">
         <dt class="v-col-sm-3 pa-0">Region</dt><dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('region')] }}</dd>
         </template>
