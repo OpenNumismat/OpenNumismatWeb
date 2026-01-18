@@ -99,7 +99,7 @@ function MD5(d){var r = M(V(Y(X(d),8*d.length)));return r.toLowerCase()}function
 const checkDbPassword = async (settings) => {
   status.value = 'Check password'
 
-  if (MD5('') !== settings.password) {
+  if (MD5('') !== settings.value.password) {
     const enteredPassword = await passwordDialog.value.promptPassword()
     if (enteredPassword && MD5(enteredPassword) === settings.value.password) {
       return true
