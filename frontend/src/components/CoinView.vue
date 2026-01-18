@@ -4,9 +4,18 @@ import {useRoute, useRouter} from "vue-router";
 import {useSQLite} from "@/composables/useSQLite.js";
 import {arrayBufferToBase64} from "@/utils/bytes2img.js"
 import {appTitle} from "@/composables/appTitle.js"
+import i18n from '../i18n'
+import StatusItem from "./StatusItem.vue"
 
 const router = useRouter()
 const route = useRoute()
+
+const props = defineProps({
+  settings: {
+    type: Object,
+    required: true,
+  },
+});
 
 const {isLoading,
     error,
@@ -53,12 +62,38 @@ onUnmounted(async () => {
     </v-row>
 
     <v-container>
-      {{ coinData[infoFieldIndex('status')] }}
-      {{ coinData[infoFieldIndex('country')] }}
-      {{ coinData[infoFieldIndex('type')] }}
+      <dl class="v-row pt-3">
+        <template v-if="coinData[infoFieldIndex('status')]">
+        <dt class="v-col-sm-3 pa-0">Status</dt>
+        <dd class="v-col-sm-9 pa-0">
+          <StatusItem :status="coinData[infoFieldIndex('status')]" :statuses="settings.statuses" statusPresentation="full" class="font-weight-bold" />
+        </dd>
+        </template>
+        <template v-if="coinData[infoFieldIndex('region')]">
+        <dt class="v-col-sm-3 pa-0">Region</dt><dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('region')] }}</dd>
+        </template>
+        <template v-if="coinData[infoFieldIndex('country')]">
+        <dt class="v-col-sm-3 pa-0">Country</dt><dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('country')] }}</dd>
+        </template>
+        <template v-if="coinData[infoFieldIndex('period')]">
+        <dt class="v-col-sm-3 pa-0">period</dt><dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('period')] }}</dd>
+        </template>
+        <template v-if="coinData[infoFieldIndex('ruler')]">
+        <dt class="v-col-sm-3 pa-0">ruler</dt><dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('ruler')] }}</dd>
+        </template>
+        <template v-if="coinData[infoFieldIndex('value')] || coinData[infoFieldIndex('unit')]">
+          <dt class="v-col-sm-3 pa-0">{{ i18n.global.t('Denomination') }}</dt>
+          <dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('value')] }}&nbsp;{{ coinData[infoFieldIndex('unit')] }}</dd>
+        </template>
+        <template v-if="coinData[infoFieldIndex('type')]">
+        <dt class="v-col-sm-3 pa-0">type</dt><dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('type')] }}</dd>
+        </template>
+      </dl>
 
+      <v-row>
       <p>{{ coinData[infoFieldIndex('features')] }}</p>
       <p>{{ coinData[infoFieldIndex('subject')] }}</p>
+      </v-row>
     </v-container>
   </v-container>
 </template>

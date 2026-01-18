@@ -216,7 +216,8 @@ const handleFileUpload = async (file) => {
           :coins_list="coinsList" :settings="collectionSettings"
           ref="coinListViewRef" />
       </KeepAlive>
-      <CoinView v-if="route.name === 'coin' && isOpened" />
+      <CoinView v-if="route.name === 'coin' && isOpened"
+        :settings="collectionSettings" />
       <ImagesView v-if="route.name === 'images' && isOpened" />
       <SettingsView v-if="route.name === 'settings'" />
       <AboutView v-if="route.name === 'about'" />

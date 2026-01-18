@@ -4,7 +4,7 @@ import {useRouter} from "vue-router";
 import {arrayBufferToBase64} from "@/utils/bytes2img.js"
 import StatusItem from "./StatusItem.vue"
 import {useSQLite} from "@/composables/useSQLite.js"
-import { imagePresentation } from "@/composables/useSettings";
+import { imagePresentation, statusPresentation } from "@/composables/useSettings";
 import i18n from '../i18n'
 
 const router = useRouter()
@@ -204,7 +204,7 @@ const loadImage = async (index, coinId) => {
           <v-img :src="arrayBufferToBase64(coin[1])" :width="100" max-height="56" />
         </template>
         <template v-slot:append>
-          <StatusItem :status="coin[3]" :statuses="settings.statuses"/>
+          <StatusItem :status="coin[3]" :statuses="settings.statuses" :statusPresentation="statusPresentation" />
         </template>
       </v-list-item>
     </v-list>
