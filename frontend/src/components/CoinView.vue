@@ -63,28 +63,33 @@ onUnmounted(async () => {
 
     <v-container>
       <dl class="v-row pt-3">
-        <dt class="v-col-sm-3 pa-0">Status</dt>
+        <dt class="v-col-sm-3 pa-0">{{ settings.fields['status'] }}</dt>
         <dd class="v-col-sm-9 pa-0">
           <StatusItem :status="coinData[infoFieldIndex('status')]" :statuses="settings.statuses" statusPresentation="full" class="font-weight-bold" />
         </dd>
         <template v-if="coinData[infoFieldIndex('region')]">
-        <dt class="v-col-sm-3 pa-0">Region</dt><dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('region')] }}</dd>
+          <dt class="v-col-sm-3 pa-0">{{ settings.fields['region'] }}</dt>
+          <dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('region')] }}</dd>
         </template>
         <template v-if="coinData[infoFieldIndex('country')]">
-        <dt class="v-col-sm-3 pa-0">Country</dt><dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('country')] }}</dd>
+          <dt class="v-col-sm-3 pa-0">{{ settings.fields['country'] }}</dt>
+          <dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('country')] }}</dd>
         </template>
         <template v-if="coinData[infoFieldIndex('period')]">
-        <dt class="v-col-sm-3 pa-0">period</dt><dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('period')] }}</dd>
+          <dt class="v-col-sm-3 pa-0">{{ settings.fields['period'] }}</dt>
+          <dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('period')] }}</dd>
         </template>
         <template v-if="coinData[infoFieldIndex('ruler')]">
-        <dt class="v-col-sm-3 pa-0">ruler</dt><dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('ruler')] }}</dd>
+          <dt class="v-col-sm-3 pa-0">{{ settings.fields['ruler'] }}</dt>
+          <dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('ruler')] }}</dd>
         </template>
         <template v-if="coinData[infoFieldIndex('value')] || coinData[infoFieldIndex('unit')]">
           <dt class="v-col-sm-3 pa-0">{{ i18n.global.t('Denomination') }}</dt>
           <dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('value')] }}&nbsp;{{ coinData[infoFieldIndex('unit')] }}</dd>
         </template>
         <template v-if="coinData[infoFieldIndex('type')]">
-        <dt class="v-col-sm-3 pa-0">type</dt><dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('type')] }}</dd>
+          <dt class="v-col-sm-3 pa-0">{{ settings.fields['type'] }}</dt>
+          <dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('type')] }}</dd>
         </template>
       </dl>
 

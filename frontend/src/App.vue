@@ -50,26 +50,52 @@ onMounted(async () => {
 
 const collectionSettings = ref({})
 
+const fieldIds = {
+  13: 'status',
+  75: 'region',
+  4: 'country',
+  6: 'period',
+  74: 'ruler',
+  10: 'type',
+  11: 'series',
+  12: 'subjectshort',
+  9: 'issuedate',
+  5: 'year',
+  25: 'mintage',
+  14: 'material',
+  7: 'mint',
+  20: 'grade',
+  40: 'paydate',
+  41: 'payprice',
+  67: 'storage',
+  83: 'condition',
+  71: 'quantity',
+}
 const initSettings = async () => {
-    collectionSettings.value = {};
-    collectionSettings.value.version = 0;
-    collectionSettings.value.password = '';
-    collectionSettings.value.type = null;
-    collectionSettings.value.convert_fraction = true;
-    collectionSettings.value.enable_bc = true;
-    collectionSettings.value.statuses = {
-      'demo': 'demo',
-      'pass': 'pass',
-      'owned': 'owned',
-      'ordered': 'ordered',
-      'sold': 'sold',
-      'sale': 'sale',
-      'wish': 'wish',
-      'missing': 'missing',
-      'bidding': 'bidding',
-      'duplicate': 'duplicate',
-      'replacement': 'replacement',
+  collectionSettings.value = {};
+  collectionSettings.value.version = 0;
+  collectionSettings.value.password = '';
+  collectionSettings.value.type = null;
+  collectionSettings.value.convert_fraction = true;
+  collectionSettings.value.enable_bc = true;
+  collectionSettings.value.statuses = {
+    'demo': 'demo',
+    'pass': 'pass',
+    'owned': 'owned',
+    'ordered': 'ordered',
+    'sold': 'sold',
+    'sale': 'sale',
+    'wish': 'wish',
+    'missing': 'missing',
+    'bidding': 'bidding',
+    'duplicate': 'duplicate',
+    'replacement': 'replacement',
   };
+
+  collectionSettings.value.fields = {};
+  Object.values(fieldIds).forEach(field => {
+    collectionSettings.value.fields[field] = field;
+  })
 }
 
 const checkDbVersion = async (settings) => {
@@ -124,12 +150,12 @@ const handleFileUpload = async (file) => {
   await router.replace('/')
   appTitle.pushTitle(file.name)
 
+  coinsList.value = []
+
   const sql_settings = `
       SELECT * FROM settings
     `
   const settingsDb = await executeQuery(sql_settings)
-
-  coinsList.value = []
 
   await initSettings()
 
@@ -150,6 +176,14 @@ const handleFileUpload = async (file) => {
             collectionSettings.value.statuses[key] = elem[1]
         })
       }
+  })
+
+  const field_sql = `SELECT id, title FROM fields WHERE id IN (${Object.keys(fieldIds)})`
+  const fieldsDb = await executeQuery(field_sql)
+
+  fieldsDb.forEach(function(elem) {
+    const field = fieldIds[elem[0]]
+    collectionSettings.value.fields[field] = elem[1]
   })
 
   const versionValid = await checkDbVersion(collectionSettings);
