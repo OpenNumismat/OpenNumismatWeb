@@ -102,21 +102,23 @@ onUnmounted(async () => {
           <dt class="v-col-sm-3 pa-0">{{ settings.fields['subjectshort'] }}</dt>
           <dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('subjectshort')] }}</dd>
         </template>
+
         <template v-if="coinData[infoFieldIndex('issuedate')]">
           <dt class="v-col-sm-3 pa-0">{{ settings.fields['issuedate'] }}</dt>
           <dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('issuedate')] }}</dd>
         </template>
-        <template v-if="coinData[infoFieldIndex('year')]">
+        <template v-else-if="coinData[infoFieldIndex('year')]">
           <dt class="v-col-sm-3 pa-0">{{ settings.fields['year'] }}</dt>
           <dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('year')] }}</dd>
         </template>
+
         <template v-if="coinData[infoFieldIndex('mintage')]">
           <dt class="v-col-sm-3 pa-0">{{ settings.fields['mintage'] }}</dt>
           <dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('mintage')] }}</dd>
         </template>
-        <template v-if="coinData[infoFieldIndex('mintage')]">
-          <dt class="v-col-sm-3 pa-0">{{ settings.fields['mintage'] }}</dt>
-          <dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('mintage')] }}</dd>
+        <template v-if="coinData[infoFieldIndex('material')]">
+          <dt class="v-col-sm-3 pa-0">{{ settings.fields['material'] }}</dt>
+          <dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('material')] }}</dd>
         </template>
 
         <template v-if="coinData[infoFieldIndex('mint')] && coinData[infoFieldIndex('mintmark')]">
