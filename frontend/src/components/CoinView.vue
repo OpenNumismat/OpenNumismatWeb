@@ -6,6 +6,7 @@ import {arrayBufferToBase64} from "@/utils/bytes2img.js"
 import {appTitle} from "@/composables/appTitle.js"
 import i18n from '../i18n'
 import StatusItem from "./StatusItem.vue"
+import {convertFraction, formatYear} from "@/utils/formatter.js";
 
 const router = useRouter()
 const route = useRoute()
@@ -88,7 +89,10 @@ onUnmounted(async () => {
         </template>
         <template v-if="coinData[infoFieldIndex('value')] || coinData[infoFieldIndex('unit')]">
           <dt class="v-col-sm-3 pa-0 text-medium-emphasis">{{ i18n.global.t('Denomination') }}</dt>
-          <dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('value')] }}&nbsp;{{ coinData[infoFieldIndex('unit')] }}</dd>
+          <dd class="v-col-sm-9 pa-0 font-weight-bold">
+            {{ convertFraction(props.settings.convert_fraction, coinData[infoFieldIndex('value')]) }}
+            {{ coinData[infoFieldIndex('unit')] }}
+          </dd>
         </template>
         <template v-if="coinData[infoFieldIndex('type')]">
           <dt class="v-col-sm-3 pa-0 text-medium-emphasis">{{ settings.fields['type'] }}</dt>
@@ -109,7 +113,7 @@ onUnmounted(async () => {
         </template>
         <template v-else-if="coinData[infoFieldIndex('year')]">
           <dt class="v-col-sm-3 pa-0 text-medium-emphasis">{{ settings.fields['year'] }}</dt>
-          <dd class="v-col-sm-9 pa-0 font-weight-bold">{{ coinData[infoFieldIndex('year')] }}</dd>
+          <dd class="v-col-sm-9 pa-0 font-weight-bold">{{ formatYear(props.settings.enable_bc, coinData[infoFieldIndex('year')]) }}</dd>
         </template>
 
         <template v-if="coinData[infoFieldIndex('mintage')]">
