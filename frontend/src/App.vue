@@ -64,6 +64,7 @@ const fieldIds = {
   25: 'mintage',
   14: 'material',
   7: 'mint',
+  8: 'mintmark',
   20: 'grade',
   40: 'paydate',
   41: 'payprice',
@@ -257,8 +258,8 @@ const handleFileUpload = async (file) => {
       <AboutView v-if="route.name === 'about'" />
 
       <div class="text-center">
-        <v-overlay 
-          v-model="isLoading" 
+        <v-overlay
+          v-model="isLoading"
           class="align-center justify-center"
           persistent
         >
