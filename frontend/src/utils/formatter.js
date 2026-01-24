@@ -44,7 +44,7 @@ export function convertFraction(convert_fraction, value) {
       return '12½';
   }
 
-  return value;
+  return i18n.global.n(value);
 }
 
 export function formatYear(enable_bc, year) {
