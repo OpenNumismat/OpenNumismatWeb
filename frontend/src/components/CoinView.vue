@@ -113,7 +113,7 @@ onUnmounted(async () => {
 
             <template v-if="coinData[infoFieldIndex('issuedate')]">
               <dt class="v-col-sm-3 text-medium-emphasis">{{ settings.fields['issuedate'] }}</dt>
-              <dd class="v-col-sm-9 font-weight-bold">{{ coinData[infoFieldIndex('issuedate')] }}</dd>
+              <dd class="v-col-sm-9 font-weight-bold">{{ i18n.global.d(coinData[infoFieldIndex('issuedate')]) }}</dd>
             </template>
             <template v-else-if="coinData[infoFieldIndex('year')]">
               <dt class="v-col-sm-3 text-medium-emphasis">{{ settings.fields['year'] }}</dt>
@@ -122,7 +122,7 @@ onUnmounted(async () => {
 
             <template v-if="coinData[infoFieldIndex('mintage')]">
               <dt class="v-col-sm-3 text-medium-emphasis">{{ settings.fields['mintage'] }}</dt>
-              <dd class="v-col-sm-9 font-weight-bold">{{ coinData[infoFieldIndex('mintage')] }}</dd>
+              <dd class="v-col-sm-9 font-weight-bold">{{ i18n.global.n(coinData[infoFieldIndex('mintage')]) }}</dd>
             </template>
             <template v-if="coinData[infoFieldIndex('material')]">
               <dt class="v-col-sm-3 text-medium-emphasis">{{ settings.fields['material'] }}</dt>
@@ -152,11 +152,11 @@ onUnmounted(async () => {
             </template>
             <template v-if="coinData[infoFieldIndex('paydate')]">
               <dt class="v-col-sm-3 text-medium-emphasis">{{ settings.fields['paydate'] }}</dt>
-              <dd class="v-col-sm-9 font-weight-bold">{{ coinData[infoFieldIndex('paydate')] }}</dd>
+              <dd class="v-col-sm-9 font-weight-bold">{{ i18n.global.d(coinData[infoFieldIndex('paydate')]) }}</dd>
             </template>
             <template v-if="coinData[infoFieldIndex('payprice')]">
               <dt class="v-col-sm-3 text-medium-emphasis">{{ settings.fields['payprice'] }}</dt>
-              <dd class="v-col-sm-9 font-weight-bold">{{ coinData[infoFieldIndex('payprice')] }}</dd>
+              <dd class="v-col-sm-9 font-weight-bold">{{ i18n.global.n(coinData[infoFieldIndex('payprice')]) }}</dd>
             </template>
             <template v-if="coinData[infoFieldIndex('storage')]">
               <dt class="v-col-sm-3 text-medium-emphasis">{{ settings.fields['storage'] }}</dt>
