@@ -43,7 +43,9 @@ jobs:
 
       - name: Install dependencies
         working-directory: frontend
-        run: npm ci
+        run: |
+          npm ci
+          npm install -g @bubblewrap/cli
 
       - name: Env
         working-directory: frontend
@@ -54,9 +56,9 @@ jobs:
         run: npm run build
 
       - name: Build APK
-        uses: sharadcodes/pwa-to-apk-action@v1.0.0
-        with:
-          project-root-folder: 'android'
+        run: |
+          cd android
+          bubblewrap build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -68,5 +70,6 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
+          name: OpenNumismat.apk
           path: android/*.apk
           if-no-files-found: error
