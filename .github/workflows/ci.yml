@@ -53,9 +53,20 @@ jobs:
         working-directory: frontend
         run: npm run build
 
+      - name: Build APK
+        uses: sharadcodes/pwa-to-apk-action@v1.0.0
+        with:
+          project-root-folder: 'android'
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./frontend/dist
           destination_dir: dev
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          path: android/*.apk
+          if-no-files-found: error
