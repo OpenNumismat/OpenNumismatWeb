@@ -5,7 +5,6 @@ import {arrayBufferToBase64} from "@/utils/bytes2img.js"
 import StatusItem from "./StatusItem.vue"
 import {useSQLite} from "@/composables/useSQLite.js"
 import { imagePresentation, statusPresentation } from "@/composables/useSettings";
-import i18n from '../i18n'
 import {convertFraction, formatYear} from "@/utils/formatter.js";
 
 const router = useRouter()
