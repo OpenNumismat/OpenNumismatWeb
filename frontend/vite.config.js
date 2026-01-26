@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
       VitePWA({
         registerType: 'autoUpdate',
         manifest: {
-          id: '/OpenNumismatWeb/',
+          id: env.VITE_BASE_PATH || '/OpenNumismatWeb/',
           name: 'OpenNumismat Web',
           short_name: 'OpenNumismat',
           description: 'Application for browsing OpenNumismat collection',
