@@ -1,5 +1,5 @@
 # Stage 1: Build Vue app
-FROM node:24-alpine as build-stage
+FROM node:24-alpine AS build-stage
 WORKDIR /app/frontend
 
 COPY frontend/package*.json ./
