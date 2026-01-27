@@ -59,6 +59,10 @@ jobs:
         working-directory: frontend
         run: npm run build
 
+      - name: Clear env
+        working-directory: frontend
+        run: rm .env.local
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
