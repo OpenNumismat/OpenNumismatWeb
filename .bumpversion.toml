@@ -22,3 +22,5 @@ pre_commit_hooks = []
 post_commit_hooks = []
 [[tool.bumpversion.files]]
 filename = "frontend/package.json"
+[[tool.bumpversion.files]]
+filename = "backend/_version.py"
