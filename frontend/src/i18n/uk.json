@@ -17,5 +17,7 @@
   "wrong_version": "Файл має неправильний або невідомий формат",
   "too_old_version": "File has an too old version. Please update it with desktop version of OpenNumismat",
   "old_version": "Файл старої версії. Оновіть його за допомогою настільної версії OpenNumismat",
-  "newest_version": "Файл новішої версії, ніж додаток"
+  "newest_version": "Файл новішої версії, ніж додаток",
+  "BC": "до н.е.",
+  "Denomination": "Номінал"
 }

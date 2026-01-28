@@ -9,13 +9,15 @@
   "settings_theme": "Tema",
   "settings_language": "Idioma",
   "settings_status": "Mostrar estado como",
-  "settings_image_view": "Show images in list",
-  "image_view_image": "Image (faster)",
+  "settings_image_view": "Mostrar imagens numa lista",
+  "image_view_image": "Imagem (mais rápido)",
   "image_view_obverse": "Obverso",
   "image_view_reverse": "Reverso",
   "image_view_both": "Ambos",
   "wrong_version": "Ficheiro de formato inválido ou desconhecido",
   "too_old_version": "Versão do ficheiro muito antiga. Por favor, actualize-a com a versão de computador de OpenNumismat.",
   "old_version": "Versão do ficheiro muito antiga. Por favor, actualize-a com a versão de computador de OpenNumismat.",
-  "newest_version": "Ficheiro mais recente que a aplicação"
+  "newest_version": "Ficheiro mais recente que a aplicação",
+  "BC": "BC",
+  "Denomination": "Denominação"
 }
