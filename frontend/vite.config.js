@@ -38,6 +38,14 @@ export default defineConfig(({ mode }) => {
         'Cross-Origin-Opener-Policy': 'same-origin',
         'Cross-Origin-Embedder-Policy': 'require-corp',
       },
+      proxy: {
+        '/api': {
+          target: 'http://localhost:5000', // Your Flask server
+          changeOrigin: true,
+          secure: false,
+          logLevel: 'debug'
+        }
+      }
     },
   }
 })

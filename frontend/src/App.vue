@@ -46,6 +46,31 @@ onMounted(async () => {
   appTheme.change(currentTheme.value)
 
   await router.replace('/')
+
+  try {
+    status.value = 'Open collection'
+
+    const response = await fetch('/api/settings');
+    if (!response.ok)
+      throw new Error('Network response was not ok');
+    collectionSettings.value = await response.json();
+  } catch (err) {
+    error.value = err.message;
+  }
+
+  try {
+    status.value = 'Read collection'
+
+    const response = await fetch('/api/coins');
+    if (!response.ok)
+      throw new Error('Network response was not ok');
+    coinsList.value = await response.json();
+  } catch (err) {
+    error.value = err.message;
+  }
+
+//  coinListViewRef.value.onOpenFile()
+  isOpened = true;
 })
 
 const updateAddressBar = () => {
@@ -168,9 +193,7 @@ const handleFileUpload = async (file) => {
 
   coinsList.value = []
 
-  const sql_settings = `
-      SELECT * FROM settings
-    `
+  const sql_settings = `SELECT * FROM settings`
   const settingsDb = await executeQuery(sql_settings)
 
   await initSettings()
