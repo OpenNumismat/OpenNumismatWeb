@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, computed} from 'vue'
+import {onMounted, ref, computed, watch} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {useTheme} from 'vuetify'
 import {useSQLite} from "@/composables/useSQLite.js";
@@ -47,6 +47,21 @@ onMounted(async () => {
 
   await router.replace('/')
 })
+
+const updateAddressBar = () => {
+  const primaryColor = appTheme.current.value.colors.primary
+  console.log(primaryColor)
+  let metaTag = document.querySelector('meta[name="theme-color"]')
+  if (!metaTag) {
+    metaTag = document.createElement('meta')
+    metaTag.name = 'theme-color'
+    document.head.appendChild(metaTag)
+  }
+
+  metaTag.setAttribute('content', primaryColor)
+}
+
+watch(() => appTheme.global.name.value, updateAddressBar)
 
 const collectionSettings = ref({})
 
