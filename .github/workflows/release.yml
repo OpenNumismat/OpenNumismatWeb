@@ -12,6 +12,12 @@ on:
           - 'major'
           - 'minor'
 
+env:
+  REGISTRY: ghcr.io
+  REGISTRY_USER: ${{ github.repository_owner }}
+  REGISTRY_PASS: ${{ secrets.GITHUB_TOKEN }}
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   release:
     runs-on: ubuntu-latest
