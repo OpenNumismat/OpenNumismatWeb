@@ -14,6 +14,7 @@ import i18n from './i18n'
 import { currentTheme } from "@/composables/useSettings";
 import PasswordDialog from '@/components/PasswordDialog.vue'
 import axios from 'axios'
+import FileServerView from "@/components/FileServerView.vue";
 
 const {isLoading,
     error,
@@ -22,6 +23,7 @@ const {isLoading,
     executeQuery} = useSQLite()
 
 const selectedFile = ref(null)
+const serverFileList = ref([])
 const coinsList = ref([])
 let isOpened = false;
 const hasError = computed({
@@ -55,11 +57,13 @@ onMounted(async () => {
 
   isLoading.value = true
   error.value = null
-  status.value = 'Open collection'
 
   try {
-    const response = await api.get('/api/settings')
-    collectionSettings.value = response.data
+    status.value = 'Open collection'
+
+    const response = await api.get('/api/filelist')
+    serverFileList.value = response.data
+    console.log(serverFileList.value)
   }
   catch (err) {
     error.value = err
@@ -67,24 +71,6 @@ onMounted(async () => {
   finally {
     isLoading.value = false
   }
-
-  isLoading.value = true
-  error.value = null
-  status.value = 'Read collection'
-
-  try {
-    const response = await api.get('/api/coins')
-    coinsList.value = response.data
-  }
-  catch (err) {
-    error.value = err
-  }
-  finally {
-    isLoading.value = false
-  }
-
-//  coinListViewRef.value.onOpenFile()
-  isOpened = true;
 })
 
 const updateAddressBar = () => {
@@ -194,6 +180,39 @@ const checkDbPassword = async (settings) => {
   return true
 }
 
+const handleRemoteFileSelected = async (file) => {
+  if (!file)
+    return;
+
+  selectedFile.value = file;
+  isOpened = true;
+  await router.replace('/')
+  appTitle.pushTitle(file)
+
+  coinsList.value = []
+
+  isLoading.value = true
+  error.value = null
+
+  try {
+    status.value = 'Open collection'
+
+    const responseSettings = await api.get('/api/settings', {params: {f: selectedFile.value}})
+    collectionSettings.value = responseSettings.data
+
+    const responseCoins = await api.get('/api/coins', {params: {f: selectedFile.value}})
+    coinsList.value = responseCoins.data
+  }
+  catch (err) {
+    error.value = err
+  }
+  finally {
+    isLoading.value = false
+  }
+
+  coinListViewRef.value.onOpenFile()
+}
+
 const handleFileUpload = async (file) => {
   if (!file)
     return;
@@ -298,6 +317,8 @@ const handleFileUpload = async (file) => {
     <v-main>
       <FileUploaderView v-if="(route.name === 'home' && !isOpened) || route.name === 'open'"
         :onFileUploaded="handleFileUpload" />
+      <FileServerView v-if="(route.name === 'home' && !isOpened) || route.name === 'open'"
+        :file_list="serverFileList" :onFileSelected="handleRemoteFileSelected" />
       <KeepAlive>
         <CoinListView v-if="route.name === 'home' && isOpened"
           :coins_list="coinsList" :settings="collectionSettings"

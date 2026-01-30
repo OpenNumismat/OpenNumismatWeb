@@ -1,16 +1,29 @@
 import sqlite3
-from flask import Flask, send_from_directory
+from flask import Flask, request, send_from_directory
+from pathlib import Path
+
+
+DATA_PATH = 'data'
 
 
 # Initializing flask app
 app = Flask(__name__, static_url_path='/')
 
 
+@app.route("/api/filelist")
+def filelist():
+    root = Path(DATA_PATH)
+    db_files = root.rglob('*.db')
+    return [str(file.relative_to(root)) for file in db_files]
+
+
 @app.route("/api/coins")
 def coins():
-    con = sqlite3.connect("data/demo.db")
-
+    query = request.args.get('f', default='demo.db')
+    print(Path(DATA_PATH) / query)
+    con = sqlite3.connect(Path(DATA_PATH) / query)
     cur = con.cursor()
+
     res = cur.execute("""
         SELECT coins.id, NULL, title, status, subjectshort, value, unit, year, mintmark, series, country
         FROM coins
@@ -46,7 +59,8 @@ def settings():
         71: 'quantity',
     }
 
-    con = sqlite3.connect("data/demo.db")
+    query = request.args.get('f', default='demo.db')
+    con = sqlite3.connect(Path(DATA_PATH) / query)
     cur = con.cursor()
 
     res = cur.execute("SELECT * FROM settings")
