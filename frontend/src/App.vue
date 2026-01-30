@@ -13,6 +13,7 @@ import ImagesView from "@/components/ImagesView.vue";
 import i18n from './i18n'
 import { currentTheme } from "@/composables/useSettings";
 import PasswordDialog from '@/components/PasswordDialog.vue'
+import axios from 'axios'
 
 const {isLoading,
     error,
@@ -42,31 +43,44 @@ const route = useRoute()
 
 const appTheme = useTheme()
 
+const api = axios.create({
+//  baseURL: 'http://localhost:5000',
+  timeout: 5000,
+})
+
 onMounted(async () => {
   appTheme.change(currentTheme.value)
 
   await router.replace('/')
 
-  try {
-    status.value = 'Open collection'
+  isLoading.value = true
+  error.value = null
+  status.value = 'Open collection'
 
-    const response = await fetch('/api/settings');
-    if (!response.ok)
-      throw new Error('Network response was not ok');
-    collectionSettings.value = await response.json();
-  } catch (err) {
-    error.value = err.message;
+  try {
+    const response = await api.get('/api/settings')
+    collectionSettings.value = response.data
+  }
+  catch (err) {
+    error.value = err
+  }
+  finally {
+    isLoading.value = false
   }
 
-  try {
-    status.value = 'Read collection'
+  isLoading.value = true
+  error.value = null
+  status.value = 'Read collection'
 
-    const response = await fetch('/api/coins');
-    if (!response.ok)
-      throw new Error('Network response was not ok');
-    coinsList.value = await response.json();
-  } catch (err) {
-    error.value = err.message;
+  try {
+    const response = await api.get('/api/coins')
+    coinsList.value = response.data
+  }
+  catch (err) {
+    error.value = err
+  }
+  finally {
+    isLoading.value = false
   }
 
 //  coinListViewRef.value.onOpenFile()
