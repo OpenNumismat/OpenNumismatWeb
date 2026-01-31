@@ -15,7 +15,7 @@
   "image_view_reverse": "Rovescio",
   "image_view_both": "Entrambi",
   "wrong_version": "Il file ha un formato errato o sconosciuto",
-  "too_old_version": "File has an too old version. Please update it with desktop version of OpenNumismat",
+  "too_old_version": "Il file ha una versione troppo vecchia. Aggiornalo con la versione desktop di OpenNumismat",
   "old_version": "Il file è di una versione troppo vecchia. Aggiornalo con la versione desktop di OpenNumismat",
   "newest_version": "Il file è di una versione più recente dell'app installata",
   "BC": "a.C.",
