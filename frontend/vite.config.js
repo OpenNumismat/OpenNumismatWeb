@@ -4,9 +4,23 @@ import { VitePWA } from 'vite-plugin-pwa'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
+
+  let proxy = {}
+  if (mode === 'development') {
+    proxy = {
+      '/api': {
+        target: 'http://localhost:5000', // Your Flask server
+        changeOrigin: true,
+        secure: false,
+        logLevel: 'debug'
+      }
+    }
+  }
+
   return {
     base: env.VITE_BASE_PATH || '/',
     plugins: [
@@ -38,14 +52,7 @@ export default defineConfig(({ mode }) => {
         'Cross-Origin-Opener-Policy': 'same-origin',
         'Cross-Origin-Embedder-Policy': 'require-corp',
       },
-      proxy: {
-        '/api': {
-          target: 'http://localhost:5000', // Your Flask server
-          changeOrigin: true,
-          secure: false,
-          logLevel: 'debug'
-        }
-      }
+      proxy: proxy,
     },
   }
 })
