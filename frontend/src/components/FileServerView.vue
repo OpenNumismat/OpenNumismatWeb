@@ -18,13 +18,18 @@ function onFileSelected(file) {
 
 <template>
   <v-container>
-    <v-list>
-      <v-list-item
-        v-for="file in file_list"
-        :title="file"
-        @click="onFileSelected(file)"
-      ></v-list-item>
-    </v-list>
+    <v-card>
+      <v-card-title>Select server file</v-card-title>
+        <v-list>
+          <template v-for="file in file_list">
+            <v-divider ></v-divider>
+            <v-list-item
+                :title="file"
+                @click="onFileSelected(file)"
+            ></v-list-item>
+          </template>
+        </v-list>
+    </v-card>
   </v-container>
 </template>
 
