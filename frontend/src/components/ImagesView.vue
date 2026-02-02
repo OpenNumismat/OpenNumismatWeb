@@ -6,11 +6,7 @@ import {arrayBufferToBase64} from "@/utils/bytes2img.js"
 
 const route = useRoute()
 
-const {isLoading,
-    error,
-    status,
-    openDatabase,
-    executeQuery} = useSQLite()
+const {executeQuery} = useSQLite()
 
 const images = ref([])
 

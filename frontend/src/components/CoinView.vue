@@ -18,11 +18,7 @@ const props = defineProps({
   },
 });
 
-const {isLoading,
-    error,
-    status,
-    openDatabase,
-    executeQuery} = useSQLite()
+const {executeQuery} = useSQLite()
 
 const coinData = ref([])
 

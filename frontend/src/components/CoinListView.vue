@@ -9,11 +9,7 @@ import {convertFraction, formatYear} from "@/utils/formatter.js";
 
 const router = useRouter()
 
-const {isLoading,
-    error,
-    status,
-    openDatabase,
-    executeQuery} = useSQLite()
+const {executeQuery} = useSQLite()
 
 const props = defineProps({
   coins_list: {

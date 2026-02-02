@@ -1,15 +1,13 @@
-import {onMounted, ref} from 'vue'
+import {onMounted} from 'vue'
 import initSqlJs from "sql.js";
+import {useGlobalStatus} from "@/composables/useGlobalStatus.js";
 
+const globalStatus = useGlobalStatus();
 let isInitialized = false
 let SQL = null
 let db = null
 
 export function useSQLite() {
-  const isLoading = ref(false)
-  const error = ref(null)
-  const status = ref('');
-
   onMounted(async () => {
     await initialize()
   });
@@ -18,9 +16,7 @@ export function useSQLite() {
     if (isInitialized)
       return
 
-    isLoading.value = true
-    error.value = null
-    status.value = 'Loading SQL.js'
+    await globalStatus.startLoading('Loading SQL.js');
 
     try {
       SQL = await initSqlJs({
@@ -30,11 +26,11 @@ export function useSQLite() {
     }
     catch (err) {
       console.error('Failed to load SQL.js:', err);
-      status.value = 'Failed to load SQL.js'
-      error.value = err
+      globalStatus.status.value = 'Failed to load SQL.js'
+      globalStatus.error.value = err
     }
     finally {
-      isLoading.value = false
+      await globalStatus.finishLoading();
     }
   }
 
@@ -43,9 +39,7 @@ export function useSQLite() {
       if (!isInitialized)
         initialize()
 
-      isLoading.value = true
-      error.value = null
-      status.value = 'Loading database...';
+      globalStatus.startLoading('Loading database...');
 
       const reader = new FileReader();
 
@@ -57,24 +51,23 @@ export function useSQLite() {
           // Load database
           db = new SQL.Database(uint8Array);
 
-          status.value = `Database loaded successfully: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
           resolve()
         }
         catch (err) {
           console.error('Error loading database:', err);
-          status.value = 'Error loading database'
-          error.value = err
+          globalStatus.status.value = 'Error loading database'
+          globalStatus.error.value = err
           reject()
         }
         finally {
-          isLoading.value = false
+          await globalStatus.finishLoading();
         }
       }
 
       reader.onerror = (err) => {
-        status.value = 'Error reading file'
-        error.value = e.target.error
-        isLoading.value = false
+        globalStatus.finishLoading();
+        globalStatus.status.value = 'Error reading file'
+        globalStatus.error.value = err
         reject()
       }
 
@@ -86,9 +79,7 @@ export function useSQLite() {
     if (!db)
       return
 
-    isLoading.value = true
-    error.value = null
-    status.value = 'Executing query...';
+    await globalStatus.startLoading('Executing query...');
     let results = null
 
     try {
@@ -100,20 +91,17 @@ export function useSQLite() {
     }
     catch (err) {
       console.error('Failed execute query:', err);
-      status.value = 'Failed execute query'
-      error.value = err
+      globalStatus.status.value = 'Failed execute query'
+      globalStatus.error.value = err
     }
     finally {
-      isLoading.value = false
+      await globalStatus.finishLoading();
     }
 
     return results
   }
 
   return {
-    isLoading,
-    error,
-    status,
     openDatabase,
     executeQuery,
   }
