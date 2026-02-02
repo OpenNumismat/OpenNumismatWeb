@@ -22,6 +22,7 @@ const {isLoading,
     openDatabase,
     executeQuery} = useSQLite()
 
+const isServerLess = import.meta.env.VITE_SERVERLESS;
 const selectedFile = ref(null)
 const serverFileList = ref([])
 const coinsList = ref([])
@@ -55,21 +56,23 @@ onMounted(async () => {
 
   await router.replace('/')
 
-  isLoading.value = true
-  error.value = null
+  if (isServerLess === undefined) {
+    isLoading.value = true
+    error.value = null
 
-  try {
-    status.value = 'Open collection'
+    try {
+      status.value = 'Open collection'
 
-    const response = await api.get('/api/filelist')
-    serverFileList.value = response.data
-    console.log(serverFileList.value)
-  }
-  catch (err) {
-    error.value = err
-  }
-  finally {
-    isLoading.value = false
+      const response = await api.get('/api/filelist')
+      serverFileList.value = response.data
+      console.log(serverFileList.value)
+    }
+    catch (err) {
+      error.value = err
+    }
+    finally {
+      isLoading.value = false
+    }
   }
 })
 

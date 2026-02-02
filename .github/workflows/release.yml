@@ -51,6 +51,7 @@ jobs:
         working-directory: frontend
         run: |
           echo "VITE_BASE_PATH=/OpenNumismatWeb/" > .env.local
+          echo "VITE_SERVERLESS=1" >> .env.local
           npm run build
           rm .env.local
 
