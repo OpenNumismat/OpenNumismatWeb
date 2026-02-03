@@ -12,9 +12,15 @@ app = Flask(__name__, static_url_path='/')
 
 @app.route("/api/filelist")
 def filelist():
-    root = Path(DATA_PATH)
-    db_files = root.rglob('*.db')
-    return [str(file.relative_to(root)) for file in db_files]
+    root = Path(DATA_PATH).resolve()
+    db_files = []
+    for file_path in root.rglob('*.db'):
+        if file_path.is_file():
+            rel_path = file_path.relative_to(root)
+
+            if 'backup' not in rel_path.parts[:-1]:
+                db_files.append(str(rel_path))
+    return db_files
 
 
 @app.route("/api/coins")
