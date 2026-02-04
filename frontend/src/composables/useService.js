@@ -2,6 +2,7 @@ import axios from "axios";
 import {useGlobalStatus} from "@/composables/useGlobalStatus.js";
 import i18n from "@/i18n/index.js";
 import {useSQLite} from "@/composables/useSQLite.js";
+import {arrayBufferToBase64} from "@/utils/bytes2img.js";
 
 const globalStatus = useGlobalStatus();
 const {openDatabase, executeQuery} = useSQLite();
@@ -33,6 +34,12 @@ const fieldIds = {
   83: 'condition',
   71: 'quantity',
 }
+
+const infoFields = ['coins.title', 'obverseimg.image', 'reverseimg.image',
+    'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
+    'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
+    'mint', 'mintmark', 'features', 'subject', 'grade', 'paydate', 'payprice',
+    'storage', 'condition', 'quantity',];
 
 const initSettings = async () => {
   let settings = {};
@@ -198,9 +205,111 @@ export function useService() {
     return {collectionSettings, coinsList};
   }
 
+  const loadImage = async (coinId, type) => {
+    let sql
+    if (type === 'obverse') {
+      sql = `SELECT obverseimg.image FROM coins
+          LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
+          WHERE coins.id=?`
+    }
+    else if (type === 'reverse') {
+      sql = `SELECT reverseimg.image FROM coins
+          LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id
+          WHERE coins.id=?`
+    }
+    else {
+      sql = `SELECT obverseimg.image, reverseimg.image FROM coins
+          LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
+          LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id
+          WHERE coins.id=?`
+    }
+
+    const results = await executeQuery(sql, [coinId,])
+    let img
+    if (type === 'both') {
+      const maxHeight = 54*4 // Step-down scaling for better quality
+      let aspectRatio
+      let img1 = null, img2 = null
+      let newWidth1 = 0, newWidth2 = 0
+
+      if (results[0][0]) {
+        const b64_img1 = arrayBufferToBase64(results[0][0])
+        img1 = new Image()
+        img1.src = b64_img1
+        await img1.decode()
+        aspectRatio = img1.naturalWidth / img1.naturalHeight
+        newWidth1 = maxHeight * aspectRatio
+      }
+
+      if (results[0][1]) {
+        const b64_img2 = arrayBufferToBase64(results[0][1])
+        img2 = new Image()
+        img2.src = b64_img2
+        await img2.decode()
+        aspectRatio = img2.naturalWidth / img2.naturalHeight
+        newWidth2 = maxHeight * aspectRatio
+      }
+
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+
+      canvas.width = newWidth1 + newWidth2
+      canvas.height = maxHeight
+      if (img1)
+        ctx.drawImage(img1, 0, 0, newWidth1, maxHeight)
+      if (img2)
+        ctx.drawImage(img2, newWidth1, 0, newWidth2, maxHeight)
+      img = canvas.toDataURL('image/png')
+    }
+    else {
+      img = arrayBufferToBase64(results[0][0])
+    }
+
+    return img
+  }
+
+  const getDetails = async (coinId) => {
+    let coinData= [];
+
+    const sql = `SELECT ${ infoFields.join(',') } FROM coins
+        LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
+        LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id
+        WHERE coins.id=?`
+    const results = await executeQuery(sql, [coinId,])
+    coinData = results[0]
+
+    return coinData
+  }
+
+  const getPhotos = async (coinId) => {
+    let photos= [];
+
+    const sql = `SELECT obverseimg.image, reverseimg.image, edgeimg.image, photo1.image, photo2.image, photo3.image, photo4.image FROM coins
+          LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
+          LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id
+          LEFT JOIN photos AS edgeimg ON coins.edgeimg = edgeimg.id
+          LEFT JOIN photos AS photo1 ON coins.photo1 = photo1.id
+          LEFT JOIN photos AS photo2 ON coins.photo2 = photo2.id
+          LEFT JOIN photos AS photo3 ON coins.photo3 = photo3.id
+          LEFT JOIN photos AS photo4 ON coins.photo4 = photo4.id
+          WHERE coins.id=?`
+    const results = await executeQuery(sql, [coinId,])
+    photos = results[0]
+
+    return photos
+  }
+
+  function infoFieldIndex(field) {
+    return infoFields.findIndex(element => element === field);
+  }
+
   return {
     getServerFileList,
     openRemoteFile,
     openLocalFile,
+    loadImage,
+    getDetails,
+    getPhotos,
+    infoFieldIndex,
   }
 }

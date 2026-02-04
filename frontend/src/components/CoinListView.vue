@@ -3,13 +3,14 @@ import {onMounted, onUnmounted, ref} from "vue";
 import {useRouter} from "vue-router";
 import {arrayBufferToBase64} from "@/utils/bytes2img.js"
 import StatusItem from "./StatusItem.vue"
-import {useSQLite} from "@/composables/useSQLite.js"
 import { imagePresentation, statusPresentation } from "@/composables/useSettings";
 import {convertFraction, formatYear} from "@/utils/formatter.js";
+import {useService} from "@/composables/useService.js";
 
 const router = useRouter()
+const service = useService();
 
-const {executeQuery} = useSQLite()
+const images = ref([])
 
 const props = defineProps({
   coins_list: {
@@ -54,69 +55,8 @@ function generateDescription( coin_data ) {
   return desc;
 }
 
-const images = ref([])
-
 const loadImage = async (index, coinId) => {
-  let sql
-  if (imagePresentation.value === 'obverse') {
-    sql = `SELECT obverseimg.image FROM coins
-        LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
-        WHERE coins.id=?`
-  }
-  else if (imagePresentation.value === 'reverse') {
-    sql = `SELECT reverseimg.image FROM coins
-        LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id
-        WHERE coins.id=?`
-  }
-  else {
-    sql = `SELECT obverseimg.image, reverseimg.image FROM coins
-        LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
-        LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id
-        WHERE coins.id=?`
-  }
-
-  const results = await executeQuery(sql, [coinId,])
-  let img
-  if (imagePresentation.value === 'both') {
-    const maxHeight = 54*4 // Step-down scaling for better quality
-    let aspectRatio
-    let img1 = null, img2 = null
-    let newWidth1 = 0, newWidth2 = 0
-
-    if (results[0][0]) {
-      const b64_img1 = arrayBufferToBase64(results[0][0])
-      img1 = new Image()
-      img1.src = b64_img1
-      await img1.decode()
-      aspectRatio = img1.naturalWidth / img1.naturalHeight
-      newWidth1 = maxHeight * aspectRatio
-    }
-
-    if (results[0][1]) {
-      const b64_img2 = arrayBufferToBase64(results[0][1])
-      img2 = new Image()
-      img2.src = b64_img2
-      await img2.decode()
-      aspectRatio = img2.naturalWidth / img2.naturalHeight
-      newWidth2 = maxHeight * aspectRatio
-    }
-
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
-
-    canvas.width = newWidth1 + newWidth2
-    canvas.height = maxHeight
-    if (img1)
-      ctx.drawImage(img1, 0, 0, newWidth1, maxHeight)
-    if (img2)
-      ctx.drawImage(img2, newWidth1, 0, newWidth2, maxHeight)
-    img = canvas.toDataURL('image/png')
-  }
-  else {
-    img = arrayBufferToBase64(results[0][0])
-  }
-
-  images.value[index] = img
+  images.value[index] = await service.loadImage(coinId, imagePresentation.value);
 }
 </script>
 
