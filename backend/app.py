@@ -25,7 +25,7 @@ def filelist():
 
 @app.route("/api/coins")
 def coins():
-    query = request.args.get('f', default='demo.db')
+    query = request.args.get('f')
     print(Path(DATA_PATH) / query)
     con = sqlite3.connect(Path(DATA_PATH) / query)
     cur = con.cursor()
@@ -38,6 +38,29 @@ def coins():
     con.close()
 
     return coins_data
+
+
+@app.route("/api/coin_data")
+def coin_data():
+    info_fields = ('coins.title', 'NULL', 'NULL',
+                  'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
+                  'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
+                  'mint', 'mintmark', 'features', 'subject', 'grade', 'paydate', 'payprice',
+                  'storage', 'condition', 'quantity', )
+
+    query = request.args.get('f')
+    coin_id = request.args.get('id')
+    con = sqlite3.connect(Path(DATA_PATH) / query)
+    cur = con.cursor()
+
+    res = cur.execute(f"SELECT {','.join(info_fields)} FROM coins "
+        "LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id "
+        "LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id "
+        "WHERE coins.id=?", coin_id)
+    coin_data = res.fetchall()
+    con.close()
+
+    return coin_data
 
 
 @app.route("/api/settings")
@@ -65,7 +88,7 @@ def settings():
         71: 'quantity',
     }
 
-    query = request.args.get('f', default='demo.db')
+    query = request.args.get('f')
     con = sqlite3.connect(Path(DATA_PATH) / query)
     cur = con.cursor()
 

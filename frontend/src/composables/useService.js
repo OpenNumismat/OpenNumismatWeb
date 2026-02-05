@@ -12,6 +12,9 @@ const api = axios.create({
   timeout: 5000,
 })
 
+let connection_type = null;
+let connected_file = null;
+
 const fieldIds = {
   13: 'status',
   75: 'region',
@@ -130,6 +133,9 @@ export function useService() {
   }
 
   const openRemoteFile = async (file) => {
+    connection_type = 'remote';
+    connected_file = file;
+
     let coinsList = [];
     let collectionSettings = {};
 
@@ -153,6 +159,8 @@ export function useService() {
   }
 
   const openLocalFile = async (file) => {
+    connection_type = 'local';
+
     let coinsList = [];
     let collectionSettings = {};
 
@@ -206,6 +214,17 @@ export function useService() {
   }
 
   const loadImage = async (coinId, type) => {
+    if (connection_type === 'local')
+      return loadImageLocal(coinId, type);
+    else if (connection_type === 'remote')
+      return loadImageRemote(coinId, type);
+  }
+
+  const loadImageRemote = async (coinId, type) => {
+
+  }
+
+  const loadImageLocal = async (coinId, type) => {
     let sql
     if (type === 'obverse') {
       sql = `SELECT obverseimg.image FROM coins
@@ -269,6 +288,32 @@ export function useService() {
   }
 
   const getDetails = async (coinId) => {
+    if (connection_type === 'local')
+      return getDetailsLocal(coinId);
+    else if (connection_type === 'remote')
+      return getDetailsRemote(coinId, connected_file);
+  }
+
+  const getDetailsRemote = async (coinId, file) => {
+    let coinData= [];
+
+    await globalStatus.startLoading('Request');
+
+    try {
+      const response = await api.get('/api/coin_data', {params: {f: file, id: coinId}})
+      coinData = response.data[0]
+    }
+    catch (err) {
+      globalStatus.error.value = err
+    }
+    finally {
+      await globalStatus.finishLoading();
+    }
+
+    return coinData;
+  }
+
+  const getDetailsLocal = async (coinId) => {
     let coinData= [];
 
     const sql = `SELECT ${ infoFields.join(',') } FROM coins
