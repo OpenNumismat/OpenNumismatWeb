@@ -1,3 +1,4 @@
+import base64
 import sqlite3
 from flask import Flask, request, send_from_directory
 from pathlib import Path
@@ -25,42 +26,80 @@ def filelist():
 
 @app.route("/api/coins")
 def coins():
-    query = request.args.get('f')
-    print(Path(DATA_PATH) / query)
-    con = sqlite3.connect(Path(DATA_PATH) / query)
+    file = request.args.get('f')
+    con = sqlite3.connect(Path(DATA_PATH) / file)
     cur = con.cursor()
 
     res = cur.execute("""
-        SELECT coins.id, NULL, title, status, subjectshort, value, unit, year, mintmark, series, country
-        FROM coins
+        SELECT coins.id, images.image, title, status, subjectshort, value, unit, year, mintmark, series, country
+        FROM coins LEFT OUTER JOIN images ON images.id = coins.image
     """)
-    coins_data = res.fetchall()
+    data = res.fetchall()
     con.close()
 
-    return coins_data
+    for i, record in enumerate(data):
+        data[i] = list(record)
+        if data[i][1]:
+            data[i][1] = base64.b64encode(data[i][1]).decode('utf-8')
+
+    return data
 
 
 @app.route("/api/coin_data")
 def coin_data():
-    info_fields = ('coins.title', 'NULL', 'NULL',
+    info_fields = ('coins.title', 'obverseimg.image', 'reverseimg.image',
                   'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
                   'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
                   'mint', 'mintmark', 'features', 'subject', 'grade', 'paydate', 'payprice',
                   'storage', 'condition', 'quantity', )
 
-    query = request.args.get('f')
+    file = request.args.get('f')
     coin_id = request.args.get('id')
-    con = sqlite3.connect(Path(DATA_PATH) / query)
+    con = sqlite3.connect(Path(DATA_PATH) / file)
     cur = con.cursor()
 
     res = cur.execute(f"SELECT {','.join(info_fields)} FROM coins "
         "LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id "
         "LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id "
         "WHERE coins.id=?", coin_id)
-    coin_data = res.fetchall()
+    data = res.fetchall()
     con.close()
 
-    return coin_data
+    result = list(data[0])
+    if result[1]:
+        result[1] = base64.b64encode(result[1]).decode('utf-8')
+    if result[2]:
+        result[2] = base64.b64encode(result[2]).decode('utf-8')
+
+    return result
+
+
+@app.route("/api/photos")
+def photos():
+    file = request.args.get('f')
+    coin_id = request.args.get('id')
+    con = sqlite3.connect(Path(DATA_PATH) / file)
+    cur = con.cursor()
+
+    res = cur.execute("""SELECT obverseimg.image, reverseimg.image, edgeimg.image, photo1.image, photo2.image, photo3.image, photo4.image FROM coins
+          LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
+          LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id
+          LEFT JOIN photos AS edgeimg ON coins.edgeimg = edgeimg.id
+          LEFT JOIN photos AS photo1 ON coins.photo1 = photo1.id
+          LEFT JOIN photos AS photo2 ON coins.photo2 = photo2.id
+          LEFT JOIN photos AS photo3 ON coins.photo3 = photo3.id
+          LEFT JOIN photos AS photo4 ON coins.photo4 = photo4.id
+          WHERE coins.id=?""", coin_id)
+    data = res.fetchall()
+    con.close()
+
+    result = []
+    for i, img in enumerate(data[0]):
+        if img:
+            encoded_img = base64.b64encode(img).decode('utf-8')
+            result.append(encoded_img)
+
+    return result
 
 
 @app.route("/api/settings")

@@ -301,7 +301,7 @@ export function useService() {
 
     try {
       const response = await api.get('/api/coin_data', {params: {f: file, id: coinId}})
-      coinData = response.data[0]
+      coinData = response.data
     }
     catch (err) {
       globalStatus.error.value = err
@@ -327,6 +327,32 @@ export function useService() {
   }
 
   const getPhotos = async (coinId) => {
+    if (connection_type === 'local')
+      return getPhotosLocal(coinId);
+    else if (connection_type === 'remote')
+      return getPhotosRemote(coinId, connected_file);
+  }
+
+  const getPhotosRemote = async (coinId, file) => {
+    let photos= [];
+
+    await globalStatus.startLoading('Request');
+
+    try {
+      const response = await api.get('/api/photos', {params: {f: file, id: coinId}})
+      photos = response.data
+    }
+    catch (err) {
+      globalStatus.error.value = err
+    }
+    finally {
+      await globalStatus.finishLoading();
+    }
+
+    return photos;
+  }
+
+  const getPhotosLocal = async (coinId) => {
     let photos= [];
 
     const sql = `SELECT obverseimg.image, reverseimg.image, edgeimg.image, photo1.image, photo2.image, photo3.image, photo4.image FROM coins
