@@ -78,10 +78,6 @@ const handleRemoteFileSelected = async (file) => {
   coinsList.value = ret.coinsList;
   collectionSettings.value = ret.collectionSettings;
 
-  // TODO: extra code
-  await globalStatus.startLoading('');
-  await globalStatus.finishLoading();
-
   coinListViewRef.value.onOpenFile()
 }
 
@@ -97,10 +93,6 @@ const handleFileUpload = async (file) => {
   const ret = await service.openLocalFile(file);
   coinsList.value = ret.coinsList;
   collectionSettings.value = ret.collectionSettings;
-
-  // TODO: extra code
-  await globalStatus.startLoading('');
-  await globalStatus.finishLoading();
 
   coinListViewRef.value.onOpenFile()
 }

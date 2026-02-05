@@ -1,10 +1,11 @@
 import {computed, ref} from "vue";
 
-export function useGlobalStatus() {
-  const isLoading = ref(false);
-  const status = ref(null);
+const isLoading = ref(false);
+const status = ref(null);
+const error = ref(null);
+const warning = ref(null);
 
-  const error = ref(null);
+export function useGlobalStatus() {
   const hasError = computed({
     get: () => !!error.value,
     set: (value) => {
@@ -12,7 +13,6 @@ export function useGlobalStatus() {
     }
   });
 
-  const warning = ref(null);
   const hasWarning = computed({
     get: () => !!warning.value,
     set: (value) => {
