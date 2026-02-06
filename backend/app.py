@@ -61,7 +61,7 @@ def coin_data():
     res = cur.execute(f"SELECT {','.join(info_fields)} FROM coins "
         "LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id "
         "LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id "
-        "WHERE coins.id=?", coin_id)
+        "WHERE coins.id=?", (coin_id,))
     data = res.fetchall()
     con.close()
 
@@ -70,6 +70,39 @@ def coin_data():
         result[1] = base64.b64encode(result[1]).decode('utf-8')
     if result[2]:
         result[2] = base64.b64encode(result[2]).decode('utf-8')
+
+    return result
+
+
+@app.route("/api/photo")
+def photo():
+    file = request.args.get('f')
+    coin_id = request.args.get('id')
+    img_type = request.args.get('type')
+    con = sqlite3.connect(Path(DATA_PATH) / file)
+    cur = con.cursor()
+
+    if img_type == 'obverse':
+        res = cur.execute("""SELECT obverseimg.image FROM coins
+            LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
+            WHERE coins.id=?""", (coin_id,))
+    elif img_type == 'reverse':
+        res = cur.execute("""SELECT reverseimg.image FROM coins
+            LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id
+            WHERE coins.id=?""", (coin_id,))
+    else:
+        res = cur.execute("""SELECT obverseimg.image, reverseimg.image FROM coins
+            LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
+            LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id
+            WHERE coins.id=?""", (coin_id,))
+
+    data = res.fetchall()
+    con.close()
+
+    result = ''
+    img = data[0][0]
+    if img:
+        result = base64.b64encode(img).decode('utf-8')
 
     return result
 
@@ -89,7 +122,7 @@ def photos():
           LEFT JOIN photos AS photo2 ON coins.photo2 = photo2.id
           LEFT JOIN photos AS photo3 ON coins.photo3 = photo3.id
           LEFT JOIN photos AS photo4 ON coins.photo4 = photo4.id
-          WHERE coins.id=?""", coin_id)
+          WHERE coins.id=?""", (coin_id,))
     data = res.fetchall()
     con.close()
 

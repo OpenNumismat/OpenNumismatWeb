@@ -217,11 +217,21 @@ export function useService() {
     if (connection_type === 'local')
       return loadImageLocal(coinId, type);
     else if (connection_type === 'remote')
-      return loadImageRemote(coinId, type);
+      return loadImageRemote(coinId, type, connected_file);
   }
 
-  const loadImageRemote = async (coinId, type) => {
+  const loadImageRemote = async (coinId, type, file) => {
+    let photo;
 
+    try {
+      const response = await api.get('/api/photo', {params: {f: file, id: coinId, type: type}})
+      photo = arrayBufferToBase64(response.data)
+    }
+    catch (err) {
+      globalStatus.error.value = err
+    }
+
+    return photo;
   }
 
   const loadImageLocal = async (coinId, type) => {
