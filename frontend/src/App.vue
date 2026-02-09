@@ -16,9 +16,11 @@ import FileServerView from "@/components/FileServerView.vue";
 import {useGlobalStatus} from "@/composables/useGlobalStatus.js";
 import {useService} from "@/composables/useService.js";
 
+const passwordDialog = ref()
+
 useSQLite() // TODO: for call initialize?
 const globalStatus = useGlobalStatus();
-const service = useService();
+const service = useService(passwordDialog);
 const isLoading = globalStatus.isLoading;
 const hasError = globalStatus.hasError;
 const hasWarning = globalStatus.hasWarning;
@@ -29,8 +31,6 @@ const serverFileList = ref([])
 const coinsList = ref([])
 const collectionSettings = ref({})
 let isOpened = false;
-
-const passwordDialog = ref()
 
 const drawer = ref(false)
 const coinListViewRef = ref(null)
@@ -69,6 +69,7 @@ const handleRemoteFileSelected = async (file) => {
   if (!file)
     return;
 
+  coinsList.value = [];
   selectedFile.value = file;
   isOpened = true;
   await router.replace('/')
@@ -85,6 +86,7 @@ const handleFileUpload = async (file) => {
   if (!file)
     return;
 
+  coinsList.value = [];
   selectedFile.value = file;
   isOpened = true;
   await router.replace('/')
