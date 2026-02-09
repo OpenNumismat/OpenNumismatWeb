@@ -52,17 +52,17 @@ const initSettings = async () => {
   settings.convert_fraction = true;
   settings.enable_bc = true;
   settings.statuses = {
-    'demo': 'demo',
-    'pass': 'pass',
-    'owned': 'owned',
-    'ordered': 'ordered',
-    'sold': 'sold',
-    'sale': 'sale',
-    'wish': 'wish',
-    'missing': 'missing',
-    'bidding': 'bidding',
-    'duplicate': 'duplicate',
-    'replacement': 'replacement',
+    'demo': i18n.global.t('demo'),
+    'pass': i18n.global.t('pass'),
+    'owned': i18n.global.t('owned'),
+    'ordered': i18n.global.t('ordered'),
+    'sold': i18n.global.t('sold'),
+    'sale': i18n.global.t('sale'),
+    'wish': i18n.global.t('wish'),
+    'missing': i18n.global.t('missing'),
+    'bidding': i18n.global.t('bidding'),
+    'duplicate': i18n.global.t('duplicate'),
+    'replacement': i18n.global.t('replacement'),
   };
 
   settings.fields = {};

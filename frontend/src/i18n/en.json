@@ -19,5 +19,16 @@
   "old_version": "File has an old version. Please update it with desktop version of OpenNumismat",
   "newest_version": "File has a newest version than app",
   "BC": "BC",
-  "Denomination": "Denomination"
+  "Denomination": "Denomination",
+  "demo": "Demo",
+  "pass": "Pass",
+  "owned": "Owned",
+  "ordered": "Ordered",
+  "sold": "Sold",
+  "sale": "Sale",
+  "wish": "Wish",
+  "missing": "Missing",
+  "bidding": "Bidding",
+  "duplicate": "Duplicate",
+  "replacement": "Replacement"
 }
