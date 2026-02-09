@@ -171,35 +171,31 @@ def settings():
 
     con.close()
 
-    collection_settings = {
-        'version': 0,
-        'password': '',
-        'type': None,
-        'convert_fraction': True,
-        'enable_bc': True,
-        'statuses': {
-            'demo': 'demo',
-            'pass': 'pass',
-            'owned': 'owned',
-            'ordered': 'ordered',
-            'sold': 'sold',
-            'sale': 'sale',
-            'wish': 'wish',
-            'missing': 'missing',
-            'bidding': 'bidding',
-            'duplicate': 'duplicate',
-            'replacement': 'replacement',
-        },
-        'fields': {},
-    }
+    collection_settings = {'statuses': {}, 'fields': {}}
+
+    for settings_entry in settings_data:
+        title = settings_entry[0]
+        val = settings_entry[1]
+        if title == 'Version':
+            collection_settings['version'] = int(val)
+        elif title == 'Password':
+            collection_settings['password'] = val
+        elif title == 'Type':
+            collection_settings['type'] = val
+        elif title == 'convert_fraction':
+            collection_settings[title] = (val.lower() in ('true', '1'))
+        elif title == 'enable_bc':
+            collection_settings[title] = (val.lower() in ('true', '1'))
+        else:
+            if title.endswith("_status_title"):
+                key = title[:-len("_status_title")]
+                collection_settings['statuses'][key] = val
 
     for field_data in fields_data:
         field_id = field_data[0]
         field_name = field_ids[field_id]
         field_title = field_data[1]
         collection_settings['fields'][field_name] = field_title
-
-    print(collection_settings)
 
     return collection_settings
 

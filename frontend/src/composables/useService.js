@@ -137,13 +137,14 @@ export function useService() {
     connected_file = file;
 
     let coinsList = [];
-    let collectionSettings = {};
+    let collectionSettings = await initSettings();
+    let settingsDb = {};
 
     await globalStatus.startLoading('Open collection');
 
     try {
       const responseSettings = await api.get('/api/settings', {params: {f: file}})
-      collectionSettings = responseSettings.data
+      settingsDb = responseSettings.data
 
       const responseCoins = await api.get('/api/coins', {params: {f: file}})
       coinsList = responseCoins.data
@@ -155,6 +156,16 @@ export function useService() {
       await globalStatus.finishLoading();
     }
 
+    if (Object.keys(settingsDb).length !== 0) {
+      collectionSettings.version = settingsDb.version;
+      collectionSettings.password = settingsDb.password;
+      collectionSettings.type = settingsDb.type;
+      collectionSettings.convert_fraction = settingsDb.convert_fraction;
+      collectionSettings.enable_bc = settingsDb.enable_bc;
+      collectionSettings.statuses = {...collectionSettings.statuses, ...settingsDb.statuses}
+      collectionSettings.fields = {...collectionSettings.fields, ...settingsDb.fields}
+    }
+
     return {collectionSettings, coinsList};
   }
 
@@ -162,14 +173,12 @@ export function useService() {
     connection_type = 'local';
 
     let coinsList = [];
-    let collectionSettings = {};
+    let collectionSettings = await initSettings()
 
     await openDatabase(file)
 
     const sql_settings = `SELECT * FROM settings`
     const settingsDb = await executeQuery(sql_settings)
-
-    collectionSettings = await initSettings()
 
     settingsDb.forEach(function(elem) {
         if (elem[0] === 'Version')
@@ -183,7 +192,7 @@ export function useService() {
         else if (elem[0] === 'enable_bc')
             collectionSettings.enable_bc = Boolean(elem[1]);
         else {
-          Object.keys(collectionSettings).forEach(key => {
+          Object.keys(collectionSettings.statuses).forEach(key => {
             if (elem[0] === key + '_status_title')
               collectionSettings.statuses[key] = elem[1]
           })
