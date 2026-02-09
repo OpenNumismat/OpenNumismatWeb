@@ -52,7 +52,6 @@ onMounted(async () => {
 
 const updateAddressBar = () => {
   const primaryColor = appTheme.current.value.colors.primary
-  console.log(primaryColor)
   let metaTag = document.querySelector('meta[name="theme-color"]')
   if (!metaTag) {
     metaTag = document.createElement('meta')
