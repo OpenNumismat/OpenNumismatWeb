@@ -74,16 +74,12 @@ const handleThemeChange = (theme) => {
       <v-list-item :title="i18n.global.t('settings_status')">
         <template v-slot:append>
           <v-list-item-action start>
-            <v-btn-toggle
+            <v-select
                 v-model="statusPresentation"
-                rounded="xl"
-                border
+                :items="statusItems"
+                :item-title="item => i18n.global.t(item.title)"
             >
-              <v-btn
-                  v-for="item in statusItems" :key="item.value" :value="item.value">
-                {{ i18n.global.t(item.title) }}
-              </v-btn>
-            </v-btn-toggle>
+            </v-select>
           </v-list-item-action>
         </template>
       </v-list-item>
