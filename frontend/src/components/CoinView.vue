@@ -54,7 +54,7 @@ onUnmounted(async () => {
           <v-row no-gutters>
             <dt class="v-col-sm-3 text-medium-emphasis">{{ settings.fields['status'] }}</dt>
             <dd class="v-col-sm-9">
-              <StatusItem :status="coinData[service.infoFieldIndex('status')]" :statuses="settings.statuses" statusPresentation="full" class="font-weight-bold" />
+              <StatusItem :status="coinData[service.infoFieldIndex('status')]" :statuses="settings.statuses" statusPresentation="icon_text" class="font-weight-bold" />
             </dd>
             <template v-if="coinData[service.infoFieldIndex('region')]">
               <dt class="v-col-sm-3 text-medium-emphasis">{{ settings.fields['region'] }}</dt>
@@ -85,7 +85,7 @@ onUnmounted(async () => {
             </template>
             <template v-if="coinData[service.infoFieldIndex('series')]">
               <dt class="v-col-sm-3 text-medium-emphasis">{{ settings.fields['series'] }}</dt>
-              <dd class="v-col-sm-9 font-weight-bold">{{ coinData[infoFieldIndex('series')] }}</dd>
+              <dd class="v-col-sm-9 font-weight-bold">{{ coinData[service.infoFieldIndex('series')] }}</dd>
             </template>
             <template v-if="coinData[service.infoFieldIndex('subjectshort')]">
               <dt class="v-col-sm-3 text-medium-emphasis">{{ settings.fields['subjectshort'] }}</dt>

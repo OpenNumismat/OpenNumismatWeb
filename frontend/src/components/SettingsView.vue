@@ -14,7 +14,8 @@ const languageItems = Object.entries(languageList).map(([key, value]) => ({
 const statusItems = [
   {value: 'text', title: 'status_view_text'},
   {value: 'icon', title: 'status_view_icon'},
-  {value: 'full', title: 'status_view_full'},
+  {value: 'icon_text', title: 'status_view_icon_text'},
+  {value: 'text_icon', title: 'status_view_text_icon'},
 ]
 
 const imageViewItems = [
