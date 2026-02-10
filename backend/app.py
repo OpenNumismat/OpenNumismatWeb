@@ -11,6 +11,11 @@ DATA_PATH = 'data'
 app = Flask(__name__, static_url_path='/')
 
 
+def sqlite_connect(file):
+    file_uri = f"file:{DATA_PATH}/{file}?mode=ro"
+    return sqlite3.connect(file_uri, uri=True)
+
+
 @app.route("/api/filelist")
 def filelist():
     root = Path(DATA_PATH).resolve()
@@ -27,7 +32,7 @@ def filelist():
 @app.route("/api/coins")
 def coins():
     file = request.args.get('f')
-    con = sqlite3.connect(Path(DATA_PATH) / file)
+    con = sqlite_connect(file)
     cur = con.cursor()
 
     res = cur.execute("""
@@ -55,7 +60,7 @@ def coin_data():
 
     file = request.args.get('f')
     coin_id = request.args.get('id')
-    con = sqlite3.connect(Path(DATA_PATH) / file)
+    con = sqlite_connect(file)
     cur = con.cursor()
 
     res = cur.execute(f"SELECT {','.join(info_fields)} FROM coins "
@@ -79,7 +84,7 @@ def photo():
     file = request.args.get('f')
     coin_id = request.args.get('id')
     img_type = request.args.get('type')
-    con = sqlite3.connect(Path(DATA_PATH) / file)
+    con = sqlite_connect(file)
     cur = con.cursor()
 
     if img_type == 'obverse':
@@ -111,7 +116,7 @@ def photo():
 def photos():
     file = request.args.get('f')
     coin_id = request.args.get('id')
-    con = sqlite3.connect(Path(DATA_PATH) / file)
+    con = sqlite_connect(file)
     cur = con.cursor()
 
     res = cur.execute("""SELECT obverseimg.image, reverseimg.image, edgeimg.image, photo1.image, photo2.image, photo3.image, photo4.image FROM coins
@@ -160,8 +165,8 @@ def settings():
         71: 'quantity',
     }
 
-    query = request.args.get('f')
-    con = sqlite3.connect(Path(DATA_PATH) / query)
+    file = request.args.get('f')
+    con = sqlite_connect(file)
     cur = con.cursor()
 
     res = cur.execute("SELECT * FROM settings")
