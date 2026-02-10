@@ -5,7 +5,8 @@
   "title_about": "Acerca de",
   "status_view_text": "Texto",
   "status_view_icon": "Icono",
-  "status_view_full": "Icono + Texto",
+  "status_view_icon_text": "Icono + Texto",
+  "status_view_text_icon": "Text + Icon",
   "settings_theme": "Tema",
   "settings_language": "Idioma",
   "settings_status": "Mostrar estado como",
@@ -19,5 +20,16 @@
   "old_version": "El archivo es de una versión antigua. Por favor, actualícelo con la versión de escritorio de OpenNumismat",
   "newest_version": "El archivo tiene una versión más nueva que la app",
   "BC": "AC",
-  "Denomination": "Denominación"
+  "Denomination": "Denominación",
+  "demo": "Demo",
+  "pass": "Préstamo",
+  "owned": "Propia",
+  "ordered": "Pedida",
+  "sold": "Vendida",
+  "sale": "En venta",
+  "wish": "Deseada",
+  "missing": "Desaparecida",
+  "bidding": "Pujas",
+  "duplicate": "Duplicado",
+  "replacement": "Reemplazo"
 }
