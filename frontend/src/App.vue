@@ -40,16 +40,6 @@ const route = useRoute()
 
 const appTheme = useTheme()
 
-onMounted(async () => {
-  appTheme.change(currentTheme.value)
-
-  await router.replace('/')
-
-  if (isServerLess === undefined) {
-    serverFileList.value = await service.getServerFileList();
-  }
-})
-
 const updateAddressBar = () => {
   const primaryColor = appTheme.current.value.colors.primary
   let metaTag = document.querySelector('meta[name="theme-color"]')
@@ -63,6 +53,17 @@ const updateAddressBar = () => {
 }
 
 watch(() => appTheme.global.name.value, updateAddressBar)
+
+onMounted(async () => {
+  appTheme.change(currentTheme.value)
+  updateAddressBar();
+
+  await router.replace('/')
+
+  if (isServerLess === undefined) {
+    serverFileList.value = await service.getServerFileList();
+  }
+})
 
 const handleRemoteFileSelected = async (file) => {
   if (!file)

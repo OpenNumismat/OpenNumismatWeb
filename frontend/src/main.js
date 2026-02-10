@@ -37,7 +37,7 @@ const vuetify = createVuetify({
       dark: {
         dark: true,
         colors: {
-          primary: colors.orange.darken2,
+          primary: colors.orange.darken3,
         }
       }
     }
