@@ -5,7 +5,8 @@
   "title_about": "Über",
   "status_view_text": "Text",
   "status_view_icon": "Icon/Piktogramm",
-  "status_view_full": "Icon + Text",
+  "status_view_icon_text": "Icon + Text",
+  "status_view_text_icon": "Text + Icon",
   "settings_theme": "Theme",
   "settings_language": "Sprache",
   "settings_status": "Show status as",
@@ -19,5 +20,16 @@
   "old_version": "Datei hat eine alte Version. Bitte mit der Desktop-Version von OpenNumismat aktualisieren",
   "newest_version": "Datei hat neuere Version als App",
   "BC": "v. Chr.",
-  "Denomination": "Nennwert"
+  "Denomination": "Nennwert",
+  "demo": "Demo",
+  "pass": "Beobachtet",
+  "owned": "Vorhanden",
+  "ordered": "Bestellt",
+  "sold": "Verkauft",
+  "sale": "Verkauf",
+  "wish": "Gesucht",
+  "missing": "Fehlt",
+  "bidding": "Bieten",
+  "duplicate": "Duplikat",
+  "replacement": "Ersatz"
 }
