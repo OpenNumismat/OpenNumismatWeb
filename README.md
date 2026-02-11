@@ -20,14 +20,14 @@ services:
     image: ghcr.io/opennumismat/opennumismatweb:latest
     restart: unless-stopped
     ports:
-      - 5000:5000
+      - 8000:8000
     volumes:
-      - /path/to/data:/app/data
+      - /path/to/data:/app/data:ro
 ```
 
 or docker run:
 
-`docker run -p 5000:5000 -v /path/to/data:/app/data -d --name opennumismatweb ghcr.io/opennumismat/opennumismatweb:latest`
+`docker run -p 8000:8000 -v /path/to/data:/app/data:ro -d --name opennumismatweb ghcr.io/opennumismat/opennumismatweb:latest`
 
 ### From source
 

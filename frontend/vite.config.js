@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => {
   if (mode === 'development') {
     proxy = {
       '/api': {
-        target: 'http://localhost:5000', // Your Flask server
+        target: 'http://localhost:8000', // Your Flask server
         changeOrigin: true,
         secure: false,
         logLevel: 'debug'

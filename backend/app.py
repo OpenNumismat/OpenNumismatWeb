@@ -1,14 +1,17 @@
 import base64
 import sqlite3
-from flask import Flask, request, send_from_directory
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
 
 DATA_PATH = 'data'
 
-
-# Initializing flask app
-app = Flask(__name__, static_url_path='/')
+app = FastAPI(
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
+)
 
 
 def sqlite_connect(file):
@@ -16,7 +19,7 @@ def sqlite_connect(file):
     return sqlite3.connect(file_uri, uri=True)
 
 
-@app.route("/api/filelist")
+@app.get("/api/filelist")
 def filelist():
     root = Path(DATA_PATH).resolve()
     db_files = []
@@ -29,9 +32,9 @@ def filelist():
     return db_files
 
 
-@app.route("/api/coins")
-def coins():
-    file = request.args.get('f')
+@app.get("/api/coins")
+def coins(f):
+    file = f
     con = sqlite_connect(file)
     cur = con.cursor()
 
@@ -50,16 +53,16 @@ def coins():
     return data
 
 
-@app.route("/api/coin_data")
-def coin_data():
+@app.get("/api/coin_data")
+def coin_data(f, id):
     info_fields = ('coins.title', 'obverseimg.image', 'reverseimg.image',
                   'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
                   'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
                   'mint', 'mintmark', 'features', 'subject', 'grade', 'paydate', 'payprice',
                   'storage', 'condition', 'quantity', )
 
-    file = request.args.get('f')
-    coin_id = request.args.get('id')
+    file = f
+    coin_id = id
     con = sqlite_connect(file)
     cur = con.cursor()
 
@@ -79,11 +82,11 @@ def coin_data():
     return result
 
 
-@app.route("/api/photo")
-def photo():
-    file = request.args.get('f')
-    coin_id = request.args.get('id')
-    img_type = request.args.get('type')
+@app.get("/api/photo")
+def photo(f, id, type):
+    file = f
+    coin_id = id
+    img_type = type
     con = sqlite_connect(file)
     cur = con.cursor()
 
@@ -112,10 +115,10 @@ def photo():
     return result
 
 
-@app.route("/api/photos")
-def photos():
-    file = request.args.get('f')
-    coin_id = request.args.get('id')
+@app.get("/api/photos")
+def photos(f, id):
+    file = f
+    coin_id = id
     con = sqlite_connect(file)
     cur = con.cursor()
 
@@ -140,8 +143,8 @@ def photos():
     return result
 
 
-@app.route("/api/settings")
-def settings():
+@app.get("/api/settings")
+def settings(f):
     field_ids = {
         13: 'status',
         75: 'region',
@@ -165,7 +168,7 @@ def settings():
         71: 'quantity',
     }
 
-    file = request.args.get('f')
+    file = f
     con = sqlite_connect(file)
     cur = con.cursor()
 
@@ -205,11 +208,11 @@ def settings():
     return collection_settings
 
 
-@app.route('/', defaults={'path': ''})
-def catch_all(path):
-    return send_from_directory('static', 'index.html')
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 # Running app
 if __name__ == '__main__':
-    app.run(debug=True)
+    import uvicorn
+
+    uvicorn.run("app:app", reload=True)
