@@ -2,6 +2,10 @@
 
 OpenNumismat Web is a web browser for [OpenNumismat](https://opennumismat.github.io/) collections.
 
+Latest stable version:
+- Web-application (PWA): https://opennumismat.github.io/OpenNumismatWeb/
+- Docker image - `ghcr.io/opennumismat/opennumismatweb:latest`
+
 Latest development build available at:
 - Web-application (PWA): https://opennumismat.github.io/OpenNumismatWeb/dev/
 - Android application - https://github.com/OpenNumismat/OpenNumismatWeb/releases/download/v0.2.0/OpenNumismat.apk
