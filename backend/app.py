@@ -1,11 +1,14 @@
 import base64
 import sqlite3
+from io import BytesIO
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
+from PIL import Image
 
 
 DATA_PATH = 'data'
+MAX_PREVIEW_IMAGE_HEIGHT = 54 * 4
 
 app = FastAPI(
     docs_url=None,
@@ -108,7 +111,40 @@ def photo(f, id, type):
     con.close()
 
     result = ''
-    img = data[0][0]
+    if img_type == 'both':
+        img1 = None
+        img2 = None
+        new_width1 = 0
+        new_width2 = 0
+
+        if data[0][0]:
+            img1 = Image.open(BytesIO(data[0][0]))
+            aspect_ratio = img1.width / img1.height
+            new_width1 = MAX_PREVIEW_IMAGE_HEIGHT * aspect_ratio
+            img1.thumbnail((new_width1, MAX_PREVIEW_IMAGE_HEIGHT), Image.Resampling.LANCZOS)
+            new_width1 = img1.width
+
+        if data[0][1]:
+            img2 = Image.open(BytesIO(data[0][1]))
+            aspect_ratio = img2.width / img2.height
+            new_width2 = MAX_PREVIEW_IMAGE_HEIGHT * aspect_ratio
+            img2.thumbnail((new_width2, MAX_PREVIEW_IMAGE_HEIGHT), Image.Resampling.LANCZOS)
+            new_width2 = img2.width
+
+        total_width = new_width1 + new_width2
+        new_img = Image.new("RGBA", (total_width, MAX_PREVIEW_IMAGE_HEIGHT), (0, 0, 0, 0))
+
+        if img1:
+            new_img.paste(img1, (0, 0))
+        if img2:
+            new_img.paste(img2, (new_width1, 0))
+
+        buffered = BytesIO()
+        new_img.save(buffered, format="WEBP", lossless=False, quality=80)
+        img = buffered.getvalue()
+    else:
+        img = data[0][0]
+
     if img:
         result = base64.b64encode(img).decode('utf-8')
 

@@ -1,2 +1,3 @@
 fastapi~=0.128.7
+pillow~=12.1.1
 uvicorn~=0.40.0
