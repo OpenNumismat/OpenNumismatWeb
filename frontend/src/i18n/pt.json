@@ -5,7 +5,8 @@
   "title_about": "Sobre",
   "status_view_text": "Texto",
   "status_view_icon": "Ícone",
-  "status_view_full": "Ícone e texto",
+  "status_view_icon_text": "Ícone e texto",
+  "status_view_text_icon": "Texto e ícone",
   "settings_theme": "Tema",
   "settings_language": "Idioma",
   "settings_status": "Mostrar estado como",
@@ -19,5 +20,16 @@
   "old_version": "Versão do ficheiro muito antiga. Por favor, actualize-a com a versão de computador de OpenNumismat.",
   "newest_version": "Ficheiro mais recente que a aplicação",
   "BC": "BC",
-  "Denomination": "Denominação"
+  "Denomination": "Denominação",
+  "demo": "Demonstração",
+  "pass": "Troca",
+  "owned": "Possuída",
+  "ordered": "Encomendada",
+  "sold": "Vendida",
+  "sale": "Vendável",
+  "wish": "Desejada",
+  "missing": "Em falta",
+  "bidding": "Oferta",
+  "duplicate": "Duplicar",
+  "replacement": "Substituto"
 }

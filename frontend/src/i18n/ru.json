@@ -5,7 +5,8 @@
   "title_about": "О программе",
   "status_view_text": "Текст",
   "status_view_icon": "Иконка",
-  "status_view_full": "Иконка + текст",
+  "status_view_icon_text": "Иконка + текст",
+  "status_view_text_icon": "Текст + иконка",
   "settings_theme": "Тема",
   "settings_language": "Язык",
   "settings_status": "Показывать статус как",
@@ -19,5 +20,16 @@
   "old_version": "Файл старой версии. Обновите его с помощью настольной версии OpenNumismat",
   "newest_version": "Файл более новой версии чем приложение",
   "BC": "до РХ",
-  "Denomination": "Номинал"
+  "Denomination": "Номинал",
+  "demo": "Демо",
+  "pass": "Проход",
+  "owned": "Есть",
+  "ordered": "Заказана",
+  "sold": "Продана",
+  "sale": "На продажу",
+  "wish": "Нужна",
+  "missing": "Утеряна",
+  "bidding": "Ставка",
+  "duplicate": "Дубликат",
+  "replacement": "Замена"
 }
