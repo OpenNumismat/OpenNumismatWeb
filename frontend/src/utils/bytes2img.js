@@ -14,5 +14,5 @@ export function arrayBufferToBase64( buffer ) {
     base64String = window.btoa(binary);
   }
 
-  return `data:image/png;base64,${base64String}`;
+  return `data:image/webp;base64,${base64String}`;
 }
