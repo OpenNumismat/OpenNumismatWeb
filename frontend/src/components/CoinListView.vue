@@ -11,12 +11,9 @@ const router = useRouter()
 const service = useService();
 
 const images = ref([])
+const coinsList = ref([])
 
 const props = defineProps({
-  coins_list: {
-    type: Array,
-    required: true,
-  },
   settings: {
     type: Object,
     required: true,
@@ -32,8 +29,11 @@ onMounted(async () => {
 onUnmounted(async () => {
 })
 
-const onOpenFile = () => {
-  images.value = new Array(props.coins_list.length).fill('')
+const onOpenFile = async () => {
+  images.value = []
+  coinsList.value = []
+  coinsList.value = await service.loadCoins()
+  images.value = new Array(coinsList.value.length).fill('')
 }
 
 defineExpose({
@@ -59,6 +59,10 @@ function generateDescription( coin_data ) {
   return desc;
 }
 
+const onStatusFilterChange = async (val) => {
+  coinsList.value = await service.loadCoins(val);
+}
+
 const loadImage = async (index, coinId) => {
   images.value[index] = await service.loadImage(coinId, imagePresentation.value);
 }
@@ -70,12 +74,14 @@ const loadImage = async (index, coinId) => {
       :label="settings.fields['status']"
       :items="statuses_list"
       :item-title="item => settings.statuses[item]"
+      @update:modelValue="onStatusFilterChange"
+      return-object
     ></v-select>
   </v-container>
   <v-container class="pa-0 ma-0">
     <v-list lines="two">
       <v-list-item
-        v-for="(coin, index) in coins_list"
+        v-for="(coin, index) in coinsList"
         :key="coin[0]"
         :subtitle="generateDescription(coin).join(', ')"
         :title="coin[2]"

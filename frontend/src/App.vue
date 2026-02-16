@@ -28,7 +28,6 @@ const hasWarning = globalStatus.hasWarning;
 const isServerLess = import.meta.env.VITE_SERVERLESS;
 const selectedFile = ref(null)
 const serverFileList = ref([])
-const coinsList = ref([])
 const statusesList = ref([])
 const collectionSettings = ref({})
 let isOpened = false;
@@ -70,14 +69,12 @@ const handleRemoteFileSelected = async (file) => {
   if (!file)
     return;
 
-  coinsList.value = [];
   selectedFile.value = file;
   isOpened = true;
   await router.replace('/')
   appTitle.pushTitle(file)
 
   const ret = await service.openRemoteFile(file);
-  coinsList.value = ret.coinsList;
   collectionSettings.value = ret.collectionSettings;
   statusesList.value = ret.statusesList;
 
@@ -88,14 +85,12 @@ const handleFileUpload = async (file) => {
   if (!file)
     return;
 
-  coinsList.value = [];
   selectedFile.value = file;
   isOpened = true;
   await router.replace('/')
   appTitle.pushTitle(file.name)
 
   const ret = await service.openLocalFile(file);
-  coinsList.value = ret.coinsList;
   collectionSettings.value = ret.collectionSettings;
   statusesList.value = ret.statusesList;
 
@@ -150,7 +145,7 @@ const handleFileUpload = async (file) => {
         :file_list="serverFileList" :onFileSelected="handleRemoteFileSelected" />
       <KeepAlive>
         <CoinListView v-if="route.name === 'home' && isOpened"
-          :coins_list="coinsList" :settings="collectionSettings" :statuses_list="statusesList"
+          :settings="collectionSettings" :statuses_list="statusesList"
           ref="coinListViewRef" />
       </KeepAlive>
       <CoinView v-if="route.name === 'coin' && isOpened"

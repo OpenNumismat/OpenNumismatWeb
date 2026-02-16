@@ -36,15 +36,22 @@ def filelist():
 
 
 @app.get("/api/coins")
-def coins(f):
+def coins(f, status_filter=None):
     file = f
     con = sqlite_connect(file)
     cur = con.cursor()
 
-    res = cur.execute("""
+    sql = """
         SELECT coins.id, images.image, title, status, subjectshort, value, unit, year, mintmark, series, country
         FROM coins LEFT OUTER JOIN images ON images.id = coins.image
-    """)
+    """
+
+    params = []
+    if status_filter:
+        sql += " WHERE status = ?"
+        params.append(status_filter)
+
+    res = cur.execute(sql, params)
     data = res.fetchall()
     con.close()
 

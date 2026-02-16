@@ -136,7 +136,6 @@ export function useService(passwordDialogRef) {
     connection_type = 'remote';
     connected_file = file;
 
-    let coinsList = [];
     let collectionSettings = await initSettings();
     let statusesList = [];
     let settingsDb = {};
@@ -171,9 +170,6 @@ export function useService(passwordDialogRef) {
         await globalStatus.startLoading('Load collection');
 
         try {
-          const responseCoins = await api.get('/api/coins', {params: {f: file}})
-          coinsList = responseCoins.data
-
           const responseFilters = await api.get('/api/filters', {params: {f: file}})
           statusesList = responseFilters.data
         }
@@ -186,13 +182,12 @@ export function useService(passwordDialogRef) {
       }
     }
 
-    return {collectionSettings, coinsList, statusesList};
+    return {collectionSettings, statusesList};
   }
 
   const openLocalFile = async (file) => {
     connection_type = 'local';
 
-    let coinsList = [];
     let statusesList = [];
     let collectionSettings = await initSettings()
 
@@ -232,18 +227,50 @@ export function useService(passwordDialogRef) {
     if (versionValid) {
       const passwordValid = await checkDbPassword(collectionSettings)
       if (passwordValid) {
-        const sql = `
-            SELECT coins.id, images.image, title, status, subjectshort, value, unit, year, mintmark, series, country
-            FROM coins LEFT OUTER JOIN images ON images.id = coins.image
-          `
-        coinsList = await executeQuery(sql)
-
         const sql_statuses = 'SELECT DISTINCT status FROM coins';
-        statusesList = (await executeQuery(sql_statuses))[0]
+        statusesList = (await executeQuery(sql_statuses)).flat()
       }
     }
 
-    return {collectionSettings, coinsList, statusesList};
+    return {collectionSettings, statusesList};
+  }
+
+  const loadCoins = async (statusFilter=null) => {
+    if (connection_type === 'local')
+      return loadCoinsLocal(statusFilter);
+    else if (connection_type === 'remote')
+      return loadCoinsRemote(statusFilter, connected_file);
+  }
+
+  const loadCoinsRemote = async (statusFilter, file) => {
+    let coinsList = [];
+
+    try {
+      const responseCoins = await api.get('/api/coins', {params: {f: file, status_filter: statusFilter}})
+      coinsList = responseCoins.data
+    }
+    catch (err) {
+      globalStatus.error.value = err
+    }
+
+    return coinsList;
+  }
+
+  const loadCoinsLocal = async (statusFilter) => {
+    let coinsList = [];
+
+    let sql = `
+        SELECT coins.id, images.image, title, status, subjectshort, value, unit, year, mintmark, series, country
+        FROM coins LEFT OUTER JOIN images ON images.id = coins.image
+      `
+    let params = [];
+    if (statusFilter) {
+      sql += ' WHERE status = ?';
+      params.push(statusFilter);
+    }
+    coinsList = await executeQuery(sql, params)
+
+    return coinsList;
   }
 
   const loadImage = async (coinId, type) => {
@@ -421,6 +448,7 @@ export function useService(passwordDialogRef) {
     getServerFileList,
     openRemoteFile,
     openLocalFile,
+    loadCoins,
     loadImage,
     getDetails,
     getPhotos,
