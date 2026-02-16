@@ -21,6 +21,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  statuses_list: {
+    type: Array,
+    required: true,
+  },
 });
 
 onMounted(async () => {
@@ -61,6 +65,13 @@ const loadImage = async (index, coinId) => {
 </script>
 
 <template>
+  <v-container>
+    <v-select v-if="statuses_list.length > 0"
+      :label="settings.fields['status']"
+      :items="statuses_list"
+      :item-title="item => settings.statuses[item]"
+    ></v-select>
+  </v-container>
   <v-container class="pa-0 ma-0">
     <v-list lines="two">
       <v-list-item

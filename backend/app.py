@@ -56,6 +56,25 @@ def coins(f):
     return data
 
 
+@app.get("/api/filters")
+def filters(f):
+    file = f
+    con = sqlite_connect(file)
+    cur = con.cursor()
+
+    res = cur.execute("""
+        SELECT DISTINCT status FROM coins
+    """)
+    data = res.fetchall()
+    con.close()
+
+    result = []
+    for record in data:
+        result.append(record[0])
+
+    return result
+
+
 @app.get("/api/coin_data")
 def coin_data(f, id):
     info_fields = ('coins.title', 'obverseimg.image', 'reverseimg.image',

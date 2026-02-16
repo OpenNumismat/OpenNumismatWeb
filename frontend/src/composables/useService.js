@@ -138,6 +138,7 @@ export function useService(passwordDialogRef) {
 
     let coinsList = [];
     let collectionSettings = await initSettings();
+    let statusesList = [];
     let settingsDb = {};
 
     await globalStatus.startLoading('Open collection');
@@ -172,6 +173,9 @@ export function useService(passwordDialogRef) {
         try {
           const responseCoins = await api.get('/api/coins', {params: {f: file}})
           coinsList = responseCoins.data
+
+          const responseFilters = await api.get('/api/filters', {params: {f: file}})
+          statusesList = responseFilters.data
         }
         catch (err) {
           globalStatus.error.value = err
@@ -182,13 +186,14 @@ export function useService(passwordDialogRef) {
       }
     }
 
-    return {collectionSettings, coinsList};
+    return {collectionSettings, coinsList, statusesList};
   }
 
   const openLocalFile = async (file) => {
     connection_type = 'local';
 
     let coinsList = [];
+    let statusesList = [];
     let collectionSettings = await initSettings()
 
     await openDatabase(file)
@@ -232,10 +237,13 @@ export function useService(passwordDialogRef) {
             FROM coins LEFT OUTER JOIN images ON images.id = coins.image
           `
         coinsList = await executeQuery(sql)
+
+        const sql_statuses = 'SELECT DISTINCT status FROM coins';
+        statusesList = (await executeQuery(sql_statuses))[0]
       }
     }
 
-    return {collectionSettings, coinsList};
+    return {collectionSettings, coinsList, statusesList};
   }
 
   const loadImage = async (coinId, type) => {
