@@ -164,22 +164,27 @@ export function useService(passwordDialogRef) {
     }
 
     const versionValid = await checkDbVersion(collectionSettings);
-    if (versionValid) {
+    if (!versionValid) {
+      return null;
+    }
+    else {
       const passwordValid = await checkDbPassword(collectionSettings)
-      if (passwordValid) {
-        await globalStatus.startLoading('Load collection');
-
-        try {
-          const responseFilters = await api.get('/api/filters', {params: {f: file}})
-          statusesList = responseFilters.data
-        }
-        catch (err) {
-          globalStatus.error.value = err
-        }
-        finally {
-          await globalStatus.finishLoading();
-        }
+      if (!passwordValid) {
+        return null;
       }
+    }
+
+    await globalStatus.startLoading('Load collection');
+
+    try {
+      const responseFilters = await api.get('/api/filters', {params: {f: file}})
+      statusesList = responseFilters.data
+    }
+    catch (err) {
+      globalStatus.error.value = err
+    }
+    finally {
+      await globalStatus.finishLoading();
     }
 
     return {collectionSettings, statusesList};
@@ -215,6 +220,17 @@ export function useService(passwordDialogRef) {
         }
     })
 
+    const versionValid = await checkDbVersion(collectionSettings);
+    if (!versionValid) {
+      return null;
+    }
+    else {
+      const passwordValid = await checkDbPassword(collectionSettings)
+      if (!passwordValid) {
+        return null;
+      }
+    }
+
     const field_sql = `SELECT id, title FROM fields WHERE id IN (${Object.keys(fieldIds)})`
     const fieldsDb = await executeQuery(field_sql)
 
@@ -223,14 +239,8 @@ export function useService(passwordDialogRef) {
       collectionSettings.fields[field] = elem[1]
     })
 
-    const versionValid = await checkDbVersion(collectionSettings);
-    if (versionValid) {
-      const passwordValid = await checkDbPassword(collectionSettings)
-      if (passwordValid) {
-        const sql_statuses = 'SELECT DISTINCT status FROM coins';
-        statusesList = (await executeQuery(sql_statuses)).flat()
-      }
-    }
+    const sql_statuses = 'SELECT DISTINCT status FROM coins';
+    statusesList = (await executeQuery(sql_statuses)).flat()
 
     return {collectionSettings, statusesList};
   }

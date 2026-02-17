@@ -26,7 +26,6 @@ const hasError = globalStatus.hasError;
 const hasWarning = globalStatus.hasWarning;
 
 const isServerLess = import.meta.env.VITE_SERVERLESS;
-const selectedFile = ref(null)
 const serverFileList = ref([])
 const statusesList = ref([])
 const collectionSettings = ref({})
@@ -65,36 +64,39 @@ onMounted(async () => {
   }
 })
 
-const handleRemoteFileSelected = async (file) => {
+const openFile = async (file, connection_type) => {
   if (!file)
     return;
 
-  selectedFile.value = file;
   isOpened = true;
   await router.replace('/')
-  appTitle.pushTitle(file)
+  let ret = null
 
-  const ret = await service.openRemoteFile(file);
-  collectionSettings.value = ret.collectionSettings;
-  statusesList.value = ret.statusesList;
+  if (connection_type === 'remote') {
+    appTitle.pushTitle(file)
 
-  coinListViewRef.value.onOpenFile()
+    ret = await service.openRemoteFile(file);
+  }
+  else if (connection_type === 'local') {
+    appTitle.pushTitle(file.name)
+
+    ret = await service.openLocalFile(file);
+  }
+
+  if (ret) {
+    collectionSettings.value = ret.collectionSettings;
+    statusesList.value = ret.statusesList;
+
+    coinListViewRef.value.onOpenFile()
+  }
+}
+
+const handleRemoteFileSelected = async (file) => {
+  await openFile(file, 'remote')
 }
 
 const handleFileUpload = async (file) => {
-  if (!file)
-    return;
-
-  selectedFile.value = file;
-  isOpened = true;
-  await router.replace('/')
-  appTitle.pushTitle(file.name)
-
-  const ret = await service.openLocalFile(file);
-  collectionSettings.value = ret.collectionSettings;
-  statusesList.value = ret.statusesList;
-
-  coinListViewRef.value.onOpenFile()
+  await openFile(file, 'local')
 }
 </script>
 
