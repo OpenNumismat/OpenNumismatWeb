@@ -36,7 +36,7 @@ def filelist():
 
 
 @app.get("/api/coins")
-def coins(f, status_filter=None):
+def coins(f, status_filter=None, country_filter=None, series_filter=None, type_filter=None, period_filter=None, mint_filter=None):
     file = f
     con = sqlite_connect(file)
     cur = con.cursor()
@@ -47,9 +47,27 @@ def coins(f, status_filter=None):
     """
 
     params = []
+    sql_filters = []
     if status_filter:
-        sql += " WHERE status = ?"
+        sql_filters.append("status = ?")
         params.append(status_filter)
+    if country_filter:
+        sql_filters.append("country = ?")
+        params.append(country_filter)
+    if series_filter:
+        sql_filters.append("series = ?")
+        params.append(series_filter)
+    if type_filter:
+        sql_filters.append("type = ?")
+        params.append(type_filter)
+    if period_filter:
+        sql_filters.append("period = ?")
+        params.append(period_filter)
+    if mint_filter:
+        sql_filters.append("mint = ?")
+        params.append(mint_filter)
+    if sql_filters:
+        sql += f" WHERE {' AND '.join(sql_filters)}"
 
     res = cur.execute(sql, params)
     data = res.fetchall()
@@ -69,15 +87,17 @@ def filters(f):
     con = sqlite_connect(file)
     cur = con.cursor()
 
-    res = cur.execute("""
-        SELECT DISTINCT status FROM coins
-    """)
-    data = res.fetchall()
-    con.close()
+    result = {}
 
-    result = []
-    for record in data:
-        result.append(record[0])
+    for field in ('status', 'country', 'series', 'type', 'period', 'mint',):
+        res = cur.execute(f"SELECT DISTINCT IFNULL({field},'') FROM coins ORDER BY {field}")
+        data = res.fetchall()
+
+        result[field] = []
+        for record in data:
+            result[field].append(record[0])
+
+    con.close()
 
     return result
 

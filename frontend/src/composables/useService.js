@@ -137,7 +137,7 @@ export function useService(passwordDialogRef) {
     connected_file = file;
 
     let collectionSettings = await initSettings();
-    let statusesList = [];
+    let collectionFilters = {};
     let settingsDb = {};
 
     await globalStatus.startLoading('Open collection');
@@ -178,7 +178,7 @@ export function useService(passwordDialogRef) {
 
     try {
       const responseFilters = await api.get('/api/filters', {params: {f: file}})
-      statusesList = responseFilters.data
+      collectionFilters = responseFilters.data
     }
     catch (err) {
       globalStatus.error.value = err
@@ -187,13 +187,13 @@ export function useService(passwordDialogRef) {
       await globalStatus.finishLoading();
     }
 
-    return {collectionSettings, statusesList};
+    return {collectionSettings, collectionFilters};
   }
 
   const openLocalFile = async (file) => {
     connection_type = 'local';
 
-    let statusesList = [];
+    let collectionFilters = {};
     let collectionSettings = await initSettings()
 
     await openDatabase(file)
@@ -240,23 +240,41 @@ export function useService(passwordDialogRef) {
     })
 
     const sql_statuses = 'SELECT DISTINCT status FROM coins';
-    statusesList = (await executeQuery(sql_statuses)).flat()
+    collectionFilters['status'] = (await executeQuery(sql_statuses)).flat()
+    const sql_countries = "SELECT DISTINCT IFNULL(country,'') FROM coins ORDER BY country";
+    collectionFilters['country'] = (await executeQuery(sql_countries)).flat()
+    const sql_series = "SELECT DISTINCT IFNULL(series,'') FROM coins ORDER BY series";
+    collectionFilters['series'] = (await executeQuery(sql_series)).flat()
+    const sql_types = "SELECT DISTINCT IFNULL(type,'') FROM coins ORDER BY type";
+    collectionFilters['type'] = (await executeQuery(sql_types)).flat()
+    const sql_periods = "SELECT DISTINCT IFNULL(period,'') FROM coins ORDER BY period";
+    collectionFilters['period'] = (await executeQuery(sql_periods)).flat()
+    const sql_mints = "SELECT DISTINCT IFNULL(mint,'') FROM coins ORDER BY mint";
+    collectionFilters['mint'] = (await executeQuery(sql_mints)).flat()
 
-    return {collectionSettings, statusesList};
+    return {collectionSettings, collectionFilters};
   }
 
-  const loadCoins = async (statusFilter=null) => {
+  const loadCoins = async (statusFilter=null, countryFilter=null, seriesFilter=null, typeFilter=null, periodFilter=null, mintFilter=null) => {
     if (connection_type === 'local')
-      return loadCoinsLocal(statusFilter);
+      return loadCoinsLocal(statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter);
     else if (connection_type === 'remote')
-      return loadCoinsRemote(statusFilter, connected_file);
+      return loadCoinsRemote(statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, connected_file);
   }
 
-  const loadCoinsRemote = async (statusFilter, file) => {
+  const loadCoinsRemote = async (statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, file) => {
     let coinsList = [];
 
     try {
-      const responseCoins = await api.get('/api/coins', {params: {f: file, status_filter: statusFilter}})
+      const responseCoins = await api.get('/api/coins', {params: {
+          f: file,
+          status_filter: statusFilter,
+          country_filter: countryFilter,
+          series_filter: seriesFilter,
+          type_filter: typeFilter,
+          period_filter: periodFilter,
+          mint_filter: mintFilter,
+      }})
       coinsList = responseCoins.data
     }
     catch (err) {
@@ -266,7 +284,7 @@ export function useService(passwordDialogRef) {
     return coinsList;
   }
 
-  const loadCoinsLocal = async (statusFilter) => {
+  const loadCoinsLocal = async (statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter) => {
     let coinsList = [];
 
     let sql = `
@@ -274,10 +292,33 @@ export function useService(passwordDialogRef) {
         FROM coins LEFT OUTER JOIN images ON images.id = coins.image
       `
     let params = [];
+    let sql_filters = [];
     if (statusFilter) {
-      sql += ' WHERE status = ?';
+      sql_filters.push('status = ?')
       params.push(statusFilter);
     }
+    if (countryFilter) {
+      sql_filters.push('country = ?')
+      params.push(countryFilter);
+    }
+    if (seriesFilter) {
+      sql_filters.push('series = ?')
+      params.push(seriesFilter);
+    }
+    if (typeFilter) {
+      sql_filters.push('type = ?')
+      params.push(typeFilter);
+    }
+    if (periodFilter) {
+      sql_filters.push('period = ?')
+      params.push(periodFilter);
+    }
+    if (mintFilter) {
+      sql_filters.push('mint = ?')
+      params.push(mintFilter);
+    }
+    if (sql_filters.length > 0)
+      sql += ` WHERE ${sql_filters.join(' AND ')}`;
     coinsList = await executeQuery(sql, params)
 
     return coinsList;

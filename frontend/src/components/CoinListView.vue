@@ -12,14 +12,20 @@ const service = useService();
 
 const images = ref([])
 const coinsList = ref([])
+const selectedStatus = ref(null)
+const selectedCountry = ref(null)
+const selectedSeries = ref(null)
+const selectedType = ref(null)
+const selectedPeriod = ref(null)
+const selectedMint = ref(null)
 
 const props = defineProps({
   settings: {
     type: Object,
     required: true,
   },
-  statuses_list: {
-    type: Array,
+  filters: {
+    type: Object,
     required: true,
   },
 });
@@ -32,6 +38,12 @@ onUnmounted(async () => {
 const onOpenFile = async () => {
   images.value = []
   coinsList.value = []
+  selectedStatus.value = null
+  selectedCountry.value = null
+  selectedSeries.value = null
+  selectedType.value = null
+  selectedPeriod.value = null
+  selectedMint.value = null
   coinsList.value = await service.loadCoins()
   images.value = new Array(coinsList.value.length).fill('')
 }
@@ -59,8 +71,15 @@ function generateDescription( coin_data ) {
   return desc;
 }
 
-const onStatusFilterChange = async (val) => {
-  coinsList.value = await service.loadCoins(val);
+const onFilterChanged = async (val) => {
+  coinsList.value = await service.loadCoins(
+      selectedStatus.value,
+      selectedCountry.value,
+      selectedSeries.value,
+      selectedType.value,
+      selectedPeriod.value,
+      selectedMint.value
+  );
 }
 
 const loadImage = async (index, coinId) => {
@@ -70,11 +89,47 @@ const loadImage = async (index, coinId) => {
 
 <template>
   <v-container>
-    <v-select v-if="statuses_list.length > 0"
+    <v-select v-if="filters['status'].length > 0"
+      v-model="selectedStatus"
       :label="settings.fields['status']"
-      :items="statuses_list"
+      :items="filters['status']"
       :item-title="item => settings.statuses[item]"
-      @update:modelValue="onStatusFilterChange"
+      @update:modelValue="onFilterChanged"
+      return-object
+    ></v-select>
+    <v-select v-if="filters['country'].length > 0"
+      v-model="selectedCountry"
+      :label="settings.fields['country']"
+      :items="filters['country']"
+      @update:modelValue="onFilterChanged"
+      return-object
+    ></v-select>
+    <v-select v-if="filters['series'].length > 0"
+      v-model="selectedSeries"
+      :label="settings.fields['series']"
+      :items="filters['series']"
+      @update:modelValue="onFilterChanged"
+      return-object
+    ></v-select>
+    <v-select v-if="filters['type'].length > 0"
+      v-model="selectedType"
+      :label="settings.fields['type']"
+      :items="filters['type']"
+      @update:modelValue="onFilterChanged"
+      return-object
+    ></v-select>
+    <v-select v-if="filters['period'].length > 0"
+      v-model="selectedPeriod"
+      :label="settings.fields['period']"
+      :items="filters['period']"
+      @update:modelValue="onFilterChanged"
+      return-object
+    ></v-select>
+    <v-select v-if="filters['mint'].length > 0"
+      v-model="selectedMint"
+      :label="settings.fields['mint']"
+      :items="filters['mint']"
+      @update:modelValue="onFilterChanged"
       return-object
     ></v-select>
   </v-container>
