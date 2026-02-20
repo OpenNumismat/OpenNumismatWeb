@@ -89,7 +89,7 @@ const loadImage = async (index, coinId) => {
 
 <template>
   <v-container>
-    <v-select v-if="filters['status'].length > 0"
+    <v-select v-if="filters['status'].length > 1"
       v-model="selectedStatus"
       :label="settings.fields['status']"
       :items="filters['status']"
@@ -97,35 +97,35 @@ const loadImage = async (index, coinId) => {
       @update:modelValue="onFilterChanged"
       return-object
     ></v-select>
-    <v-select v-if="filters['country'].length > 0"
+    <v-select v-if="filters['country'].length > 1"
       v-model="selectedCountry"
       :label="settings.fields['country']"
       :items="filters['country']"
       @update:modelValue="onFilterChanged"
       return-object
     ></v-select>
-    <v-select v-if="filters['series'].length > 0"
+    <v-select v-if="filters['series'].length > 1"
       v-model="selectedSeries"
       :label="settings.fields['series']"
       :items="filters['series']"
       @update:modelValue="onFilterChanged"
       return-object
     ></v-select>
-    <v-select v-if="filters['type'].length > 0"
+    <v-select v-if="filters['type'].length > 1"
       v-model="selectedType"
       :label="settings.fields['type']"
       :items="filters['type']"
       @update:modelValue="onFilterChanged"
       return-object
     ></v-select>
-    <v-select v-if="filters['period'].length > 0"
+    <v-select v-if="filters['period'].length > 1"
       v-model="selectedPeriod"
       :label="settings.fields['period']"
       :items="filters['period']"
       @update:modelValue="onFilterChanged"
       return-object
     ></v-select>
-    <v-select v-if="filters['mint'].length > 0"
+    <v-select v-if="filters['mint'].length > 1"
       v-model="selectedMint"
       :label="settings.fields['mint']"
       :items="filters['mint']"
