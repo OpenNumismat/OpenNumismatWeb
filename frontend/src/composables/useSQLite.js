@@ -84,13 +84,13 @@ export function useSQLite() {
 
     try {
       const result = db.exec(sql, params);
-      console.log(result[0].values)
       results = result.length > 0
         ? result[0].values
         : [];
+      console.log(results)
     }
     catch (err) {
-      console.error('Failed execute query:', err);
+      console.error('Failed execute query:', err, '\nRequest: ', sql, '\nParams: ', params);
       globalStatus.status.value = 'Failed execute query'
       globalStatus.error.value = err
     }
