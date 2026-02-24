@@ -166,6 +166,7 @@ def photo(f, id, type):
     if img_type == 'both':
         img1 = None
         img2 = None
+        img = None
         new_width1 = 0
         new_width2 = 0
 
@@ -191,9 +192,10 @@ def photo(f, id, type):
         if img2:
             new_img.paste(img2, (new_width1, 0))
 
-        buffered = BytesIO()
-        new_img.save(buffered, format="WEBP", lossless=False, quality=80)
-        img = buffered.getvalue()
+        if img1 or img2:
+            buffered = BytesIO()
+            new_img.save(buffered, format="WEBP", lossless=False, quality=80)
+            img = buffered.getvalue()
     else:
         img = data[0][0]
 
