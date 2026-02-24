@@ -6,7 +6,7 @@ import StatusItem from "./StatusItem.vue"
 import { imagePresentation, statusPresentation } from "@/composables/useSettings";
 import {convertFraction, formatYear} from "@/utils/formatter.js";
 import {useService} from "@/composables/useService.js";
-import i18n from "@/i18n/index.js";
+import FilterItem from "@/components/FilterItem.vue";
 
 const router = useRouter()
 const service = useService();
@@ -72,31 +72,7 @@ function generateDescription( coin_data ) {
   return desc;
 }
 
-const onFilterChanged = async (val) => {
-  coinsList.value = await service.loadCoins(
-      selectedStatus.value,
-      selectedCountry.value,
-      selectedSeries.value,
-      selectedType.value,
-      selectedPeriod.value,
-      selectedMint.value
-  );
-}
-
-const onFilterClear = async (filter) => {
-  if (filter === 'status')
-    selectedStatus.value = null;
-  else if (filter === 'country')
-    selectedCountry.value = null;
-  else if (filter === 'series')
-    selectedSeries.value = null;
-  else if (filter === 'type')
-    selectedType.value = null;
-  else if (filter === 'period')
-    selectedPeriod.value = null;
-  else if (filter === 'mint')
-    selectedMint.value = null;
-
+const onFilterChanged = async (field, val) => {
   coinsList.value = await service.loadCoins(
       selectedStatus.value,
       selectedCountry.value,
@@ -114,79 +90,12 @@ const loadImage = async (index, coinId) => {
 
 <template>
   <v-container>
-    <v-select v-if="filters['status'].length > 1"
-      v-model="selectedStatus"
-      :label="settings.fields['status']"
-      :items="filters['status']"
-      :item-title="item => settings.statuses[item]"
-      @update:modelValue="onFilterChanged"
-      return-object
-    >
-      <template v-slot:prepend-item>
-        <v-list-item :title="i18n.global.t('All')" @click="onFilterClear('status')"></v-list-item>
-        <v-divider class="mt-2"></v-divider>
-      </template>
-    </v-select>
-    <v-select v-if="filters['country'].length > 1"
-      v-model="selectedCountry"
-      :label="settings.fields['country']"
-      :items="filters['country']"
-      @update:modelValue="onFilterChanged"
-      return-object
-    >
-      <template v-slot:prepend-item>
-        <v-list-item :title="i18n.global.t('All')" @click="onFilterClear('country')"></v-list-item>
-        <v-divider class="mt-2"></v-divider>
-      </template>
-    </v-select>
-    <v-select v-if="filters['series'].length > 1"
-      v-model="selectedSeries"
-      :label="settings.fields['series']"
-      :items="filters['series']"
-      @update:modelValue="onFilterChanged"
-      return-object
-    >
-      <template v-slot:prepend-item>
-        <v-list-item :title="i18n.global.t('All')" @click="onFilterClear('series')"></v-list-item>
-        <v-divider class="mt-2"></v-divider>
-      </template>
-    </v-select>
-    <v-select v-if="filters['type'].length > 1"
-      v-model="selectedType"
-      :label="settings.fields['type']"
-      :items="filters['type']"
-      @update:modelValue="onFilterChanged"
-      return-object
-    >
-      <template v-slot:prepend-item>
-        <v-list-item :title="i18n.global.t('All')" @click="onFilterClear('type')"></v-list-item>
-        <v-divider class="mt-2"></v-divider>
-      </template>
-    </v-select>
-    <v-select v-if="filters['period'].length > 1"
-      v-model="selectedPeriod"
-      :label="settings.fields['period']"
-      :items="filters['period']"
-      @update:modelValue="onFilterChanged"
-      return-object
-    >
-      <template v-slot:prepend-item>
-        <v-list-item :title="i18n.global.t('All')" @click="onFilterClear('period')"></v-list-item>
-        <v-divider class="mt-2"></v-divider>
-      </template>
-    </v-select>
-    <v-select v-if="filters['mint'].length > 1"
-      v-model="selectedMint"
-      :label="settings.fields['mint']"
-      :items="filters['mint']"
-      @update:modelValue="onFilterChanged"
-      return-object
-    >
-      <template v-slot:prepend-item>
-        <v-list-item :title="i18n.global.t('All')" @click="onFilterClear('mint')"></v-list-item>
-        <v-divider class="mt-2"></v-divider>
-      </template>
-    </v-select>
+    <FilterItem :filters="filters['status']" field="status" :settings="settings" @filter-changed="onFilterChanged" v-model="selectedStatus" />
+    <FilterItem :filters="filters['country']" field="country" :settings="settings" @filter-changed="onFilterChanged" v-model="selectedCountry" />
+    <FilterItem :filters="filters['series']" field="series" :settings="settings" @filter-changed="onFilterChanged" v-model="selectedSeries" />
+    <FilterItem :filters="filters['type']" field="type" :settings="settings" @filter-changed="onFilterChanged" v-model="selectedType" />
+    <FilterItem :filters="filters['period']" field="period" :settings="settings" @filter-changed="onFilterChanged" v-model="selectedPeriod" />
+    <FilterItem :filters="filters['mint']" field="mint" :settings="settings" @filter-changed="onFilterChanged" v-model="selectedMint" />
   </v-container>
 
   <v-container class="pa-0 ma-0">
