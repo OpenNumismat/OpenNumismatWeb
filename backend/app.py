@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from PIL import Image
+from _version import __version__
 
 
 DATA_PATH = 'data'
@@ -20,6 +21,11 @@ app = FastAPI(
 def sqlite_connect(file):
     file_uri = f"file:{DATA_PATH}/{file}?mode=ro"
     return sqlite3.connect(file_uri, uri=True)
+
+
+@app.get("/api/version")
+def version():
+    return __version__
 
 
 @app.get("/api/filelist")
