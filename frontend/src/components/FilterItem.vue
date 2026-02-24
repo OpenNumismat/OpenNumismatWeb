@@ -1,6 +1,8 @@
 <script setup>
 import {ref} from "vue";
 import i18n from "@/i18n/index.js";
+import {statusPresentation} from "@/composables/useSettings.js";
+import StatusItem from "@/components/StatusItem.vue";
 
 const props = defineProps(['filters', 'field', 'settings'])
 const emit = defineEmits(['filterChanged'])
@@ -32,6 +34,15 @@ const onFilterClear = async () => {
     <template v-slot:prepend-item>
       <v-list-item :title="i18n.global.t('All')" @click="onFilterClear"></v-list-item>
       <v-divider class="mt-2"></v-divider>
+    </template>
+
+    <template v-slot:selection="{ item }" v-if="field === 'status'">
+      <StatusItem :status="item.raw" :statuses="settings.statuses" statusPresentation="icon_text" />
+    </template>
+    <template v-slot:item="{ props, item }" v-if="field === 'status'">
+      <v-list-item v-bind="props" title="">
+        <StatusItem :status="item.raw" :statuses="settings.statuses" statusPresentation="icon_text" />
+      </v-list-item>
     </template>
   </v-select>
 </template>
