@@ -82,7 +82,6 @@ def coins(f, sort=None, reverse: bool = False, status_filter=None, country_filte
         sql += " ORDER BY sort_id"
     if reverse:
         sql += " DESC"
-    print(reverse, sql)
 
     res = cur.execute(sql, params)
     data = res.fetchall()
