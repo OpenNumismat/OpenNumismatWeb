@@ -24,6 +24,7 @@ const onChanged = async (val) => {
         :item-title="item => settings.fields[item]"
         @update:modelValue="onChanged"
         return-object
+        clearable
       ></v-select>
     </v-col>
 
