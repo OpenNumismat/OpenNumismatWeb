@@ -22,6 +22,7 @@ const selectedSeries = ref(null)
 const selectedType = ref(null)
 const selectedPeriod = ref(null)
 const selectedMint = ref(null)
+const fields = ref([])
 
 const props = defineProps({
   settings: {
@@ -52,6 +53,18 @@ const onOpenFile = async () => {
   coinsList.value = []
   coinsList.value = await service.loadCoins()
   images.value = new Array(coinsList.value.length).fill('')
+
+  fields.value = ['title', 'year']
+  if (props.filters['status'].length > 1)
+    fields.value.push('status')
+  if (props.filters['country'].length > 1)
+    fields.value.push('country')
+  if (props.filters['series'].length > 1)
+    fields.value.push('series')
+  if (props.filters['type'].length > 1)
+    fields.value.push('type')
+  if (props.filters['period'].length > 1)
+    fields.value.push('period')
 }
 
 defineExpose({
@@ -110,7 +123,7 @@ const loadImage = async (index, coinId) => {
 
 <template>
   <v-container>
-    <SortItem :filters="filters['country']" :settings="settings" @sort-by-changed="onSortByChanged" v-model="sortedBy" v-model:reverse="reverseSort" />
+    <SortItem :fields="fields" :settings="settings" @sort-by-changed="onSortByChanged" v-model="sortedBy" v-model:reverse="reverseSort" />
   </v-container>
 
   <v-container>

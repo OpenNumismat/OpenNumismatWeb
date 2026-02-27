@@ -1,9 +1,7 @@
 <script setup>
 import i18n from "@/i18n/index.js";
 
-const items = ['title', 'status', 'country', 'series', 'type', 'period']
-
-const props = defineProps(['filters', 'settings'])
+const props = defineProps(['fields', 'settings'])
 const emit = defineEmits(['sortByChanged'])
 const sortedBy = defineModel()
 const isReverse = defineModel('reverse')
@@ -14,12 +12,12 @@ const onChanged = async (val) => {
 </script>
 
 <template>
-  <v-row align="center" no-gutters>
+  <v-row align="center" no-gutters v-if="fields.length > 0">
     <v-col class="mr-4">
-      <v-select v-if="filters.length > 1"
+      <v-select
         v-model="sortedBy"
         hide-details
-        :items="items"
+        :items="fields"
         :label="i18n.global.t('Sort by')"
         :item-title="item => settings.fields[item]"
         @update:modelValue="onChanged"
