@@ -42,7 +42,8 @@ def filelist():
 
 
 @app.get("/api/coins")
-def coins(f, status_filter=None, country_filter=None, series_filter=None, type_filter=None, period_filter=None, mint_filter=None):
+def coins(f, sort=None, status_filter=None, country_filter=None, series_filter=None, type_filter=None,
+          period_filter=None, mint_filter=None):
     file = f
     con = sqlite_connect(file)
     cur = con.cursor()
@@ -74,6 +75,11 @@ def coins(f, status_filter=None, country_filter=None, series_filter=None, type_f
         params.append(mint_filter)
     if sql_filters:
         sql += f" WHERE {' AND '.join(sql_filters)}"
+
+    if sort:
+        sql += f" ORDER BY {sort}"
+    else:
+        sql += " ORDER BY sort_id"
 
     res = cur.execute(sql, params)
     data = res.fetchall()
@@ -256,6 +262,7 @@ def settings(f):
         67: 'storage',
         83: 'condition',
         71: 'quantity',
+        1: 'title',
     }
 
     file = f

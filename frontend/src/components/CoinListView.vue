@@ -7,12 +7,14 @@ import { imagePresentation, statusPresentation } from "@/composables/useSettings
 import {convertFraction, formatYear} from "@/utils/formatter.js";
 import {useService} from "@/composables/useService.js";
 import FilterItem from "@/components/FilterItem.vue";
+import SortItem from "@/components/SortItem.vue";
 
 const router = useRouter()
 const service = useService();
 
 const images = ref([])
 const coinsList = ref([])
+const sortedBy = ref(null)
 const selectedStatus = ref(null)
 const selectedCountry = ref(null)
 const selectedSeries = ref(null)
@@ -37,6 +39,7 @@ onUnmounted(async () => {
 })
 
 const onOpenFile = async () => {
+  sortedBy.value = null
   selectedStatus.value = null
   selectedCountry.value = null
   selectedSeries.value = null
@@ -74,6 +77,7 @@ function generateDescription( coin_data ) {
 
 const onFilterChanged = async (field, val) => {
   coinsList.value = await service.loadCoins(
+      sortedBy.value,
       selectedStatus.value,
       selectedCountry.value,
       selectedSeries.value,
@@ -83,12 +87,28 @@ const onFilterChanged = async (field, val) => {
   );
 }
 
+const onSortByChanged = async (val) => {
+  coinsList.value = await service.loadCoins(
+      sortedBy.value,
+      selectedStatus.value,
+      selectedCountry.value,
+      selectedSeries.value,
+      selectedType.value,
+      selectedPeriod.value,
+      selectedMint.value,
+  );
+}
+
 const loadImage = async (index, coinId) => {
   images.value[index] = await service.loadImage(coinId, imagePresentation.value);
 }
 </script>
 
 <template>
+  <v-container>
+    <SortItem :filters="filters['country']" :settings="settings" @sort-by-changed="onSortByChanged" v-model="sortedBy" />
+  </v-container>
+
   <v-container>
     <FilterItem :filters="filters['status']" field="status" :settings="settings" @filter-changed="onFilterChanged" v-model="selectedStatus" />
     <FilterItem :filters="filters['country']" field="country" :settings="settings" @filter-changed="onFilterChanged" v-model="selectedCountry" />

@@ -36,6 +36,7 @@ const fieldIds = {
   67: 'storage',
   83: 'condition',
   71: 'quantity',
+  1: 'title',
 }
 
 const infoFields = ['coins.title', 'obverseimg.image', 'reverseimg.image',
@@ -255,14 +256,15 @@ export function useService(passwordDialogRef) {
     return {collectionSettings, collectionFilters};
   }
 
-  const loadCoins = async (statusFilter=null, countryFilter=null, seriesFilter=null, typeFilter=null, periodFilter=null, mintFilter=null) => {
+  const loadCoins = async (sortBy=null, statusFilter=null, countryFilter=null, seriesFilter=null,
+                           typeFilter=null, periodFilter=null, mintFilter=null) => {
     if (connection_type === 'local')
-      return loadCoinsLocal(statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter);
+      return loadCoinsLocal(sortBy, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter);
     else if (connection_type === 'remote')
-      return loadCoinsRemote(statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, connected_file);
+      return loadCoinsRemote(sortBy, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, connected_file);
   }
 
-  const loadCoinsRemote = async (statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, file) => {
+  const loadCoinsRemote = async (sortBy, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, file) => {
     let coinsList = [];
 
     try {
@@ -274,6 +276,7 @@ export function useService(passwordDialogRef) {
           type_filter: typeFilter,
           period_filter: periodFilter,
           mint_filter: mintFilter,
+          sort: sortBy,
       }})
       coinsList = responseCoins.data
     }
@@ -284,7 +287,7 @@ export function useService(passwordDialogRef) {
     return coinsList;
   }
 
-  const loadCoinsLocal = async (statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter) => {
+  const loadCoinsLocal = async (sortBy, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter) => {
     let coinsList = [];
 
     let sql = `
@@ -319,6 +322,12 @@ export function useService(passwordDialogRef) {
     }
     if (sql_filters.length > 0)
       sql += ` WHERE ${sql_filters.join(' AND ')}`;
+    if (sortBy) {
+      sql += ` ORDER BY ${sortBy}`;
+    }
+    else {
+      sql += ' ORDER BY sort_id';
+    }
     coinsList = await executeQuery(sql, params)
 
     return coinsList;
