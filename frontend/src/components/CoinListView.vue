@@ -15,6 +15,7 @@ const service = useService();
 const images = ref([])
 const coinsList = ref([])
 const sortedBy = ref(null)
+const reverseSort = ref(false)
 const selectedStatus = ref(null)
 const selectedCountry = ref(null)
 const selectedSeries = ref(null)
@@ -40,6 +41,7 @@ onUnmounted(async () => {
 
 const onOpenFile = async () => {
   sortedBy.value = null
+  reverseSort.value = false
   selectedStatus.value = null
   selectedCountry.value = null
   selectedSeries.value = null
@@ -78,6 +80,7 @@ function generateDescription( coin_data ) {
 const onFilterChanged = async (field, val) => {
   coinsList.value = await service.loadCoins(
       sortedBy.value,
+      reverseSort.value,
       selectedStatus.value,
       selectedCountry.value,
       selectedSeries.value,
@@ -90,12 +93,13 @@ const onFilterChanged = async (field, val) => {
 const onSortByChanged = async (val) => {
   coinsList.value = await service.loadCoins(
       sortedBy.value,
+      reverseSort.value,
       selectedStatus.value,
       selectedCountry.value,
       selectedSeries.value,
       selectedType.value,
       selectedPeriod.value,
-      selectedMint.value,
+      selectedMint.value
   );
 }
 
@@ -106,7 +110,7 @@ const loadImage = async (index, coinId) => {
 
 <template>
   <v-container>
-    <SortItem :filters="filters['country']" :settings="settings" @sort-by-changed="onSortByChanged" v-model="sortedBy" />
+    <SortItem :filters="filters['country']" :settings="settings" @sort-by-changed="onSortByChanged" v-model="sortedBy" v-model:reverse="reverseSort" />
   </v-container>
 
   <v-container>

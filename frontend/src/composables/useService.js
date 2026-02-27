@@ -256,27 +256,28 @@ export function useService(passwordDialogRef) {
     return {collectionSettings, collectionFilters};
   }
 
-  const loadCoins = async (sortBy=null, statusFilter=null, countryFilter=null, seriesFilter=null,
-                           typeFilter=null, periodFilter=null, mintFilter=null) => {
+  const loadCoins = async (sortBy=null, reverse=false, statusFilter=null, countryFilter=null,
+                           seriesFilter=null, typeFilter=null, periodFilter=null, mintFilter=null) => {
     if (connection_type === 'local')
-      return loadCoinsLocal(sortBy, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter);
+      return loadCoinsLocal(sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter);
     else if (connection_type === 'remote')
-      return loadCoinsRemote(sortBy, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, connected_file);
+      return loadCoinsRemote(sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, connected_file);
   }
 
-  const loadCoinsRemote = async (sortBy, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, file) => {
+  const loadCoinsRemote = async (sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, file) => {
     let coinsList = [];
 
     try {
       const responseCoins = await api.get('/api/coins', {params: {
           f: file,
+          sort: sortBy,
+          reverse: reverse,
           status_filter: statusFilter,
           country_filter: countryFilter,
           series_filter: seriesFilter,
           type_filter: typeFilter,
           period_filter: periodFilter,
           mint_filter: mintFilter,
-          sort: sortBy,
       }})
       coinsList = responseCoins.data
     }
@@ -287,7 +288,7 @@ export function useService(passwordDialogRef) {
     return coinsList;
   }
 
-  const loadCoinsLocal = async (sortBy, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter) => {
+  const loadCoinsLocal = async (sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter) => {
     let coinsList = [];
 
     let sql = `
@@ -322,12 +323,13 @@ export function useService(passwordDialogRef) {
     }
     if (sql_filters.length > 0)
       sql += ` WHERE ${sql_filters.join(' AND ')}`;
-    if (sortBy) {
+    if (sortBy)
       sql += ` ORDER BY ${sortBy}`;
-    }
-    else {
+    else
       sql += ' ORDER BY sort_id';
-    }
+    if (reverse)
+      sql += ' DESC';
+
     coinsList = await executeQuery(sql, params)
 
     return coinsList;

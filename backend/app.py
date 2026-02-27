@@ -42,7 +42,7 @@ def filelist():
 
 
 @app.get("/api/coins")
-def coins(f, sort=None, status_filter=None, country_filter=None, series_filter=None, type_filter=None,
+def coins(f, sort=None, reverse: bool = False, status_filter=None, country_filter=None, series_filter=None, type_filter=None,
           period_filter=None, mint_filter=None):
     file = f
     con = sqlite_connect(file)
@@ -80,6 +80,9 @@ def coins(f, sort=None, status_filter=None, country_filter=None, series_filter=N
         sql += f" ORDER BY {sort}"
     else:
         sql += " ORDER BY sort_id"
+    if reverse:
+        sql += " DESC"
+    print(reverse, sql)
 
     res = cur.execute(sql, params)
     data = res.fetchall()
