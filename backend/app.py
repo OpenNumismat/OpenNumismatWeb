@@ -273,7 +273,7 @@ def settings(f):
 
     res = cur.execute("SELECT * FROM settings")
     settings_data = res.fetchall()
-    res = cur.execute(f"SELECT id, title FROM fields WHERE id IN ({",".join(map(str, field_ids))})")
+    res = cur.execute(f"SELECT id, title FROM fields WHERE id IN ({','.join(map(str, field_ids))})")
     fields_data = res.fetchall()
 
     con.close()
