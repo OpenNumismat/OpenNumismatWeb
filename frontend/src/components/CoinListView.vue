@@ -8,12 +8,14 @@ import {convertFraction, formatYear} from "@/utils/formatter.js";
 import {useService} from "@/composables/useService.js";
 import FilterItem from "@/components/FilterItem.vue";
 import SortItem from "@/components/SortItem.vue";
+import i18n from "@/i18n/index.js";
 
 const router = useRouter()
 const service = useService();
 
 const images = ref([])
 const coinsList = ref([])
+const searchVal = ref(null)
 const sortedBy = ref(null)
 const reverseSort = ref(false)
 const selectedStatus = ref(null)
@@ -41,6 +43,7 @@ onUnmounted(async () => {
 })
 
 const onOpenFile = async () => {
+  searchVal.value = null
   sortedBy.value = null
   reverseSort.value = false
   selectedStatus.value = null
@@ -90,21 +93,9 @@ function generateDescription( coin_data ) {
   return desc;
 }
 
-const onFilterChanged = async (field, val) => {
+const onChanged = async () => {
   coinsList.value = await service.loadCoins(
-      sortedBy.value,
-      reverseSort.value,
-      selectedStatus.value,
-      selectedCountry.value,
-      selectedSeries.value,
-      selectedType.value,
-      selectedPeriod.value,
-      selectedMint.value
-  );
-}
-
-const onSortByChanged = async (val) => {
-  coinsList.value = await service.loadCoins(
+      searchVal.value,
       sortedBy.value,
       reverseSort.value,
       selectedStatus.value,
@@ -123,16 +114,26 @@ const loadImage = async (index, coinId) => {
 
 <template>
   <v-container>
-    <SortItem :fields="fields" :settings="settings" @sort-by-changed="onSortByChanged" v-model="sortedBy" v-model:reverse="reverseSort" />
+    <SortItem :fields="fields" :settings="settings" @sort-by-changed="onChanged" v-model="sortedBy" v-model:reverse="reverseSort" />
   </v-container>
 
   <v-container>
-    <FilterItem :filters="filters['status']" field="status" :settings="settings" @filter-changed="onFilterChanged" v-model="selectedStatus" />
-    <FilterItem :filters="filters['country']" field="country" :settings="settings" @filter-changed="onFilterChanged" v-model="selectedCountry" />
-    <FilterItem :filters="filters['series']" field="series" :settings="settings" @filter-changed="onFilterChanged" v-model="selectedSeries" />
-    <FilterItem :filters="filters['type']" field="type" :settings="settings" @filter-changed="onFilterChanged" v-model="selectedType" />
-    <FilterItem :filters="filters['period']" field="period" :settings="settings" @filter-changed="onFilterChanged" v-model="selectedPeriod" />
-    <FilterItem :filters="filters['mint']" field="mint" :settings="settings" @filter-changed="onFilterChanged" v-model="selectedMint" />
+    <FilterItem :filters="filters['status']" field="status" :settings="settings" @filter-changed="onChanged" v-model="selectedStatus" />
+    <FilterItem :filters="filters['country']" field="country" :settings="settings" @filter-changed="onChanged" v-model="selectedCountry" />
+    <FilterItem :filters="filters['series']" field="series" :settings="settings" @filter-changed="onChanged" v-model="selectedSeries" />
+    <FilterItem :filters="filters['type']" field="type" :settings="settings" @filter-changed="onChanged" v-model="selectedType" />
+    <FilterItem :filters="filters['period']" field="period" :settings="settings" @filter-changed="onChanged" v-model="selectedPeriod" />
+    <FilterItem :filters="filters['mint']" field="mint" :settings="settings" @filter-changed="onChanged" v-model="selectedMint" />
+  </v-container>
+
+  <v-container>
+    <v-text-field
+        v-model="searchVal"
+        :label="i18n.global.t('Search')"
+        clearable
+        @change="onChanged"
+        @click:clear="onChanged"
+    />
   </v-container>
 
   <v-container class="pa-0 ma-0">

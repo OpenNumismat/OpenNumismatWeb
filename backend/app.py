@@ -42,7 +42,7 @@ def filelist():
 
 
 @app.get("/api/coins")
-def coins(f, sort=None, reverse: bool = False, status_filter=None, country_filter=None, series_filter=None, type_filter=None,
+def coins(f, search=None, sort=None, reverse: bool = False, status_filter=None, country_filter=None, series_filter=None, type_filter=None,
           period_filter=None, mint_filter=None):
     file = f
     con = sqlite_connect(file)
@@ -55,6 +55,9 @@ def coins(f, sort=None, reverse: bool = False, status_filter=None, country_filte
 
     params = []
     sql_filters = []
+    if search:
+        sql_filters.append("title LIKE ?")
+        params.append(f"%{search}%")
     if status_filter:
         sql_filters.append("status = ?")
         params.append(status_filter)

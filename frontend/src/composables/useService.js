@@ -256,20 +256,21 @@ export function useService(passwordDialogRef) {
     return {collectionSettings, collectionFilters};
   }
 
-  const loadCoins = async (sortBy=null, reverse=false, statusFilter=null, countryFilter=null,
+  const loadCoins = async (search=null, sortBy=null, reverse=false, statusFilter=null, countryFilter=null,
                            seriesFilter=null, typeFilter=null, periodFilter=null, mintFilter=null) => {
     if (connection_type === 'local')
-      return loadCoinsLocal(sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter);
+      return loadCoinsLocal(search, sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter);
     else if (connection_type === 'remote')
-      return loadCoinsRemote(sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, connected_file);
+      return loadCoinsRemote(search, sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, connected_file);
   }
 
-  const loadCoinsRemote = async (sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, file) => {
+  const loadCoinsRemote = async (search, sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, file) => {
     let coinsList = [];
 
     try {
       const responseCoins = await api.get('/api/coins', {params: {
           f: file,
+          search: search,
           sort: sortBy,
           reverse: reverse,
           status_filter: statusFilter,
@@ -288,7 +289,7 @@ export function useService(passwordDialogRef) {
     return coinsList;
   }
 
-  const loadCoinsLocal = async (sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter) => {
+  const loadCoinsLocal = async (search, sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter) => {
     let coinsList = [];
 
     let sql = `
@@ -297,6 +298,10 @@ export function useService(passwordDialogRef) {
       `
     let params = [];
     let sql_filters = [];
+    if (search) {
+      sql_filters.push("title LIKE ?")
+      params.push(`%${search}%`);
+    }
     if (statusFilter) {
       sql_filters.push('status = ?')
       params.push(statusFilter);
