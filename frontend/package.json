@@ -14,7 +14,7 @@
   "dependencies": {
     "@mdi/font": "^7.4.47",
     "@vueuse/core": "^14.2.1",
-    "axios": "^1.13.5",
+    "axios": "^1.13.6",
     "sql.js": "^1.14.1",
     "vue": "^3.5.29",
     "vue-i18n": "^11.2.8",
