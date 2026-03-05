@@ -310,6 +310,55 @@ def settings(f):
     return collection_settings
 
 
+@app.get("/api/summary")
+def summary(f):
+    collection_summary = {}
+
+    file = f
+    con = sqlite_connect(file)
+    cur = con.cursor()
+
+    res = cur.execute("SELECT count(*) FROM coins")
+    data = res.fetchall()
+    collection_summary['total_count'] = data[0][0]
+
+    res = cur.execute("SELECT count(*) FROM coins WHERE status IN ('owned', 'ordered', 'sale', 'duplicate', 'replacement')")
+    data = res.fetchall()
+    collection_summary['count_owned'] = data[0][0]
+
+    res = cur.execute("SELECT count(*) FROM coins WHERE status='wish'")
+    data = res.fetchall()
+    collection_summary['count_wish'] = data[0][0]
+
+    res = cur.execute("SELECT count(*) FROM coins WHERE status='sold'")
+    data = res.fetchall()
+    collection_summary['count_sold'] = data[0][0]
+
+    res = cur.execute("SELECT count(*) FROM coins WHERE status='bidding'")
+    data = res.fetchall()
+    collection_summary['count_bidding'] = data[0][0]
+
+    res = cur.execute("SELECT count(*) FROM coins WHERE status='missing'")
+    data = res.fetchall()
+    collection_summary['count_missing'] = data[0][0]
+
+    res = cur.execute("SELECT SUM(totalpayprice) FROM coins WHERE status IN ('owned', 'ordered', 'sale', 'sold', 'missing', 'duplicate', 'replacement') AND totalpayprice<>'' AND totalpayprice IS NOT NULL")
+    data = res.fetchall()
+    collection_summary['paid'] = data[0][0]
+
+    res = cur.execute("SELECT SUM(payprice) FROM coins WHERE status IN ('owned', 'ordered', 'sale', 'sold', 'missing', 'duplicate', 'replacement') AND payprice<>'' AND payprice IS NOT NULL")
+    data = res.fetchall()
+    collection_summary['paid_without_commission'] = data[0][0]
+
+    res = cur.execute("SELECT paydate FROM coins WHERE status IN ('owned', 'ordered', 'sale', 'sold', 'missing', 'duplicate', 'replacement') AND paydate<>'' AND paydate IS NOT NULL ORDER BY paydate LIMIT 1")
+    data = res.fetchall()
+    collection_summary['first_purchase'] = data[0][0]
+
+    con.close()
+
+    return collection_summary
+
+
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 

@@ -22,6 +22,10 @@ const routes = [
     name: 'settings',
   },
   {
+    path: '/summary',
+    name: 'summary',
+  },
+  {
     path: '/about',
     name: 'about',
   },

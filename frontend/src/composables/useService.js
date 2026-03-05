@@ -511,6 +511,74 @@ export function useService(passwordDialogRef) {
     return infoFields.findIndex(element => element === field);
   }
 
+  const getSummary = async () => {
+    if (connection_type === 'local')
+      return getSummaryLocal();
+    else if (connection_type === 'remote')
+      return getSummaryRemote(connected_file);
+  }
+
+  const getSummaryRemote = async (file) => {
+    let summary= {};
+
+    await globalStatus.startLoading('Request');
+
+    try {
+      const response = await api.get('/api/summary', {params: {f: file}})
+      summary = response.data
+    }
+    catch (err) {
+      globalStatus.error.value = err
+    }
+    finally {
+      await globalStatus.finishLoading();
+    }
+
+    return summary;
+  }
+
+  const getSummaryLocal = async () => {
+    let collection_summary = {};
+
+    let sql = "SELECT count(*) FROM coins"
+    let results = await executeQuery(sql)
+    collection_summary['total_count'] = results[0][0]
+
+    sql = "SELECT count(*) FROM coins WHERE status IN ('owned', 'ordered', 'sale', 'duplicate', 'replacement')"
+    results = await executeQuery(sql)
+    collection_summary['count_owned'] = results[0][0]
+
+    sql = "SELECT count(*) FROM coins WHERE status='wish'"
+    results = await executeQuery(sql)
+    collection_summary['count_wish'] = results[0][0]
+
+    sql = "SELECT count(*) FROM coins WHERE status='sold'"
+    results = await executeQuery(sql)
+    collection_summary['count_sold'] = results[0][0]
+
+    sql = "SELECT count(*) FROM coins WHERE status='bidding'"
+    results = await executeQuery(sql)
+    collection_summary['count_bidding'] = results[0][0]
+
+    sql = "SELECT count(*) FROM coins WHERE status='missing'"
+    results = await executeQuery(sql)
+    collection_summary['count_missing'] = results[0][0]
+
+    sql = "SELECT SUM(totalpayprice) FROM coins WHERE status IN ('owned', 'ordered', 'sale', 'sold', 'missing', 'duplicate', 'replacement') AND totalpayprice<>'' AND totalpayprice IS NOT NULL"
+    results = await executeQuery(sql)
+    collection_summary['paid'] = results[0][0]
+
+    sql = "SELECT SUM(payprice) FROM coins WHERE status IN ('owned', 'ordered', 'sale', 'sold', 'missing', 'duplicate', 'replacement') AND payprice<>'' AND payprice IS NOT NULL"
+    results = await executeQuery(sql)
+    collection_summary['paid_without_commission'] = results[0][0]
+
+    sql = "SELECT paydate FROM coins WHERE status IN ('owned', 'ordered', 'sale', 'sold', 'missing', 'duplicate', 'replacement') AND paydate<>'' AND paydate IS NOT NULL ORDER BY paydate LIMIT 1"
+    results = await executeQuery(sql)
+    collection_summary['first_purchase'] = results[0][0]
+
+    return collection_summary
+  }
+
   return {
     getServerFileList,
     openRemoteFile,
@@ -520,5 +588,6 @@ export function useService(passwordDialogRef) {
     getDetails,
     getPhotos,
     infoFieldIndex,
+    getSummary,
   }
 }

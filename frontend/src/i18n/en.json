@@ -1,6 +1,7 @@
 {
   "uploading_safety_warranty": "Your file not will be uploaded to the internet. You can disable internet connection.",
   "title_open": "Open",
+  "title_summary": "Summary",
   "title_settings": "Settings",
   "title_about": "About",
   "status_view_text": "Text",
@@ -34,5 +35,15 @@
   "replacement": "Replacement",
   "All": "All",
   "Sort by": "Sort by",
-  "Search": "Search"
+  "Search": "Search",
+  "Total count": "Total count",
+  "Count owned": "Count owned",
+  "Count wish": "Count wish",
+  "Count sales": "Count sales",
+  "Count biddings": "Count biddings",
+  "Count missing": "Count missing",
+  "Paid": "Paid",
+  "commission": "commission",
+  "Average paid per item": "Average paid per item",
+  "First purchase": "First purchase"
 }

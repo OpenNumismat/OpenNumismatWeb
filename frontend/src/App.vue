@@ -10,6 +10,7 @@ import SettingsView from "@/components/SettingsView.vue";
 import AboutView from "@/components/AboutView.vue";
 import CoinView from "@/components/CoinView.vue";
 import ImagesView from "@/components/ImagesView.vue";
+import SummaryView from "@/components/SummaryView.vue";
 import { currentTheme } from "@/composables/useSettings";
 import PasswordDialog from '@/components/PasswordDialog.vue'
 import FileServerView from "@/components/FileServerView.vue";
@@ -125,6 +126,14 @@ const handleFileUpload = async (file) => {
           :active="route.name === 'open'"
         ></v-list-item>
         <v-list-item
+          v-if="isOpened"
+          prepend-icon="mdi-text-box-outline"
+          :title="$t('title_summary')"
+          value="summary"
+          @click="router.push('/summary'); drawer = false"
+          :active="route.name === 'summary'"
+        ></v-list-item>
+        <v-list-item
           prepend-icon="mdi-cog"
           :title="$t('title_settings')"
           value="settings"
@@ -151,6 +160,7 @@ const handleFileUpload = async (file) => {
           :settings="collectionSettings" :filters="collectionFilters"
           ref="coinListViewRef" />
       </KeepAlive>
+      <SummaryView v-if="route.name === 'summary' && isOpened" />
       <CoinView v-if="route.name === 'coin' && isOpened"
         :settings="collectionSettings" />
       <ImagesView v-if="route.name === 'images' && isOpened" />
