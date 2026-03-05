@@ -49,9 +49,9 @@ onUnmounted(async () => {
 
   <v-container>
     <dl>
-      <v-row no-gutters>
+      <v-row density="compact">
         <v-col cols="12" md="6">
-          <v-row no-gutters>
+          <v-row density="compact">
             <dt class="v-col-sm-3 text-medium-emphasis">{{ settings.fields['status'] }}</dt>
             <dd class="v-col-sm-9">
               <StatusItem :status="coinData[service.infoFieldIndex('status')]" :statuses="settings.statuses" statusPresentation="icon_text" class="font-weight-bold" />
@@ -130,7 +130,7 @@ onUnmounted(async () => {
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-row no-gutters>
+          <v-row density="compact">
             <template v-if="coinData[service.infoFieldIndex('grade')]">
               <dt class="v-col-sm-3 text-medium-emphasis">{{ settings.fields['grade'] }}</dt>
               <dd class="v-col-sm-9 font-weight-bold">{{ coinData[service.infoFieldIndex('grade')] }}</dd>

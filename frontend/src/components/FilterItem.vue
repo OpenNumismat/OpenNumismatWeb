@@ -22,11 +22,11 @@ const onFilterChanged = async (val) => {
     density="comfortable"
   >
     <template v-slot:selection="{ item }" v-if="field === 'status'">
-      <StatusItem :status="item.raw" :statuses="settings.statuses" statusPresentation="icon_text" />
+      <StatusItem :status="item" :statuses="settings.statuses" statusPresentation="icon_text" />
     </template>
     <template v-slot:item="{ props, item }" v-if="field === 'status'">
       <v-list-item v-bind="props" title="">
-        <StatusItem :status="item.raw" :statuses="settings.statuses" statusPresentation="icon_text" />
+        <StatusItem :status="item" :statuses="settings.statuses" statusPresentation="icon_text" />
       </v-list-item>
     </template>
   </v-select>

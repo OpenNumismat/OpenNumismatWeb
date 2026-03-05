@@ -11,18 +11,18 @@ const props = defineProps(['status', 'statuses', 'statusPresentation', 'class'])
     {{ statuses[status] }}
   </template>
   <template v-if="statusPresentation === 'icon_text'">
-    <v-row align="center" no-gutters>
+    <v-row align="center" density="compact">
       <v-col cols="auto">
         <v-img :src="`${status}.png`" width="16"></v-img>
       </v-col>
-      <v-col class="ps-2" :class="props.class">
+      <v-col :class="props.class">
         {{ statuses[status] }}
       </v-col>
     </v-row>
   </template>
   <template v-if="statusPresentation === 'text_icon'">
-    <v-row align="center" no-gutters>
-      <v-col class="pe-2" :class="props.class">
+    <v-row align="center" density="compact">
+      <v-col :class="props.class">
         {{ statuses[status] }}
       </v-col>
       <v-col cols="auto">

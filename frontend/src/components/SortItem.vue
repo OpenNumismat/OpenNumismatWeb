@@ -12,7 +12,7 @@ const onChanged = async (val) => {
 </script>
 
 <template>
-  <v-row align="center" no-gutters v-if="fields.length > 0">
+  <v-row align="center" density="compact" v-if="fields.length > 0">
     <v-col class="mr-4">
       <v-select
         v-model="sortedBy"
