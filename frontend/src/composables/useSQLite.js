@@ -83,6 +83,16 @@ export function useSQLite() {
     let results = null
 
     try {
+/*
+      const result = [];
+      const stmt = db.prepare(sql);
+      stmt.bind(params);
+      while(stmt.step()) {
+        result.push(stmt.get());
+      }
+      stmt.free();
+      results = result;
+*/
       const result = db.exec(sql, params);
       results = result.length > 0
         ? result[0].values
