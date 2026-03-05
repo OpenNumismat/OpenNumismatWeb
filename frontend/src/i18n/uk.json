@@ -1,6 +1,7 @@
 {
   "uploading_safety_warranty": "Ваш файл не буде завантажено в Інтернет. Ви можете вимкнути підключення до Інтернету.",
   "title_open": "Відкрити",
+  "title_summary": "Зведення",
   "title_settings": "Налаштування",
   "title_about": "Про програму",
   "status_view_text": "Текст",
@@ -32,5 +33,17 @@
   "bidding": "Ставка",
   "duplicate": "Дублікат",
   "replacement": "Заміна",
-  "All": "Усе"
+  "All": "Усе",
+  "Sort by": "Сортувати за",
+  "Search": "Search",
+  "Total count": "Усього",
+  "Count owned": "Кількість наявних",
+  "Count wish": "Кількість потрібних",
+  "Count sales": "Кількість проданих",
+  "Count biddings": "Кількість ставок",
+  "Count missing": "Кількість потрібних",
+  "Paid": "Сплачено",
+  "commission": "Комісія",
+  "Average paid per item": "Середня ціна за шт.",
+  "First purchase": "Перше придбання"
 }
