@@ -130,9 +130,11 @@ const loadImage = async (index, coinId) => {
     <v-text-field
         v-model="searchVal"
         :label="i18n.global.t('Search')"
-        clearable
         @change="onChanged"
         @click:clear="onChanged"
+        clearable
+        density="comfortable"
+        hide-details
     />
   </v-container>
 

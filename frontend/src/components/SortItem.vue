@@ -16,13 +16,14 @@ const onChanged = async (val) => {
     <v-col class="mr-4">
       <v-select
         v-model="sortedBy"
-        hide-details
         :items="fields"
         :label="i18n.global.t('Sort by')"
         :item-title="item => settings.fields[item]"
         @update:modelValue="onChanged"
         return-object
         clearable
+        density="comfortable"
+        hide-details
       ></v-select>
     </v-col>
 

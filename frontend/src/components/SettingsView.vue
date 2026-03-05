@@ -67,6 +67,8 @@ const handleThemeChange = (theme) => {
                 item-title="name"
                 item-value="lang"
                 @update:model-value="setLocale"
+                density="comfortable"
+                hide-details
             >
             </v-select>
           </v-list-item-action>
@@ -79,6 +81,8 @@ const handleThemeChange = (theme) => {
                 v-model="statusPresentation"
                 :items="statusItems"
                 :item-title="item => i18n.global.t(item.title)"
+                density="comfortable"
+                hide-details
             >
             </v-select>
           </v-list-item-action>
@@ -91,6 +95,8 @@ const handleThemeChange = (theme) => {
                 v-model="imagePresentation"
                 :items="imageViewItems"
                 :item-title="item => i18n.global.t(item.title)"
+                density="comfortable"
+                hide-details
             >
             </v-select>
           </v-list-item-action>

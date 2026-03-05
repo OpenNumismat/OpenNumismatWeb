@@ -30,6 +30,7 @@ const onFilterClear = async () => {
     @update:modelValue="onFilterChanged"
     return-object
     v-model:menu="isMenuOpen"
+    density="comfortable"
   >
     <template v-slot:prepend-item>
       <v-list-item :title="i18n.global.t('All')" @click="onFilterClear"></v-list-item>
