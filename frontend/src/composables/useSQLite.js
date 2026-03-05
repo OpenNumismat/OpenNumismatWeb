@@ -20,7 +20,7 @@ export function useSQLite() {
 
     try {
       SQL = await initSqlJs({
-        locateFile: file => `https://sql.js.org/dist/${file}`
+        locateFile: file => `/assets/wasm/${file}`
       });
       isInitialized = true
     }

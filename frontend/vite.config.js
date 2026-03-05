@@ -1,7 +1,9 @@
 import { fileURLToPath, URL } from 'node:url'
+import path from 'node:path'
 
 import { VitePWA } from 'vite-plugin-pwa'
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig, loadEnv, normalizePath } from 'vite'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 import vue from '@vitejs/plugin-vue'
 
 
@@ -40,6 +42,14 @@ export default defineConfig(({ mode }) => {
           ],
           orientation: 'portrait',
         }
+      }),
+      viteStaticCopy({
+        targets: [
+          {
+            src: normalizePath(path.resolve(__dirname, './node_modules/sql.js/dist/sql-wasm-browser.wasm')),
+            dest: 'assets/wasm'
+          }
+        ]
       }),
     ],
     resolve: {
