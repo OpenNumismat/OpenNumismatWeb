@@ -1,6 +1,7 @@
 {
   "uploading_safety_warranty": "Ваш файл не будет загружен в Интернет. Вы можете отключить подключение к Интернету.",
   "title_open": "Открыть",
+  "title_summary": "Сводка",
   "title_settings": "Настройки",
   "title_about": "О программе",
   "status_view_text": "Текст",
@@ -32,5 +33,17 @@
   "bidding": "Ставка",
   "duplicate": "Дубликат",
   "replacement": "Замена",
-  "All": "Все"
+  "All": "Все",
+  "Sort by": "Сортировать по",
+  "Search": "Поиск",
+  "Total count": "Всего",
+  "Count owned": "Количество имеющихся",
+  "Count wish": "Количество нужных",
+  "Count sales": "Количество проданных",
+  "Count biddings": "Количество ставок",
+  "Count missing": "Количество утерянных",
+  "Paid": "Уплачено",
+  "commission": "комиссия",
+  "Average paid per item": "Средняя цена за шт",
+  "First purchase": "Первая покупка"
 }

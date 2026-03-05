@@ -1,6 +1,7 @@
 {
   "uploading_safety_warranty": "Il tuo file non verrà caricato su Internet. Puoi disconnettere la connessione a Internet.",
   "title_open": "Apri",
+  "title_summary": "Riepilogo",
   "title_settings": "Impostazioni",
   "title_about": "A riguardo",
   "status_view_text": "Testo",
@@ -32,5 +33,17 @@
   "bidding": "Offerto",
   "duplicate": "Doppia",
   "replacement": "Rimpiazzo",
-  "All": "Tutto"
+  "All": "Tutto",
+  "Sort by": "Ordina per",
+  "Search": "Search",
+  "Total count": "Conteggio totale",
+  "Count owned": "Totale possedute",
+  "Count wish": "Totale desiderate",
+  "Count sales": "Totale vendite",
+  "Count biddings": "Totale offerte",
+  "Count missing": "Totale mancanti",
+  "Paid": "Pagato",
+  "commission": "Commissione",
+  "Average paid per item": "Costo medio per elemento",
+  "First purchase": "Primo acquisto"
 }

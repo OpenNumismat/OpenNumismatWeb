@@ -1,6 +1,7 @@
 {
   "uploading_safety_warranty": "Su archivo no será subido a Internet. Puede deshabilitar la conexión a Internet.",
   "title_open": "Abrir",
+  "title_summary": "Sumario",
   "title_settings": "Configuración",
   "title_about": "Acerca de",
   "status_view_text": "Texto",
@@ -32,5 +33,17 @@
   "bidding": "Pujas",
   "duplicate": "Duplicado",
   "replacement": "Reemplazo",
-  "All": "Todo"
+  "All": "Todo",
+  "Sort by": "Ordenar por",
+  "Search": "Search",
+  "Total count": "Recuento total",
+  "Count owned": "Recuento propias",
+  "Count wish": "Recuento deseadas",
+  "Count sales": "Recuento de ventas",
+  "Count biddings": "Recuento de pujas",
+  "Count missing": "Recuento desaparecidas",
+  "Paid": "Pagado",
+  "commission": "comisión",
+  "Average paid per item": "Promedio pagado por artículo",
+  "First purchase": "Primera compra"
 }

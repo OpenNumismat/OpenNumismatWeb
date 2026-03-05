@@ -1,6 +1,7 @@
 {
   "uploading_safety_warranty": "Ihre Datei wird nicht auf einen Server geladen. Sie können die Internetverbindung deaktivieren.",
   "title_open": "Öffnen",
+  "title_summary": "Zusammenfassung",
   "title_settings": "Einstellungen",
   "title_about": "Über",
   "status_view_text": "Text",
@@ -32,5 +33,17 @@
   "bidding": "Bieten",
   "duplicate": "Duplikat",
   "replacement": "Ersatz",
-  "All": "Alle"
+  "All": "Alle",
+  "Sort by": "Sortiere nach",
+  "Search": "Search",
+  "Total count": "Gesamtanzahl",
+  "Count owned": "Anzahl im Besitz",
+  "Count wish": "Anzahl gewünscht",
+  "Count sales": "Anzahl Verkauf",
+  "Count biddings": "Anzahl geboten",
+  "Count missing": "Anzahl fehlend",
+  "Paid": "Bezahlt",
+  "commission": "Provision",
+  "Average paid per item": "Ø-Preis pro Artikel",
+  "First purchase": "erster Kauf"
 }

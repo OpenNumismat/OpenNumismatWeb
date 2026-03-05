@@ -1,6 +1,7 @@
 {
   "uploading_safety_warranty": "O seu ficheiro não será enviado para a Internet. Pode desactivar a ligação.",
   "title_open": "Abrir",
+  "title_summary": "Resumo",
   "title_settings": "Definições",
   "title_about": "Sobre",
   "status_view_text": "Texto",
@@ -32,5 +33,17 @@
   "bidding": "Oferta",
   "duplicate": "Duplicar",
   "replacement": "Substituto",
-  "All": "Tudo"
+  "All": "Tudo",
+  "Sort by": "Ordenar por",
+  "Search": "Search",
+  "Total count": "Contagem total",
+  "Count owned": "Possuídas",
+  "Count wish": "Desejadas",
+  "Count sales": "Vendidas",
+  "Count biddings": "Total de ofertas",
+  "Count missing": "Total de faltas",
+  "Paid": "Pago",
+  "commission": "comissão",
+  "Average paid per item": "Média paga por item",
+  "First purchase": "Primeira compra"
 }
