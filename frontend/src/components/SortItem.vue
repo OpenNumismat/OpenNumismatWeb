@@ -23,6 +23,7 @@ const onChanged = async (val) => {
         return-object
         clearable
         density="comfortable"
+        inputmode="none"
         hide-details
       ></v-select>
     </v-col>

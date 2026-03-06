@@ -20,6 +20,7 @@ const onFilterChanged = async (val) => {
     return-object
     clearable
     density="comfortable"
+    inputmode="none"
   >
     <template v-slot:selection="{ item }" v-if="field === 'status'">
       <StatusItem :status="item" :statuses="settings.statuses" statusPresentation="icon_text" />
