@@ -132,6 +132,7 @@ const loadImage = async (index, coinId) => {
         :label="i18n.global.t('Search')"
         @change="onChanged"
         @click:clear="onChanged"
+        @keydown.enter="$event.target.blur()"
         clearable
         density="comfortable"
         hide-details
