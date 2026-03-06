@@ -352,7 +352,8 @@ def summary(f):
 
     res = cur.execute("SELECT paydate FROM coins WHERE status IN ('owned', 'ordered', 'sale', 'sold', 'missing', 'duplicate', 'replacement') AND paydate<>'' AND paydate IS NOT NULL ORDER BY paydate LIMIT 1")
     data = res.fetchall()
-    collection_summary['first_purchase'] = data[0][0]
+    if data:
+        collection_summary['first_purchase'] = data[0][0]
 
     con.close()
 
