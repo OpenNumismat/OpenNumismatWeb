@@ -7,6 +7,7 @@ import i18n from '../i18n'
 import StatusItem from "./StatusItem.vue"
 import {convertFraction, formatYear} from "@/utils/formatter.js";
 import {useService} from "@/composables/useService.js";
+import InfoRow from "@/components/InfoRow.vue";
 
 const router = useRouter()
 const route = useRoute()
@@ -52,189 +53,117 @@ onUnmounted(async () => {
       <v-row density="compact">
         <v-col cols="12" md="6">
           <v-row density="compact">
-            <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-              {{ settings.fields['status'] }}
-            </v-col>
-            <v-col tag="dd" cols="12" sm="9">
+            <InfoRow :title="settings.fields['status']">
               <StatusItem :status="coinData[service.infoFieldIndex('status')]" :statuses="settings.statuses" statusPresentation="icon_text" class="font-weight-bold" />
-            </v-col>
-            <template v-if="coinData[service.infoFieldIndex('region')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['region'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('region')] }}
-              </v-col>
-            </template>
-            <template v-if="coinData[service.infoFieldIndex('country')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['country'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('country')] }}
-              </v-col>
-            </template>
-            <template v-if="coinData[service.infoFieldIndex('period')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['period'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('period')] }}
-              </v-col>
-            </template>
-            <template v-if="coinData[service.infoFieldIndex('ruler')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['ruler'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('ruler')] }}
-              </v-col>
-            </template>
-            <template v-if="coinData[service.infoFieldIndex('value')] || coinData[service.infoFieldIndex('unit')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ i18n.global.t('Denomination') }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ convertFraction(props.settings.convert_fraction, coinData[service.infoFieldIndex('value')]) }}
-                {{ coinData[service.infoFieldIndex('unit')] }}
-              </v-col>
-            </template>
-            <template v-if="coinData[service.infoFieldIndex('type')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['type'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('type')] }}
-              </v-col>
-            </template>
-            <template v-if="coinData[service.infoFieldIndex('series')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['series'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('series')] }}
-              </v-col>
-            </template>
-            <template v-if="coinData[service.infoFieldIndex('subjectshort')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['subjectshort'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('subjectshort')] }}
-              </v-col>
-            </template>
+            </InfoRow>
+            <InfoRow
+              :title="settings.fields['region']"
+              :value="coinData[service.infoFieldIndex('region')]"
+            />
+            <InfoRow
+              :title="settings.fields['country']"
+              :value="coinData[service.infoFieldIndex('country')]"
+            />
+            <InfoRow
+              :title="settings.fields['period']"
+              :value="coinData[service.infoFieldIndex('period')]"
+            />
+            <InfoRow
+              :title="settings.fields['ruler']"
+              :value="coinData[service.infoFieldIndex('ruler')]"
+            />
+            <InfoRow
+                v-if="coinData[service.infoFieldIndex('value')] || coinData[service.infoFieldIndex('unit')]"
+                :title="i18n.global.t('Denomination')"
+            >
+              {{ convertFraction(props.settings.convert_fraction, coinData[service.infoFieldIndex('value')]) }}
+              {{ coinData[service.infoFieldIndex('unit')] }}
+            </InfoRow>
+            <InfoRow
+              :title="settings.fields['type']"
+              :value="coinData[service.infoFieldIndex('type')]"
+            />
+            <InfoRow
+              :title="settings.fields['series']"
+              :value="coinData[service.infoFieldIndex('series')]"
+            />
+            <InfoRow
+              :title="settings.fields['subjectshort']"
+              :value="coinData[service.infoFieldIndex('subjectshort')]"
+            />
 
-            <template v-if="coinData[service.infoFieldIndex('issuedate')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['issuedate'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('issuedate')] }}
-              </v-col>
-            </template>
-            <template v-else-if="coinData[service.infoFieldIndex('year')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['year'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ formatYear(props.settings.enable_bc, coinData[service.infoFieldIndex('year')]) }}
-              </v-col>
-            </template>
+            <InfoRow
+                v-if="coinData[service.infoFieldIndex('issuedate')]"
+                :title="i18n.global.t('Issuedate')"
+            >
+              {{ i18n.global.d(coinData[service.infoFieldIndex('issuedate')]) }}
+            </InfoRow>
+            <InfoRow
+                v-else-if="coinData[service.infoFieldIndex('year')]"
+                :title="i18n.global.t('year')"
+            >
+              {{ formatYear(props.settings.enable_bc, coinData[service.infoFieldIndex('year')]) }}
+            </InfoRow>
 
-            <template v-if="coinData[service.infoFieldIndex('mintage')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['mintage'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('mintage')] }}
-              </v-col>
-            </template>
-            <template v-if="coinData[service.infoFieldIndex('material')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['material'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('material')] }}
-              </v-col>
-            </template>
+            <InfoRow
+              v-if="coinData[service.infoFieldIndex('mintage')]"
+              :title="settings.fields['mintage']"
+              :value="i18n.global.n(coinData[service.infoFieldIndex('mintage')])"
+            />
+            <InfoRow
+              :title="settings.fields['material']"
+              :value="coinData[service.infoFieldIndex('material')]"
+            />
 
-            <template v-if="coinData[service.infoFieldIndex('mint')] && coinData[service.infoFieldIndex('mintmark')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['mint'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('mint')] }} ({{ coinData[service.infoFieldIndex('mintmark')] }})
-              </v-col>
-            </template>
-            <template v-else-if="coinData[service.infoFieldIndex('mint')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['mint'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('mint')] }}
-              </v-col>
-            </template>
-            <template v-else-if="coinData[service.infoFieldIndex('mintmark')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['mintmark'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('mintmark')] }}
-              </v-col>
-            </template>
+            <InfoRow
+                v-if="coinData[service.infoFieldIndex('mint')] && coinData[service.infoFieldIndex('mintmark')]"
+                :title="settings.fields['mint']"
+            >
+              {{ coinData[service.infoFieldIndex('mint')] }} ({{ coinData[service.infoFieldIndex('mintmark')] }})
+            </InfoRow>
+            <InfoRow
+                v-else-if="coinData[service.infoFieldIndex('mint')]"
+                :title="settings.fields['mint']"
+            >
+              {{ coinData[service.infoFieldIndex('mint')] }}
+            </InfoRow>
+            <InfoRow
+                v-else-if="coinData[service.infoFieldIndex('mintmark')]"
+                :title="settings.fields['mintmark']"
+            >
+              {{ coinData[service.infoFieldIndex('mintmark')] }}
+            </InfoRow>
           </v-row>
         </v-col>
 
         <v-col cols="12" md="6">
           <v-row density="compact">
-            <template v-if="coinData[service.infoFieldIndex('grade')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['grade'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('grade')] }}
-              </v-col>
-            </template>
-            <template v-if="coinData[service.infoFieldIndex('paydate')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['paydate'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('paydate')] }}
-              </v-col>
-            </template>
-            <template v-if="coinData[service.infoFieldIndex('payprice')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['payprice'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('payprice')] }}
-              </v-col>
-            </template>
-            <template v-if="coinData[service.infoFieldIndex('storage')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['storage'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('storage')] }}
-              </v-col>
-            </template>
-            <template v-if="coinData[service.infoFieldIndex('condition')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['condition'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('condition')] }}
-              </v-col>
-            </template>
-            <template v-if="coinData[service.infoFieldIndex('quantity')]">
-              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
-                {{ settings.fields['quantity'] }}
-              </v-col>
-              <v-col tag="dd" cols="12" sm="9" class="font-weight-bold">
-                {{ coinData[service.infoFieldIndex('quantity')] }}
-              </v-col>
-            </template>
+            <InfoRow
+              :title="settings.fields['grade']"
+              :value="coinData[service.infoFieldIndex('grade')]"
+            />
+            <InfoRow
+              v-if="coinData[service.infoFieldIndex('paydate')]"
+              :title="settings.fields['paydate']"
+              :value="i18n.global.d()"
+            />
+            <InfoRow
+              v-if="coinData[service.infoFieldIndex('payprice')]"
+              :title="settings.fields['payprice']"
+              :value="i18n.global.n(coinData[service.infoFieldIndex('payprice')])"
+            />
+            <InfoRow
+              :title="settings.fields['storage']"
+              :value="coinData[service.infoFieldIndex('storage')]"
+            />
+            <InfoRow
+              :title="settings.fields['condition']"
+              :value="coinData[service.infoFieldIndex('condition')]"
+            />
+            <InfoRow
+              :title="settings.fields['quantity']"
+              :value="coinData[service.infoFieldIndex('quantity')]"
+            />
           </v-row>
         </v-col>
       </v-row>
