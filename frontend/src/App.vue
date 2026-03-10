@@ -16,6 +16,7 @@ import PasswordDialog from '@/components/PasswordDialog.vue'
 import FileServerView from "@/components/FileServerView.vue";
 import {useGlobalStatus} from "@/composables/useGlobalStatus.js";
 import {useService} from "@/composables/useService.js";
+import ReloadPrompt from "@/components/ReloadPrompt.vue";
 
 const passwordDialog = ref()
 
@@ -222,6 +223,7 @@ const handleFileUpload = async (file) => {
       </v-snackbar>
 
       <PasswordDialog ref="passwordDialog" />
+      <ReloadPrompt />
 
     </v-main>
   </v-app>

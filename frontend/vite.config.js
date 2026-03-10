@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       vue(),
       VitePWA({
-        registerType: 'autoUpdate',
+        registerType: 'prompt',
         manifest: {
           id: env.VITE_BASE_PATH || '/OpenNumismatWeb/',
           name: 'OpenNumismat Web',
@@ -44,6 +44,7 @@ export default defineConfig(({ mode }) => {
         },
         workbox: {
           globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,wasm}'],
+          cleanupOutdatedCaches: true,
         }
       }),
       viteStaticCopy({
