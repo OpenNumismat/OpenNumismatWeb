@@ -41,6 +41,9 @@ export default defineConfig(({ mode }) => {
             { src: 'icon-512.png', sizes: '512x512', type: 'image/png' }
           ],
           orientation: 'portrait',
+        },
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,wasm}'],
         }
       }),
       viteStaticCopy({
