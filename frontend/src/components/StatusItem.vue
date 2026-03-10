@@ -7,10 +7,10 @@ const props = defineProps(['status', 'statuses', 'statusPresentation', 'class'])
   <template v-if="statusPresentation === 'icon'">
     <v-img :src="`${status}.png`" :width="16" />
   </template>
-  <template v-if="statusPresentation === 'text'">
+  <template v-else-if="statusPresentation === 'text'">
     {{ statuses[status] }}
   </template>
-  <template v-if="statusPresentation === 'icon_text'">
+  <template v-else-if="statusPresentation === 'icon_text'">
     <v-row align="center" density="compact">
       <v-col cols="auto">
         <v-img :src="`${status}.png`" width="16"></v-img>
@@ -20,7 +20,7 @@ const props = defineProps(['status', 'statuses', 'statusPresentation', 'class'])
       </v-col>
     </v-row>
   </template>
-  <template v-if="statusPresentation === 'text_icon'">
+  <template v-else>
     <v-row align="center" density="compact">
       <v-col :class="props.class">
         {{ statuses[status] }}
