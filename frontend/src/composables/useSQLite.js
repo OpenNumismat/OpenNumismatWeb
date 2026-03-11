@@ -93,6 +93,7 @@ export function useSQLite() {
       stmt.free();
       results = result;
 */
+      console.log(sql, params)
       const result = db.exec(sql, params);
       results = result.length > 0
         ? result[0].values
