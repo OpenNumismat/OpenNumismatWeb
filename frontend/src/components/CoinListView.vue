@@ -43,17 +43,6 @@ onUnmounted(async () => {
 })
 
 const onOpenFile = async () => {
-  searchVal.value = null
-  sortedBy.value = null
-  reverseSort.value = false
-  selectedStatus.value = null
-  selectedCountry.value = null
-  selectedSeries.value = null
-  selectedType.value = null
-  selectedPeriod.value = null
-  selectedMint.value = null
-  images.value = []
-  coinsList.value = []
   coinsList.value = await service.loadCoins()
   images.value = new Array(coinsList.value.length).fill('')
 
@@ -70,8 +59,23 @@ const onOpenFile = async () => {
     fields.value.push('period')
 }
 
+const clear = async () => {
+  searchVal.value = null
+  sortedBy.value = null
+  reverseSort.value = false
+  selectedStatus.value = null
+  selectedCountry.value = null
+  selectedSeries.value = null
+  selectedType.value = null
+  selectedPeriod.value = null
+  selectedMint.value = null
+  images.value = []
+  coinsList.value = []
+}
+
 defineExpose({
-  onOpenFile
+  onOpenFile,
+  clear
 })
 
 function generateDescription( coin_data ) {
@@ -94,6 +98,8 @@ function generateDescription( coin_data ) {
 }
 
 const onChanged = async () => {
+  images.value = []
+  coinsList.value = []
   coinsList.value = await service.loadCoins(
       searchVal.value,
       sortedBy.value,

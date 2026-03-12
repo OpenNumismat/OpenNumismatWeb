@@ -70,9 +70,16 @@ const openFile = async (file, connection_type) => {
   if (!file)
     return;
 
-  collectionFilters.value = {'status': [], 'country': [], 'series': [], 'type': [], 'period': [], 'mint': []}
-  isOpened = true;
+  watch(coinListViewRef, (newVal) => {
+    if (newVal) {
+      coinListViewRef.value.clear()
+    }
+  })
+
   await router.replace('/')
+  isOpened = true;
+
+  collectionFilters.value = {'status': [], 'country': [], 'series': [], 'type': [], 'period': [], 'mint': []}
   let ret = null
 
   if (connection_type === 'remote') {
@@ -90,7 +97,7 @@ const openFile = async (file, connection_type) => {
     collectionSettings.value = ret.collectionSettings;
     collectionFilters.value = ret.collectionFilters;
 
-    coinListViewRef.value.onOpenFile()
+    await coinListViewRef.value.onOpenFile()
   }
 }
 
