@@ -32,7 +32,8 @@ def version():
 def filelist():
     root = Path(DATA_PATH).resolve()
     db_files = []
-    for file_path in root.rglob('*.db'):
+    for file_path in sorted(root.rglob('*.db'),
+                            key=lambda x: str(x.relative_to(root)).casefold()):
         if file_path.is_file():
             rel_path = file_path.relative_to(root)
 
