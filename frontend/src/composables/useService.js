@@ -287,6 +287,9 @@ export function useService(passwordDialogRef) {
     catch (err) {
       globalStatus.error.value = err
     }
+    finally {
+      await globalStatus.finishLoading();
+    }
 
     return coinsList;
   }
