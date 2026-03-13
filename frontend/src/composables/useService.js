@@ -267,6 +267,8 @@ export function useService(passwordDialogRef) {
   const loadCoinsRemote = async (search, sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, file) => {
     let coinsList = [];
 
+    await globalStatus.startLoading('Load coins');
+
     try {
       const responseCoins = await api.get('/api/coins', {params: {
           f: file,
