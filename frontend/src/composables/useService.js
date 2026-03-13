@@ -9,7 +9,7 @@ const {openDatabase, executeQuery} = useSQLite();
 
 const api = axios.create({
 //  baseURL: 'http://localhost:8000',
-  timeout: 15000,
+  timeout: 20000,
 })
 
 let connection_type = null;

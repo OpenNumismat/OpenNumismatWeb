@@ -145,7 +145,7 @@ onUnmounted(async () => {
             <InfoRow
               v-if="coinData[service.infoFieldIndex('paydate')]"
               :title="settings.fields['paydate']"
-              :value="i18n.global.d()"
+              :value="i18n.global.d(coinData[service.infoFieldIndex('paydate')])"
             />
             <InfoRow
               v-if="coinData[service.infoFieldIndex('payprice')]"
