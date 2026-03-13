@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, onUnmounted, ref} from "vue";
+import {onMounted, onUnmounted, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import {arrayBufferToBase64} from "@/utils/bytes2img.js"
 import StatusItem from "./StatusItem.vue"
@@ -13,7 +13,8 @@ import i18n from "@/i18n/index.js";
 const router = useRouter()
 const service = useService();
 
-const images = ref([])
+const presentationState = ref(imagePresentation)
+const images = ref({})
 const coinsList = ref([])
 const searchVal = ref(null)
 const sortedBy = ref(null)
@@ -38,13 +39,27 @@ const props = defineProps({
 });
 
 onMounted(async () => {
+  watch(presentationState, () => {
+    images.value = {}
+    if (imagePresentation.value === 'image' && props.settings.type) {
+      const coins_list = service.loadCoins()
+      coins_list.forEach((coin) => {
+        images.value[coin[0]] = coin[1];
+      });
+    }
+  })
 })
 onUnmounted(async () => {
 })
 
 const onOpenFile = async () => {
+  images.value = {};
   coinsList.value = await service.loadCoins()
-  images.value = new Array(coinsList.value.length).fill('')
+  if (imagePresentation.value === 'image') {
+    coinsList.value.forEach((coin) => {
+      images.value[coin[0]] = coin[1];
+    });
+  }
 
   fields.value = ['title', 'year']
   if (props.filters['status'].length > 1)
@@ -69,7 +84,6 @@ const clear = async () => {
   selectedType.value = null
   selectedPeriod.value = null
   selectedMint.value = null
-  images.value = []
   coinsList.value = []
 }
 
@@ -98,7 +112,6 @@ function generateDescription( coin_data ) {
 }
 
 const onChanged = async () => {
-  images.value = []
   coinsList.value = []
   coinsList.value = await service.loadCoins(
       searchVal.value,
@@ -113,8 +126,11 @@ const onChanged = async () => {
   );
 }
 
-const loadImage = async (index, coinId) => {
-  images.value[index] = await service.loadImage(coinId, imagePresentation.value);
+const loadImage = async (coinId) => {
+  if (coinId in images.value)
+    return;
+
+  images.value[coinId] = await service.loadImage(coinId, imagePresentation.value);
 }
 </script>
 
@@ -157,21 +173,21 @@ const loadImage = async (index, coinId) => {
       >
         <template v-slot:prepend v-if="imagePresentation === 'obverse'">
           <v-lazy :width="56">
-            <v-img :src="images[index]" :width="56" max-height="56" :tmp="loadImage(index, coin[0])" />
+            <v-img :src="images[coin[0]]" :width="56" max-height="56" :tmp="loadImage(coin[0])" />
           </v-lazy>
         </template>
         <template v-slot:prepend v-else-if="imagePresentation === 'reverse'">
           <v-lazy :width="56">
-            <v-img :src="images[index]" :width="56" max-height="56" :tmp="loadImage(index, coin[0])" />
+            <v-img :src="images[coin[0]]" :width="56" max-height="56" :tmp="loadImage(coin[0])" />
           </v-lazy>
         </template>
         <template v-slot:prepend v-else-if="imagePresentation === 'both'">
           <v-lazy :width="100">
-            <v-img :src="images[index]" :width="100" max-height="56" :tmp="loadImage(index, coin[0])" />
+            <v-img :src="images[coin[0]]" :width="100" max-height="56" :tmp="loadImage(coin[0])" />
           </v-lazy>
         </template>
         <template v-slot:prepend v-else>
-          <v-img :src="arrayBufferToBase64(coin[1])" :width="100" max-height="56" />
+          <v-img :src="arrayBufferToBase64(images[coin[0]])" :width="100" max-height="56" />
         </template>
         <template v-slot:append>
           <StatusItem :status="coin[3]" :statuses="settings.statuses" :statusPresentation="statusPresentation" />
