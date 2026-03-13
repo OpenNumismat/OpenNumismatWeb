@@ -70,7 +70,7 @@ const openFile = async (file, connection_type) => {
   if (!file)
     return;
 
-  watch(coinListViewRef, (newVal) => {
+  const stopClearWatch = watch(coinListViewRef, (newVal) => {
     if (newVal) {
       coinListViewRef.value.clear()
     }
@@ -99,6 +99,8 @@ const openFile = async (file, connection_type) => {
 
     await coinListViewRef.value.onOpenFile()
   }
+
+  stopClearWatch()
 }
 
 const handleRemoteFileSelected = async (file) => {
