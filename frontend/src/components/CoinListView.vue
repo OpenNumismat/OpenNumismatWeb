@@ -13,7 +13,6 @@ import i18n from "@/i18n/index.js";
 const router = useRouter()
 const service = useService();
 
-const presentationState = ref(imagePresentation)
 const images = ref({})
 const coinsList = ref([])
 const searchVal = ref(null)
@@ -39,10 +38,10 @@ const props = defineProps({
 });
 
 onMounted(async () => {
-  watch(presentationState, () => {
+  watch(imagePresentation,async () => {
     images.value = {}
     if (imagePresentation.value === 'image' && props.settings.type) {
-      const coins_list = service.loadCoins()
+      const coins_list = await service.loadCoins()
       coins_list.forEach((coin) => {
         images.value[coin[0]] = coin[1];
       });
