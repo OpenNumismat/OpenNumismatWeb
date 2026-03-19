@@ -41,9 +41,9 @@ onMounted(async () => {
   watch(imagePresentation,async () => {
     images.value = {}
     if (imagePresentation.value === 'image' && props.settings.type) {
-      const coins_list = await service.loadCoins()
-      coins_list.forEach((coin) => {
-        images.value[coin[0]] = coin[1];
+      const coin_images = await service.loadImages()
+      coin_images.forEach((coin_image) => {
+        images.value[coin_image[0]] = coin_image[1];
       });
     }
   })
@@ -55,8 +55,9 @@ const onOpenFile = async () => {
   images.value = {};
   coinsList.value = await service.loadCoins()
   if (imagePresentation.value === 'image') {
-    coinsList.value.forEach((coin) => {
-      images.value[coin[0]] = coin[1];
+    const coin_images = await service.loadImages()
+    coin_images.forEach((coin_image) => {
+      images.value[coin_image[0]] = coin_image[1];
     });
   }
 
@@ -93,19 +94,19 @@ defineExpose({
 
 function generateDescription( coin_data ) {
   let desc = [];
-  if (coin_data[4])
-    desc.push(coin_data[4]);
-  if (coin_data[5] || coin_data[6])
-    desc.push(convertFraction(props.settings.convert_fraction, coin_data[5]) + ' ' + coin_data[6]);
-  if (coin_data[10])
-    desc.push(coin_data[10]);
-  if (coin_data[7]) {
-    desc.push(formatYear(props.settings.enable_bc, coin_data[7]));
-  }
-  if (coin_data[8])
-    desc.push(coin_data[8]);
+  if (coin_data[3])
+    desc.push(coin_data[3]);
+  if (coin_data[4] || coin_data[5])
+    desc.push(convertFraction(props.settings.convert_fraction, coin_data[4]) + ' ' + coin_data[5]);
   if (coin_data[9])
     desc.push(coin_data[9]);
+  if (coin_data[6]) {
+    desc.push(formatYear(props.settings.enable_bc, coin_data[6]));
+  }
+  if (coin_data[7])
+    desc.push(coin_data[7]);
+  if (coin_data[8])
+    desc.push(coin_data[8]);
 
   return desc;
 }
@@ -166,7 +167,7 @@ const loadImage = async (coinId) => {
         v-for="(coin, index) in coinsList"
         :key="coin[0]"
         :subtitle="generateDescription(coin).join(', ')"
-        :title="coin[2]"
+        :title="coin[1]"
         @click="router.push('/coin/' + coin[0])"
         class="pa-1"
       >
@@ -189,7 +190,7 @@ const loadImage = async (coinId) => {
           <v-img :src="arrayBufferToBase64(images[coin[0]])" :width="100" max-height="56" />
         </template>
         <template v-slot:append>
-          <StatusItem :status="coin[3]" :statuses="settings.statuses" :statusPresentation="statusPresentation" />
+          <StatusItem :status="coin[2]" :statuses="settings.statuses" :statusPresentation="statusPresentation" />
         </template>
       </v-list-item>
     </v-list>

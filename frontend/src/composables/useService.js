@@ -295,11 +295,9 @@ export function useService(passwordDialogRef) {
   }
 
   const loadCoinsLocal = async (search, sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter) => {
-    let coinsList = [];
-
     let sql = `
-        SELECT coins.id, images.image, title, status, subjectshort, value, unit, year, mintmark, series, country
-        FROM coins LEFT OUTER JOIN images ON images.id = coins.image
+        SELECT coins.id, title, status, subjectshort, value, unit, year, mintmark, series, country
+        FROM coins
       `
     let params = [];
     let sql_filters = [];
@@ -340,9 +338,36 @@ export function useService(passwordDialogRef) {
     if (reverse)
       sql += ' DESC';
 
-    coinsList = await executeQuery(sql, params)
+    return await executeQuery(sql, params)
+  }
 
-    return coinsList;
+  const loadImages = async () => {
+    if (connection_type === 'local')
+      return loadImagesLocal();
+    else if (connection_type === 'remote')
+      return loadImagesRemote(connected_file);
+  }
+
+  const loadImagesRemote = async (file) => {
+    let images = [];
+
+    try {
+      const response = await api.get('/api/images', {params: {f: file}})
+      images = response.data
+    }
+    catch (err) {
+      globalStatus.error.value = err
+    }
+
+    return images;
+  }
+
+  const loadImagesLocal = async () => {
+    let sql = `
+        SELECT coins.id, images.image
+        FROM coins LEFT OUTER JOIN images ON images.id = coins.image
+      `
+    return await executeQuery(sql);
   }
 
   const loadImage = async (coinId, type) => {
@@ -589,6 +614,7 @@ export function useService(passwordDialogRef) {
     openRemoteFile,
     openLocalFile,
     loadCoins,
+    loadImages,
     loadImage,
     getDetails,
     getPhotos,

@@ -50,8 +50,8 @@ def coins(f, search=None, sort=None, reverse: bool = False, status_filter=None, 
     cur = con.cursor()
 
     sql = """
-        SELECT coins.id, images.image, title, status, subjectshort, value, unit, year, mintmark, series, country
-        FROM coins LEFT OUTER JOIN images ON images.id = coins.image
+        SELECT coins.id, title, status, subjectshort, value, unit, year, mintmark, series, country
+        FROM coins
     """
 
     params = []
@@ -88,6 +88,27 @@ def coins(f, search=None, sort=None, reverse: bool = False, status_filter=None, 
         sql += " DESC"
 
     res = cur.execute(sql, params)
+    data = res.fetchall()
+    con.close()
+
+    for i, record in enumerate(data):
+        data[i] = list(record)
+
+    return data
+
+
+@app.get("/api/images")
+def coins(f):
+    file = f
+    con = sqlite_connect(file)
+    cur = con.cursor()
+
+    sql = """
+        SELECT coins.id, images.image
+        FROM coins LEFT OUTER JOIN images ON images.id = coins.image
+    """
+
+    res = cur.execute(sql)
     data = res.fetchall()
     con.close()
 
