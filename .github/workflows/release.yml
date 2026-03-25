@@ -61,12 +61,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./frontend/dist
 
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v${{ steps.bump.outputs.current-version }}
-          draft: true
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
       
@@ -86,11 +80,10 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            #type=semver,pattern={{major}}.{{minor}}
-            #type=semver,pattern={{major}}
+            type=raw,value=${{ steps.bump.outputs.current-version }}
+            type=raw,value=latest
+          flavor: |
+            latest=false
 
       - name: Build and push
         uses: docker/build-push-action@v7
@@ -100,3 +93,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.bump.outputs.current-version }}
