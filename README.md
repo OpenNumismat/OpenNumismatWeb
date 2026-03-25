@@ -2,6 +2,8 @@
 
 OpenNumismat Web is a web browser for [OpenNumismat](https://opennumismat.github.io/) collections.
 
+![Screenshot](https://opennumismat.github.io/images/OpenNumismatWeb.png)
+
 Latest stable version:
 - Web-application (PWA): https://opennumismat.github.io/OpenNumismatWeb/
 - Docker image - `ghcr.io/opennumismat/opennumismatweb:latest`
@@ -38,3 +40,19 @@ or docker run:
 Look at Development section
 
 ## Development
+
+Run backend (optional):
+
+```
+cd backend
+pip3 install -r requirements.txt
+python3 app.py
+```
+
+Run frontend:
+
+```
+cd frontend
+npm install
+npm run dev
+```
