@@ -5,7 +5,7 @@ import {arrayBufferToBase64} from "@/utils/bytes2img.js"
 import {appTitle} from "@/composables/appTitle.js"
 import i18n from '../i18n'
 import StatusItem from "./StatusItem.vue"
-import {convertFraction, formatYear} from "@/utils/formatter.js";
+import {convertFraction, convertLinksToAnchors, formatYear} from "@/utils/formatter.js";
 import {useService} from "@/composables/useService.js";
 import InfoRow from "@/components/InfoRow.vue";
 
@@ -171,8 +171,8 @@ onUnmounted(async () => {
   </v-container>
 
   <v-container>
-    <p>{{ coinData[service.infoFieldIndex('features')] }}</p>
-    <p>{{ coinData[service.infoFieldIndex('subject')] }}</p>
+    <p v-html="convertLinksToAnchors(coinData[service.infoFieldIndex('features')])"></p>
+    <p v-html="convertLinksToAnchors(coinData[service.infoFieldIndex('subject')])"></p>
   </v-container>
 </template>
 

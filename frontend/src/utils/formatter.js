@@ -60,3 +60,13 @@ export function formatYear(enable_bc, year) {
 
   return year;
 }
+
+export function convertLinksToAnchors(text) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  try {
+    return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+  }
+  catch (e) {
+    return text;
+  }
+}
