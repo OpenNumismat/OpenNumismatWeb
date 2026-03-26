@@ -42,84 +42,88 @@ const handleThemeChange = (theme) => {
 </script>
 
 <template>
-  <v-container>
-    <v-list>
-      <v-list-item :title="i18n.global.t('settings_theme')">
-        <template v-slot:append>
-          <v-list-item-action start>
-            <v-btn-toggle
-                v-model="currentTheme"
-                rounded="xl"
-                border
-                @update:model-value="handleThemeChange"
-            >
-              <v-btn value="dark" icon="mdi-weather-night"></v-btn>
-              <v-btn value="system" icon="mdi-brightness-auto"></v-btn>
-              <v-btn value="light" icon="mdi-weather-sunny"></v-btn>
-            </v-btn-toggle>
-          </v-list-item-action>
-        </template>
-      </v-list-item>
-      <v-list-item :title="i18n.global.t('settings_language')">
-        <template v-slot:append>
-          <v-list-item-action start>
-            <v-select
-                v-model="$i18n.locale"
-                :items="languageItems"
-                item-title="name"
-                item-value="lang"
-                @update:model-value="setLocale"
-                density="comfortable"
-                hide-details
-            >
-            </v-select>
-          </v-list-item-action>
-        </template>
-      </v-list-item>
-      <v-list-item :title="i18n.global.t('settings_status')">
-        <template v-slot:append>
-          <v-list-item-action start>
-            <v-select
-                v-model="statusPresentation"
-                :items="statusItems"
-                :item-title="item => i18n.global.t(item.title)"
-                density="comfortable"
-                hide-details
-            >
-            </v-select>
-          </v-list-item-action>
-        </template>
-      </v-list-item>
-      <v-list-item :title="i18n.global.t('settings_image_view')">
-        <template v-slot:append>
-          <v-list-item-action start>
-            <v-select
-                v-model="imagePresentation"
-                :items="imageViewItems"
-                :item-title="item => i18n.global.t(item.title)"
-                density="comfortable"
-                hide-details
-            >
-            </v-select>
-          </v-list-item-action>
-        </template>
-      </v-list-item>
-    </v-list>
-  </v-container>
-  <v-container v-if="!isServerLess">
-    <v-list>
+  <v-list>
+    <v-list-subheader>
+      {{ i18n.global.t('Interface') }}
+    </v-list-subheader>
+    <v-divider />
+    <v-list-item :title="i18n.global.t('settings_theme')">
+      <template v-slot:append>
+        <v-list-item-action start>
+          <v-btn-toggle
+              v-model="currentTheme"
+              rounded="xl"
+              border
+              @update:model-value="handleThemeChange"
+          >
+            <v-btn value="dark" icon="mdi-weather-night"></v-btn>
+            <v-btn value="system" icon="mdi-brightness-auto"></v-btn>
+            <v-btn value="light" icon="mdi-weather-sunny"></v-btn>
+          </v-btn-toggle>
+        </v-list-item-action>
+      </template>
+    </v-list-item>
+    <v-list-item :title="i18n.global.t('settings_language')">
+      <template v-slot:append>
+        <v-list-item-action start>
+          <v-select
+              v-model="$i18n.locale"
+              :items="languageItems"
+              item-title="name"
+              item-value="lang"
+              @update:model-value="setLocale"
+              density="comfortable"
+              hide-details
+          >
+          </v-select>
+        </v-list-item-action>
+      </template>
+    </v-list-item>
+    <v-list-item :title="i18n.global.t('settings_status')">
+      <template v-slot:append>
+        <v-list-item-action start>
+          <v-select
+              v-model="statusPresentation"
+              :items="statusItems"
+              :item-title="item => i18n.global.t(item.title)"
+              density="comfortable"
+              hide-details
+          >
+          </v-select>
+        </v-list-item-action>
+      </template>
+    </v-list-item>
+    <v-list-item :title="i18n.global.t('settings_image_view')">
+      <template v-slot:append>
+        <v-list-item-action start>
+          <v-select
+              v-model="imagePresentation"
+              :items="imageViewItems"
+              :item-title="item => i18n.global.t(item.title)"
+              density="comfortable"
+              hide-details
+          >
+          </v-select>
+        </v-list-item-action>
+      </template>
+    </v-list-item>
+    <template  v-if="!isServerLess">
+      <v-list-subheader>
+        {{ i18n.global.t('Server') }}
+      </v-list-subheader>
+      <v-divider />
       <v-list-item>
           <v-list-item-action start>
             <v-text-field
-                label="API Key"
+                :label="i18n.global.t('API Key')"
                 v-model="apiKey"
                 density="comfortable"
                 hide-details
             />
           </v-list-item-action>
       </v-list-item>
-    </v-list>
-  </v-container>
+    </template>
+  </v-list>
 </template>
 
 <style scoped>

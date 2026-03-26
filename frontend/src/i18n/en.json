@@ -45,5 +45,8 @@
   "Paid": "Paid",
   "commission": "commission",
   "Average paid per item": "Average paid per item",
-  "First purchase": "First purchase"
+  "First purchase": "First purchase",
+  "Interface": "Interface",
+  "Server": "Server",
+  "API Key": "API Key"
 }
