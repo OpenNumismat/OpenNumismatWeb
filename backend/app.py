@@ -26,7 +26,6 @@ app = FastAPI(
 
 
 async def get_api_key(header_key: str = Security(api_key_header)):
-    print(header_key)
     if header_key == API_KEY:
         return header_key
     raise HTTPException(
