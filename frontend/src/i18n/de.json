@@ -45,5 +45,8 @@
   "Paid": "Bezahlt",
   "commission": "Provision",
   "Average paid per item": "Ø-Preis pro Artikel",
-  "First purchase": "erster Kauf"
+  "First purchase": "erster Kauf",
+  "Interface": "Interface",
+  "Server": "Server",
+  "API Key": "API Key"
 }
