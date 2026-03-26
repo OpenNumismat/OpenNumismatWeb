@@ -1,21 +1,38 @@
 import base64
+import os
 import sqlite3
 from io import BytesIO
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Security, Depends
+from fastapi.security.api_key import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from PIL import Image
+from starlette import status
 from _version import __version__
 
 
 DATA_PATH = 'data'
 MAX_PREVIEW_IMAGE_HEIGHT = 54 * 4
 
+API_KEY_NAME = "access_token"
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
+API_KEY = os.getenv("API_KEY")
+
 app = FastAPI(
     docs_url=None,
     redoc_url=None,
     openapi_url=None,
 )
+
+
+async def get_api_key(header_key: str = Security(api_key_header)):
+    print(header_key)
+    if header_key == API_KEY:
+        return header_key
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Could not validate API Key"
+    )
 
 
 def sqlite_connect(file):
@@ -28,7 +45,7 @@ def version():
     return __version__
 
 
-@app.get("/api/filelist")
+@app.get("/api/filelist", dependencies=[Depends(get_api_key)])
 def filelist():
     root = Path(DATA_PATH).resolve()
     db_files = []
@@ -42,7 +59,7 @@ def filelist():
     return db_files
 
 
-@app.get("/api/coins")
+@app.get("/api/coins", dependencies=[Depends(get_api_key)])
 def coins(f, search=None, sort=None, reverse: bool = False, status_filter=None, country_filter=None, series_filter=None, type_filter=None,
           period_filter=None, mint_filter=None):
     file = f
@@ -97,7 +114,7 @@ def coins(f, search=None, sort=None, reverse: bool = False, status_filter=None, 
     return data
 
 
-@app.get("/api/images")
+@app.get("/api/images", dependencies=[Depends(get_api_key)])
 def coins(f):
     file = f
     con = sqlite_connect(file)
@@ -120,7 +137,7 @@ def coins(f):
     return data
 
 
-@app.get("/api/filters")
+@app.get("/api/filters", dependencies=[Depends(get_api_key)])
 def filters(f):
     file = f
     con = sqlite_connect(file)
@@ -141,7 +158,7 @@ def filters(f):
     return result
 
 
-@app.get("/api/coin_data")
+@app.get("/api/coin_data", dependencies=[Depends(get_api_key)])
 def coin_data(f, id):
     info_fields = ('coins.title', 'obverseimg.image', 'reverseimg.image',
                   'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
@@ -170,7 +187,7 @@ def coin_data(f, id):
     return result
 
 
-@app.get("/api/photo")
+@app.get("/api/photo", dependencies=[Depends(get_api_key)])
 def photo(f, id, type):
     file = f
     coin_id = id
@@ -238,7 +255,7 @@ def photo(f, id, type):
     return result
 
 
-@app.get("/api/photos")
+@app.get("/api/photos", dependencies=[Depends(get_api_key)])
 def photos(f, id):
     file = f
     coin_id = id
@@ -266,7 +283,7 @@ def photos(f, id):
     return result
 
 
-@app.get("/api/settings")
+@app.get("/api/settings", dependencies=[Depends(get_api_key)])
 def settings(f):
     field_ids = {
         13: 'status',
@@ -332,7 +349,7 @@ def settings(f):
     return collection_settings
 
 
-@app.get("/api/summary")
+@app.get("/api/summary", dependencies=[Depends(get_api_key)])
 def summary(f):
     collection_summary = {}
 

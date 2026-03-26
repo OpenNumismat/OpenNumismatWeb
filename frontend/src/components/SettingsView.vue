@@ -4,7 +4,9 @@ import { useTheme } from 'vuetify'
 import { languageList, setLocale } from '@/i18n'
 import i18n from '../i18n'
 import {appTitle} from "@/composables/appTitle.js"
-import { imagePresentation, statusPresentation, currentTheme } from "@/composables/useSettings";
+import { imagePresentation, statusPresentation, currentTheme, apiKey } from "@/composables/useSettings";
+
+const isServerLess = import.meta.env.VITE_SERVERLESS;
 
 const languageItems = Object.entries(languageList).map(([key, value]) => ({
   lang: key,
@@ -101,6 +103,20 @@ const handleThemeChange = (theme) => {
             </v-select>
           </v-list-item-action>
         </template>
+      </v-list-item>
+    </v-list>
+  </v-container>
+  <v-container v-if="!isServerLess">
+    <v-list>
+      <v-list-item>
+          <v-list-item-action start>
+            <v-text-field
+                label="API Key"
+                v-model="apiKey"
+                density="comfortable"
+                hide-details
+            />
+          </v-list-item-action>
       </v-list-item>
     </v-list>
   </v-container>

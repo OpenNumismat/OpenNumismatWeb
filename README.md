@@ -25,6 +25,8 @@ services:
     container_name: opennumismatweb
     image: ghcr.io/opennumismat/opennumismatweb:latest
     restart: unless-stopped
+    environment:
+      API_KEY: <random_string> # optional
     ports:
       - 8000:8000
     volumes:
@@ -39,9 +41,13 @@ or docker run:
 
 Look at Development section
 
+### Set the necessary env vars
+
+`API_KEY` - protects your server from unauthorized access. Generate a secure value using: `openssl rand -base64 32`
+
 ## Development
 
-Run backend (optional):
+Setup env vars and run backend (optional):
 
 ```
 cd backend

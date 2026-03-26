@@ -12,6 +12,16 @@ const api = axios.create({
   timeout: 20000,
 })
 
+api.interceptors.request.use((config) => {
+  const apiKey = localStorage.getItem('apiKey');
+
+  if (apiKey) {
+    config.headers['access_token'] = apiKey;
+  }
+
+  return config;
+});
+
 let connection_type = null;
 let connected_file = null;
 
