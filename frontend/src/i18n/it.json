@@ -35,7 +35,7 @@
   "replacement": "Rimpiazzo",
   "All": "Tutto",
   "Sort by": "Ordina per",
-  "Search": "Search",
+  "Search": "Cerca",
   "Total count": "Conteggio totale",
   "Count owned": "Totale possedute",
   "Count wish": "Totale desiderate",
@@ -45,5 +45,8 @@
   "Paid": "Pagato",
   "commission": "Commissione",
   "Average paid per item": "Costo medio per elemento",
-  "First purchase": "Primo acquisto"
+  "First purchase": "Primo acquisto",
+  "Interface": "Interface",
+  "Server": "Server",
+  "API Key": "API Key"
 }
