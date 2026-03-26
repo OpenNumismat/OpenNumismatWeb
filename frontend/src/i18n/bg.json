@@ -45,5 +45,8 @@
   "Paid": "Платено",
   "commission": "Комисионна",
   "Average paid per item": "Средно платено за бройка",
-  "First purchase": "Първа покупка"
+  "First purchase": "Първа покупка",
+  "Interface": "Interface",
+  "Server": "Server",
+  "API Key": "API Key"
 }
