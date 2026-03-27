@@ -1,6 +1,7 @@
 import {onMounted} from 'vue'
 import initSqlJs from "sql.js";
 import {useGlobalStatus} from "@/composables/useGlobalStatus.js";
+import i18n from "@/i18n/index.js";
 
 const globalStatus = useGlobalStatus();
 let isInitialized = false
@@ -16,7 +17,7 @@ export function useSQLite() {
     if (isInitialized)
       return
 
-    await globalStatus.startLoading('Loading SQL.js');
+    await globalStatus.startLoading(i18n.global.t('Loading SQL.js'));
 
     try {
       SQL = await initSqlJs({
@@ -26,7 +27,7 @@ export function useSQLite() {
     }
     catch (err) {
       console.error('Failed to load SQL.js:', err);
-      globalStatus.status.value = 'Failed to load SQL.js'
+      globalStatus.status.value = i18n.global.t('Failed to load SQL.js')
       globalStatus.error.value = err
     }
     finally {
@@ -39,7 +40,7 @@ export function useSQLite() {
       if (!isInitialized)
         initialize()
 
-      globalStatus.startLoading('Loading database...');
+      globalStatus.startLoading(i18n.global.t('Loading database...'));
 
       const reader = new FileReader();
 
@@ -55,7 +56,7 @@ export function useSQLite() {
         }
         catch (err) {
           console.error('Error loading database:', err);
-          globalStatus.status.value = 'Error loading database'
+          globalStatus.status.value = i18n.global.t('Error loading database')
           globalStatus.error.value = err
           reject()
         }
@@ -66,7 +67,7 @@ export function useSQLite() {
 
       reader.onerror = (err) => {
         globalStatus.finishLoading();
-        globalStatus.status.value = 'Error reading file'
+        globalStatus.status.value = i18n.global.t('Error reading file')
         globalStatus.error.value = err
         reject()
       }
@@ -79,7 +80,7 @@ export function useSQLite() {
     if (!db)
       return
 
-    await globalStatus.startLoading('Executing query...');
+    await globalStatus.startLoading(i18n.global.t('Executing query...'));
     let results = null
 
     try {
@@ -102,7 +103,7 @@ export function useSQLite() {
     }
     catch (err) {
       console.error('Failed execute query:', err, '\nRequest: ', sql, '\nParams: ', params);
-      globalStatus.status.value = 'Failed execute query'
+      globalStatus.status.value = i18n.global.t('Failed execute query')
       globalStatus.error.value = err
     }
     finally {

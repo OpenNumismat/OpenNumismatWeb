@@ -85,7 +85,7 @@ const initSettings = async () => {
 }
 
 const checkDbVersion = async (settings) => {
-    globalStatus.status.value = 'Check collection'
+    globalStatus.status.value = i18n.global.t('Check collection')
 
     if (settings.type !== 'OpenNumismat') {
       globalStatus.error.value = i18n.global.t('wrong_version');
@@ -110,7 +110,7 @@ function MD5(d){var r = M(V(Y(X(d),8*d.length)));return r.toLowerCase()}function
 
 export function useService(passwordDialogRef) {
   const checkDbPassword = async (settings) => {
-    globalStatus.status.value = 'Check password'
+    globalStatus.status.value = i18n.global.t('Check password')
 
     if (MD5('') !== settings.password) {
       const enteredPassword = await passwordDialogRef.value.promptPassword()
@@ -118,7 +118,7 @@ export function useService(passwordDialogRef) {
         return true
       }
       else {
-        globalStatus.error.value = 'Wrong password'
+        globalStatus.error.value = i18n.global.t('Wrong password')
         return false
       }
     }
@@ -129,7 +129,7 @@ export function useService(passwordDialogRef) {
   const getServerFileList = async () => {
     let serverFileList = [];
 
-    await globalStatus.startLoading('Connect to remote server');
+    await globalStatus.startLoading(i18n.global.t('Connect to remote server'));
 
     try {
       const response = await api.get('/api/filelist')
@@ -151,7 +151,7 @@ export function useService(passwordDialogRef) {
     let collectionFilters = {};
     let settingsDb = {};
 
-    await globalStatus.startLoading('Open collection');
+    await globalStatus.startLoading(i18n.global.t('Open collection'));
 
     try {
       const responseSettings = await api.get('/api/settings', {params: {f: file}})
@@ -185,7 +185,7 @@ export function useService(passwordDialogRef) {
       }
     }
 
-    await globalStatus.startLoading('Load collection');
+    await globalStatus.startLoading(i18n.global.t('Load collection'));
 
     try {
       const responseFilters = await api.get('/api/filters', {params: {f: file}})
@@ -277,7 +277,7 @@ export function useService(passwordDialogRef) {
   const loadCoinsRemote = async (search, sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, file) => {
     let coinsList = [];
 
-    await globalStatus.startLoading('Load coins');
+    await globalStatus.startLoading(i18n.global.t('Load coins'));
 
     try {
       const responseCoins = await api.get('/api/coins', {params: {
@@ -474,7 +474,7 @@ export function useService(passwordDialogRef) {
   const getDetailsRemote = async (coinId, file) => {
     let coinData= [];
 
-    await globalStatus.startLoading('Request');
+    await globalStatus.startLoading(i18n.global.t('Request'));
 
     try {
       const response = await api.get('/api/coin_data', {params: {f: file, id: coinId}})
@@ -491,7 +491,7 @@ export function useService(passwordDialogRef) {
   }
 
   const getDetailsLocal = async (coinId) => {
-    let coinData= [];
+    let coinData;
 
     const sql = `SELECT ${ infoFields.join(',') } FROM coins
         LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
@@ -513,7 +513,7 @@ export function useService(passwordDialogRef) {
   const getPhotosRemote = async (coinId, file) => {
     let photos= [];
 
-    await globalStatus.startLoading('Request');
+    await globalStatus.startLoading(i18n.global.t('Request'));
 
     try {
       const response = await api.get('/api/photos', {params: {f: file, id: coinId}})
@@ -530,7 +530,7 @@ export function useService(passwordDialogRef) {
   }
 
   const getPhotosLocal = async (coinId) => {
-    let photos= [];
+    let photos;
 
     const sql = `SELECT obverseimg.image, reverseimg.image, edgeimg.image, photo1.image, photo2.image, photo3.image, photo4.image FROM coins
           LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
@@ -561,7 +561,7 @@ export function useService(passwordDialogRef) {
   const getSummaryRemote = async (file) => {
     let summary= {};
 
-    await globalStatus.startLoading('Request');
+    await globalStatus.startLoading(i18n.global.t('Request'));
 
     try {
       const response = await api.get('/api/summary', {params: {f: file}})
