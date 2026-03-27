@@ -48,5 +48,20 @@
   "First purchase": "Primo acquisto",
   "Interface": "Interfaccia",
   "Server": "Server",
-  "API Key": "Chiave API"
+  "API Key": "Chiave API",
+ "Loading SQL.js": "Loading SQL.js",
+ "Failed to load SQL.js": "Failed to load SQL.js",
+ "Loading database...": "Loading database...",
+ "Error loading database": "Error loading database",
+ "Error reading file": "Error reading file",
+ "Executing query...": "Executing query...",
+ "Failed execute query": "Failed to execute query",
+ "Check collection": "Check collection",
+ "Check password": "Check password",
+ "Wrong password": "Password errata",
+ "Connect to remote server": "Connect to remote server",
+ "Open collection": "Aprire collezione",
+ "Load collection": "Load collection",
+ "Load coins": "Load coins",
+ "Request": "Request"
 }
