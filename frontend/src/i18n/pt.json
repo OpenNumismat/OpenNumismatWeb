@@ -53,7 +53,7 @@
  "Failed to load SQL.js": "Falha ao carregar SQL.js",
  "Loading database...": "A carregar a base de dados...",
  "Error loading database": "Erro ao carregar a base de dados",
- "Error reading file": "Error reading file",
+ "Error reading file": "Erro ao ler o ficheiro",
  "Executing query...": "Executing query...",
  "Failed execute query": "Failed to execute query",
  "Check collection": "Check collection",
