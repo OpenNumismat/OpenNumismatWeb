@@ -51,7 +51,7 @@
   "API Key": "API ключ",
  "Loading SQL.js": "Загрузка SQL.js",
  "Failed to load SQL.js": "Не удалось загрузить SQL.js",
- "Loading database...": "Loading database...",
+ "Loading database...": "Загрузка базы данных...",
  "Error loading database": "Error loading database",
  "Error reading file": "Error reading file",
  "Executing query...": "Executing query...",
