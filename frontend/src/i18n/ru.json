@@ -62,6 +62,6 @@
  "Connect to remote server": "Подключение к удаленному серверу",
  "Open collection": "Открытие коллекции",
  "Load collection": "Загрузка коллекции",
- "Load coins": "Load coins",
- "Request": "Request"
+ "Load coins": "Загрузка списка монет",
+ "Request": "Запрос"
 }
