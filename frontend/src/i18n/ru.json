@@ -55,7 +55,7 @@
  "Error loading database": "Ошибка загрузки базы данных",
  "Error reading file": "Ошибка чтения файла",
  "Executing query...": "Выполнение запроса...",
- "Failed execute query": "Failed to execute query",
+ "Failed execute query": "Не удалось выполнить запрос",
  "Check collection": "Check collection",
  "Check password": "Check password",
  "Wrong password": "Неверный пароль",
