@@ -52,7 +52,7 @@
  "Loading SQL.js": "Загрузка SQL.js",
  "Failed to load SQL.js": "Не удалось загрузить SQL.js",
  "Loading database...": "Загрузка базы данных...",
- "Error loading database": "Error loading database",
+ "Error loading database": "Ошибка загрузки базы данных",
  "Error reading file": "Error reading file",
  "Executing query...": "Executing query...",
  "Failed execute query": "Failed to execute query",
