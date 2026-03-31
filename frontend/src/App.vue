@@ -2,7 +2,6 @@
 import {onMounted, ref, watch} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {useTheme} from 'vuetify'
-import {useSQLite} from "@/composables/useSQLite.js";
 import {appTitle} from "@/composables/appTitle.js";
 import FileUploaderView from '@/components/FileUploaderView.vue'
 import CoinListView from "@/components/CoinListView.vue";
@@ -20,7 +19,6 @@ import ReloadPrompt from "@/components/ReloadPrompt.vue";
 
 const passwordDialog = ref()
 
-useSQLite() // TODO: for call initialize?
 const globalStatus = useGlobalStatus();
 const service = useService(passwordDialog);
 const isLoading = globalStatus.isLoading;
