@@ -54,7 +54,7 @@
  "Loading database...": "Cargando base de datos...",
  "Error loading database": "No se pudo cargar base de datos",
  "Error reading file": "No se pudo leer archivo",
- "Executing query...": "Executing query...",
+ "Executing query...": "Ejecutando consulta...",
  "Failed execute query": "Failed to execute query",
  "Check collection": "Check collection",
  "Check password": "Check password",
