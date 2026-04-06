@@ -52,7 +52,7 @@
  "Loading SQL.js": "Cargando SQL.js",
  "Failed to load SQL.js": "No se pudo cargar SQL.js",
  "Loading database...": "Cargando base de datos...",
- "Error loading database": "Error loading database",
+ "Error loading database": "No se pudo cargar base de datos",
  "Error reading file": "Error reading file",
  "Executing query...": "Executing query...",
  "Failed execute query": "Failed to execute query",
