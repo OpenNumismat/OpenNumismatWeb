@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       vue(),
       VitePWA({
-        registerType: 'prompt',
+        registerType: 'autoUpdate',
         manifest: {
           id: env.VITE_BASE_PATH || '/OpenNumismatWeb/',
           name: 'OpenNumismat Web',
@@ -45,6 +45,8 @@ export default defineConfig(({ mode }) => {
           ignoreURLParametersMatching: [/^v$/],
           globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,wasm}'],
           cleanupOutdatedCaches: true,
+          clientsClaim: true,
+          skipWaiting: true,
         }
       }),
       viteStaticCopy({
