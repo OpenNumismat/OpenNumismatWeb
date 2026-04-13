@@ -255,6 +255,8 @@ export function useService(passwordDialogRef) {
     collectionFilters['status'] = (await executeQuery(sql_statuses)).flat()
     const sql_countries = "SELECT DISTINCT IFNULL(country,'') FROM coins ORDER BY country";
     collectionFilters['country'] = (await executeQuery(sql_countries)).flat()
+    const sql_years = "SELECT DISTINCT IFNULL(year,'') FROM coins ORDER BY year";
+    collectionFilters['year'] = (await executeQuery(sql_years)).flat()
     const sql_series = "SELECT DISTINCT IFNULL(series,'') FROM coins ORDER BY series";
     collectionFilters['series'] = (await executeQuery(sql_series)).flat()
     const sql_types = "SELECT DISTINCT IFNULL(type,'') FROM coins ORDER BY type";
@@ -268,14 +270,14 @@ export function useService(passwordDialogRef) {
   }
 
   const loadCoins = async (search=null, sortBy=null, reverse=false, statusFilter=null, countryFilter=null,
-                           seriesFilter=null, typeFilter=null, periodFilter=null, mintFilter=null) => {
+                           yearFilter=null, seriesFilter=null, typeFilter=null, periodFilter=null, mintFilter=null) => {
     if (connection_type === 'local')
-      return loadCoinsLocal(search, sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter);
+      return loadCoinsLocal(search, sortBy, reverse, statusFilter, countryFilter, yearFilter, seriesFilter, typeFilter, periodFilter, mintFilter);
     else if (connection_type === 'remote')
-      return loadCoinsRemote(search, sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, connected_file);
+      return loadCoinsRemote(search, sortBy, reverse, statusFilter, countryFilter, yearFilter, seriesFilter, typeFilter, periodFilter, mintFilter, connected_file);
   }
 
-  const loadCoinsRemote = async (search, sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter, file) => {
+  const loadCoinsRemote = async (search, sortBy, reverse, statusFilter, countryFilter, yearFilter, seriesFilter, typeFilter, periodFilter, mintFilter, file) => {
     let coinsList = [];
 
     await globalStatus.startLoading(i18n.global.t('Load coins'));
@@ -288,6 +290,7 @@ export function useService(passwordDialogRef) {
           reverse: reverse,
           status_filter: statusFilter,
           country_filter: countryFilter,
+          year_filter: yearFilter,
           series_filter: seriesFilter,
           type_filter: typeFilter,
           period_filter: periodFilter,
@@ -305,7 +308,7 @@ export function useService(passwordDialogRef) {
     return coinsList;
   }
 
-  const loadCoinsLocal = async (search, sortBy, reverse, statusFilter, countryFilter, seriesFilter, typeFilter, periodFilter, mintFilter) => {
+  const loadCoinsLocal = async (search, sortBy, reverse, statusFilter, countryFilter, yearFilter, seriesFilter, typeFilter, periodFilter, mintFilter) => {
     let sql = `
         SELECT coins.id, title, status, subjectshort, value, unit, year, mintmark, series, country
         FROM coins
@@ -323,6 +326,10 @@ export function useService(passwordDialogRef) {
     if (countryFilter) {
       sql_filters.push('country = ?')
       params.push(countryFilter);
+    }
+    if (yearFilter) {
+      sql_filters.push('year = ?')
+      params.push(yearFilter);
     }
     if (seriesFilter) {
       sql_filters.push('series = ?')

@@ -20,6 +20,7 @@ const sortedBy = ref(null)
 const reverseSort = ref(false)
 const selectedStatus = ref(null)
 const selectedCountry = ref(null)
+const selectedYear = ref(null)
 const selectedSeries = ref(null)
 const selectedType = ref(null)
 const selectedPeriod = ref(null)
@@ -61,11 +62,13 @@ const onOpenFile = async () => {
     });
   }
 
-  fields.value = ['title', 'year']
+  fields.value = ['title',]
   if (props.filters['status'].length > 1)
     fields.value.push('status')
   if (props.filters['country'].length > 1)
     fields.value.push('country')
+  if (props.filters['year'].length > 1)
+    fields.value.push('year')
   if (props.filters['series'].length > 1)
     fields.value.push('series')
   if (props.filters['type'].length > 1)
@@ -80,6 +83,7 @@ const clear = async () => {
   reverseSort.value = false
   selectedStatus.value = null
   selectedCountry.value = null
+  selectedYear.value = null
   selectedSeries.value = null
   selectedType.value = null
   selectedPeriod.value = null
@@ -119,6 +123,7 @@ const onChanged = async () => {
       reverseSort.value,
       selectedStatus.value,
       selectedCountry.value,
+      selectedYear.value,
       selectedSeries.value,
       selectedType.value,
       selectedPeriod.value,
@@ -142,6 +147,7 @@ const loadImage = async (coinId) => {
   <v-container>
     <FilterItem :filters="filters['status']" field="status" :settings="settings" @filter-changed="onChanged" v-model="selectedStatus" />
     <FilterItem :filters="filters['country']" field="country" :settings="settings" @filter-changed="onChanged" v-model="selectedCountry" />
+    <FilterItem :filters="filters['year']" field="year" :settings="settings" @filter-changed="onChanged" v-model="selectedYear" />
     <FilterItem :filters="filters['series']" field="series" :settings="settings" @filter-changed="onChanged" v-model="selectedSeries" />
     <FilterItem :filters="filters['type']" field="type" :settings="settings" @filter-changed="onChanged" v-model="selectedType" />
     <FilterItem :filters="filters['period']" field="period" :settings="settings" @filter-changed="onChanged" v-model="selectedPeriod" />

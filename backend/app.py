@@ -59,8 +59,8 @@ def filelist():
 
 
 @app.get("/api/coins", dependencies=[Depends(get_api_key)])
-def coins(f, search=None, sort=None, reverse: bool = False, status_filter=None, country_filter=None, series_filter=None, type_filter=None,
-          period_filter=None, mint_filter=None):
+def coins(f, search=None, sort=None, reverse: bool = False, status_filter=None, country_filter=None, year_filter=None,
+          series_filter=None, type_filter=None, period_filter=None, mint_filter=None):
     file = f
     con = sqlite_connect(file)
     cur = con.cursor()
@@ -81,6 +81,9 @@ def coins(f, search=None, sort=None, reverse: bool = False, status_filter=None, 
     if country_filter:
         sql_filters.append("country = ?")
         params.append(country_filter)
+    if year_filter:
+        sql_filters.append("year = ?")
+        params.append(year_filter)
     if series_filter:
         sql_filters.append("series = ?")
         params.append(series_filter)
@@ -144,7 +147,7 @@ def filters(f):
 
     result = {}
 
-    for field in ('status', 'country', 'series', 'type', 'period', 'mint',):
+    for field in ('status', 'country', 'year', 'series', 'type', 'period', 'mint',):
         res = cur.execute(f"SELECT DISTINCT IFNULL({field},'') FROM coins ORDER BY {field}")
         data = res.fetchall()
 

@@ -76,7 +76,7 @@ const openFile = async (file, connection_type) => {
 
   await router.replace('/')
   collectionSettings.value = {};
-  collectionFilters.value = {'status': [], 'country': [], 'series': [], 'type': [], 'period': [], 'mint': []}
+  collectionFilters.value = {'status': [], 'country': [], 'year': [], 'series': [], 'type': [], 'period': [], 'mint': []}
   isOpened = true;
 
   let ret = null
