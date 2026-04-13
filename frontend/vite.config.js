@@ -42,6 +42,7 @@ export default defineConfig(({ mode }) => {
           ],
         },
         workbox: {
+          ignoreURLParametersMatching: [/^v$/],
           globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,wasm}'],
           cleanupOutdatedCaches: true,
         }
