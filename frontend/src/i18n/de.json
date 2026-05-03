@@ -48,7 +48,7 @@
   "First purchase": "erster Kauf",
   "Interface": "Interface",
   "Server": "Server",
-  "API Key": "API Key",
+  "API Key": "API-Schlüssel",
  "Loading SQL.js": "Laden SQL.js",
  "Failed to load SQL.js": "Fehler beim Laden SQL.js",
  "Loading database...": "Laden der Datenbank ...",
