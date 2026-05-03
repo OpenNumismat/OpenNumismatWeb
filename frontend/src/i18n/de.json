@@ -6,7 +6,7 @@
   "title_about": "Über",
   "status_view_text": "Text",
   "status_view_icon": "Icon/Piktogramm",
-  "status_view_icon_text": "Icon + Text",
+  "status_view_icon_text": "Text + Icon",
   "status_view_text_icon": "Text + Icon",
   "settings_theme": "Thema",
   "settings_language": "Sprache",
