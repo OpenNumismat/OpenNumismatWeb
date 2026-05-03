@@ -55,7 +55,7 @@
  "Error loading database": "Error loading database",
  "Error reading file": "Error reading file",
  "Executing query...": "Executing query...",
- "Failed execute query": "Failed to execute query",
+ "Failed execute query": "Fehler bei Durchführung der Abfrage",
  "Check collection": "Sammlung prüfen",
  "Check password": "Passwort prüfen",
  "Wrong password": "Falsches Passwort",
