@@ -50,7 +50,7 @@
   "Server": "Server",
   "API Key": "Chiave API",
  "Loading SQL.js": "Caricamento di SQL.js in corso",
- "Failed to load SQL.js": "Failed to load SQL.js",
+ "Failed to load SQL.js": "Errore nel caricamento di SQL.js",
  "Loading database...": "Loading database...",
  "Error loading database": "Error loading database",
  "Error reading file": "Error reading file",
