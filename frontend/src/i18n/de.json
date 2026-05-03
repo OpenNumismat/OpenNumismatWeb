@@ -17,7 +17,7 @@
   "image_view_reverse": "Rückseite",
   "image_view_both": "Beide",
   "wrong_version": "Datei hat unbekanntes Format",
-  "too_old_version": "File has an too old version. Please update it with desktop version of OpenNumismat",
+  "too_old_version": "Die Datei ist veraltet. Bitte aktualisieren Sie sie mit der Desktop-Version von OpenNumismat.",
   "old_version": "Datei hat eine alte Version. Bitte mit der Desktop-Version von OpenNumismat aktualisieren",
   "newest_version": "Datei hat neuere Version als App",
   "BC": "v. Chr.",
