@@ -56,6 +56,7 @@ jobs:
           java-version: '17'
 
       - name: Capacitor Sync
+        working-directory: frontend
         run: npx cap sync android
 
       - name: Build Android App
