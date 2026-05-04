@@ -16,6 +16,9 @@ import FileServerView from "@/components/FileServerView.vue";
 import {useGlobalStatus} from "@/composables/useGlobalStatus.js";
 import {useService} from "@/composables/useService.js";
 import UpdatedPrompt from "@/components/UpdatedPrompt.vue";
+import i18n from "@/i18n";
+
+const appVersion = import.meta.env.VITE_APP_VERSION;
 
 const passwordDialog = ref()
 
@@ -26,6 +29,7 @@ const hasError = globalStatus.hasError;
 const hasWarning = globalStatus.hasWarning;
 
 const isServerLess = import.meta.env.VITE_SERVERLESS;
+const serverVersion = ref(null)
 const serverFileList = ref([])
 const collectionFilters = ref({})
 const collectionSettings = ref({})
@@ -60,7 +64,13 @@ onMounted(async () => {
   await router.replace('/')
 
   if (isServerLess === undefined) {
-    serverFileList.value = await service.getServerFileList();
+    serverVersion.value = await service.getServerVersion();
+    if (serverVersion.value !== null) {
+      if (serverVersion.value !== appVersion) {
+        globalStatus.warning.value = i18n.global.t('The server version is different from the application version');
+      }
+      serverFileList.value = await service.getServerFileList();
+    }
   }
 })
 
@@ -162,7 +172,7 @@ const handleFileUpload = async (file) => {
     <v-main>
       <FileUploaderView v-if="(route.name === 'home' && !isOpened) || route.name === 'open'"
         :onFileUploaded="handleFileUpload" />
-      <FileServerView v-if="((route.name === 'home' && !isOpened) || route.name === 'open') && !isServerLess"
+      <FileServerView v-if="((route.name === 'home' && !isOpened) || route.name === 'open') && !isServerLess && serverVersion"
         :file_list="serverFileList" :onFileSelected="handleRemoteFileSelected" />
       <KeepAlive>
         <CoinListView v-if="route.name === 'home' && isOpened"

@@ -127,6 +127,23 @@ export function useService(passwordDialogRef) {
     return true
   }
 
+  const getServerVersion = async () => {
+    let serverVersion = null;
+
+    await globalStatus.startLoading(i18n.global.t('Connect to remote server'));
+
+    try {
+      const response = await api.get('/api/version')
+      serverVersion = response.data
+    } catch (err) {
+      globalStatus.error.value = err
+    } finally {
+      await globalStatus.finishLoading()
+    }
+
+    return serverVersion;
+  }
+
   const getServerFileList = async () => {
     let serverFileList = [];
 
@@ -628,6 +645,7 @@ export function useService(passwordDialogRef) {
   }
 
   return {
+    getServerVersion,
     getServerFileList,
     openRemoteFile,
     openLocalFile,

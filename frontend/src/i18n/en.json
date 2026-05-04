@@ -63,5 +63,6 @@
  "Open collection": "Open collection",
  "Load collection": "Load collection",
  "Load coins": "Load coins",
- "Request": "Request"
+ "Request": "Request",
+ "The server version is different from the application version": "The server version is different from the application version"
 }
