@@ -63,5 +63,6 @@
  "Open collection": "Открытие коллекции",
  "Load collection": "Загрузка коллекции",
  "Load coins": "Загрузка списка монет",
- "Request": "Запрос"
+ "Request": "Запрос",
+ "The server version is different from the application version": "The server version is different from the application version"
 }
