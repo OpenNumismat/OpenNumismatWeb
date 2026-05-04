@@ -63,5 +63,6 @@
  "Open collection": "Abrir colección",
  "Load collection": "Cargar colección",
  "Load coins": "Cargar monedas",
- "Request": "Solicitud"
+ "Request": "Solicitud",
+ "The server version is different from the application version": "The server version is different from the application version"
 }
