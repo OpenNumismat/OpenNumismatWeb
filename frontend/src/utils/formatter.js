@@ -75,7 +75,7 @@ export function formatYear(enable_bc, year) {
 export function convertLinksToAnchors(text) {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   try {
-    return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+    return text.replace(urlRegex, '<a href="$1" target="_blank" class="text-primary-darken-1 text-decoration-none text-decoration-hover-underline">$1</a>');
   }
   catch (e) {
     return text;

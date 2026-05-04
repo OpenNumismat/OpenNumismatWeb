@@ -20,7 +20,9 @@ onUnmounted(async () => {
       <v-card-text>
         <p>Copyright (C) 2026 Vitaly Ignatov</p>
         <p>OpenNumismat Web is freeware licensed under a GPLv3</p>
-        <p>Homepage: <a href="https://opennumismat.github.io">https://opennumismat.github.io</a></p>
+        <p>Homepage:
+          <a href="https://opennumismat.github.io" class="text-primary-darken-1 text-decoration-none text-decoration-hover-underline">https://opennumismat.github.io</a>
+        </p>
       </v-card-text>
     </v-card>
   </v-container>
