@@ -60,10 +60,11 @@ jobs:
         run: npx cap sync android
 
       - name: Build Android App
+        working-directory: frontend
         run: cd android && ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: android-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: frontend/android/app/build/outputs/apk/debug/app-debug.apk
