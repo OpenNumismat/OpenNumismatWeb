@@ -2,11 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
-  workflow_run:
-    workflows: ["Bump version and create release"]
-    types:
-      - completed
+    branches: [ capacitor ]
   workflow_dispatch: # allow manual start
 
 concurrency:
@@ -29,10 +25,6 @@ jobs:
         with:
           fetch-depth: 0
 
-#      - name: Bump patch version
-#        uses: callowayproject/bump-my-version@master
-#        with:
-#          args: patch --no-commit --verbose
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
@@ -57,43 +49,20 @@ jobs:
           npm run build
           rm .env.local
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./frontend/dist
-          destination_dir: dev
+          distribution: 'zulu'
+          java-version: '17'
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4
-      
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
- 
-      - name: Login to ${{ env.REGISTRY }} registry
-        uses: docker/login-action@v4
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ env.REGISTRY_USER }}
-          password: ${{ env.REGISTRY_PASS }}
+      - name: Capacitor Sync
+        run: npx cap sync android
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v6
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            #type=semver,pattern={{major}}.{{minor}}
-            #type=semver,pattern={{major}}
+      - name: Build Android App
+        run: cd android && ./gradlew assembleDebug
 
-      - name: Build and push
-        uses: docker/build-push-action@v7
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
-          context: .
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          name: android-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
