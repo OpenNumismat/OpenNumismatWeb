@@ -1,5 +1,16 @@
 import i18n from "@/i18n/index.js";
 
+export const nSys = (value, options = {}) => {
+  return new Intl.NumberFormat(navigator.language, options).format(value)
+}
+
+export const dSys = (value, options = {}) => {
+  const date = new Date(value)
+  if (isNaN(date.getTime()))
+    return ''
+  return new Intl.DateTimeFormat(navigator.language, options).format(date)
+}
+
 export function convertFraction(convert_fraction, value) {
   if (convert_fraction) {
     if (value === 0.02)
@@ -45,7 +56,7 @@ export function convertFraction(convert_fraction, value) {
   }
 
   try {
-    return i18n.global.n(value);
+    return nSys(value);
   }
   catch (e) {
     return value;

@@ -5,7 +5,7 @@ import {arrayBufferToBase64} from "@/utils/bytes2img.js"
 import {appTitle} from "@/composables/appTitle.js"
 import i18n from '../i18n'
 import StatusItem from "./StatusItem.vue"
-import {convertFraction, convertLinksToAnchors, formatYear} from "@/utils/formatter.js";
+import {convertFraction, convertLinksToAnchors, dSys, nSys, formatYear} from "@/utils/formatter";
 import {useService} from "@/composables/useService.js";
 import InfoRow from "@/components/InfoRow.vue";
 
@@ -96,7 +96,7 @@ onUnmounted(async () => {
                 v-if="coinData[service.infoFieldIndex('issuedate')]"
                 :title="i18n.global.t('Issuedate')"
             >
-              {{ i18n.global.d(coinData[service.infoFieldIndex('issuedate')]) }}
+              {{ dSys(coinData[service.infoFieldIndex('issuedate')]) }}
             </InfoRow>
             <InfoRow
                 v-else-if="coinData[service.infoFieldIndex('year')]"
@@ -108,7 +108,7 @@ onUnmounted(async () => {
             <InfoRow
               v-if="coinData[service.infoFieldIndex('mintage')]"
               :title="settings.fields['mintage']"
-              :value="i18n.global.n(coinData[service.infoFieldIndex('mintage')])"
+              :value="nSys(coinData[service.infoFieldIndex('mintage')])"
             />
             <InfoRow
               :title="settings.fields['material']"
@@ -145,12 +145,12 @@ onUnmounted(async () => {
             <InfoRow
               v-if="coinData[service.infoFieldIndex('paydate')]"
               :title="settings.fields['paydate']"
-              :value="i18n.global.d(coinData[service.infoFieldIndex('paydate')])"
+              :value="dSys(coinData[service.infoFieldIndex('paydate')])"
             />
             <InfoRow
               v-if="coinData[service.infoFieldIndex('payprice')]"
               :title="settings.fields['payprice']"
-              :value="i18n.global.n(coinData[service.infoFieldIndex('payprice')])"
+              :value="nSys(coinData[service.infoFieldIndex('payprice')])"
             />
             <InfoRow
               :title="settings.fields['storage']"
