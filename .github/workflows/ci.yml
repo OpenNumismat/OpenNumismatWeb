@@ -55,6 +55,15 @@ jobs:
           distribution: 'zulu'
           java-version: '24'
 
+#      - name: Generate Assets
+#        working-directory: frontend
+#        run: npx capacitor-assets generate --android
+
+      - name: Set Build Number
+        working-directory: frontend
+        run: |
+          sed -i "s/versionCode [0-9]*/versionCode ${{ github.run_number }}/" android/app/build.gradle
+
       - name: Capacitor Sync
         working-directory: frontend
         run: npx cap sync android
