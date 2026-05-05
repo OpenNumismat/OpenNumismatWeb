@@ -269,6 +269,14 @@ const handleFileUpload = async (file) => {
 </template>
 
 <style scoped>
+html, body, .v-application {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.v-app-bar {
+  top: 0 !important;
+}
+
 .safe-area-top {
   padding-top: env(safe-area-inset-top);
   height: calc(64px + env(safe-area-inset-top)) !important;
