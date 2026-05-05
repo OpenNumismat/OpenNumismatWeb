@@ -45,14 +45,32 @@ const appTheme = useTheme()
 
 const updateAddressBar = () => {
   const primaryColor = appTheme.current.value.colors.primary
-  let metaTag = document.querySelector('meta[name="theme-color"]')
-  if (!metaTag) {
-    metaTag = document.createElement('meta')
-    metaTag.name = 'theme-color'
-    document.head.appendChild(metaTag)
+  if (import.meta.env.VITE_PLATFORM_ANDROID) {
+    try {
+      import('@capacitor/status-bar').then(({ StatusBar, Style }) => {
+        StatusBar.setBackgroundColor({ color: primaryColor });
+        if (currentTheme.value === 'light') {
+          StatusBar.setStyle({style: Style.Light});
+        } else if (currentTheme.value === 'dark') {
+          StatusBar.setStyle({ style: Style.Dark });
+        } else {
+          StatusBar.setStyle({ style: Style.Default });
+        }
+      });
+    } catch (e) {
+      console.error('StatusBar error:', e);
+    }
   }
+  else {
+    let metaTag = document.querySelector('meta[name="theme-color"]')
+    if (!metaTag) {
+      metaTag = document.createElement('meta')
+      metaTag.name = 'theme-color'
+      document.head.appendChild(metaTag)
+    }
 
-  metaTag.setAttribute('content', primaryColor)
+    metaTag.setAttribute('content', primaryColor)
+  }
 }
 
 watch(() => appTheme.global.name.value, updateAddressBar)
@@ -248,6 +266,12 @@ const handleFileUpload = async (file) => {
 </template>
 
 <style scoped>
+/*
+:root {
+  // For Capacitor transparent statusbar
+  padding-top: env(safe-area-inset-top);
+}
+*/
 header {
   line-height: 1.5;
 }

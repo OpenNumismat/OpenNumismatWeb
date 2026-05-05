@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/status-bar": "^8.0.2",
     "@mdi/font": "^7.4.47",
     "@vueuse/core": "^14.2.1",
     "axios": "^1.13.6",
