@@ -48,7 +48,7 @@ const updateAddressBar = () => {
   if (import.meta.env.VITE_PLATFORM_ANDROID) {
     try {
       import('@capacitor/status-bar').then(({ StatusBar, Style }) => {
-        StatusBar.setOverlaysWebView({ overlay: false });
+        StatusBar.setOverlaysWebView({ overlay: true });
         StatusBar.setBackgroundColor({ color: primaryColor });
         if (currentTheme.value === 'light') {
           StatusBar.setBackgroundColor({ color: '#ffa726' });
@@ -144,7 +144,7 @@ const handleFileUpload = async (file) => {
 
 <template>
   <v-app>
-    <v-app-bar color="primary">
+    <v-app-bar color="primary" flat class="safe-area-top">
       <v-app-bar-nav-icon v-if="route.name === 'home' || (route.name === 'open' && !isOpened)"
         @click="drawer = !drawer"
       ></v-app-bar-nav-icon>
@@ -269,9 +269,16 @@ const handleFileUpload = async (file) => {
 </template>
 
 <style scoped>
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+  height: calc(64px + env(safe-area-inset-top)) !important;
+}
 /*
 :root {
   // For Capacitor transparent statusbar
+  padding-top: env(safe-area-inset-top);
+}
+header, .ion-page {
   padding-top: env(safe-area-inset-top);
 }
 */
