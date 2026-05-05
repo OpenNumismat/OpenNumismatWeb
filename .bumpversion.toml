@@ -24,3 +24,5 @@ post_commit_hooks = []
 filename = "frontend/package.json"
 [[tool.bumpversion.files]]
 filename = "backend/_version.py"
+[[tool.bumpversion.files]]
+filename = "frontend/android/app/build.gradle"

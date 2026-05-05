@@ -71,5 +71,6 @@ jobs:
           prerelease: true
           name: "Development Build"
           generate_release_notes: true
+          append_body: false
           files: |
-            frontend/android/app/build/outputs/apk/debug/app-debug.apk
+            frontend/android/app/build/outputs/apk/debug/*.apk
