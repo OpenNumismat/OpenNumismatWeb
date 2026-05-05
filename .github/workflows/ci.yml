@@ -63,8 +63,13 @@ jobs:
         working-directory: frontend
         run: cd android && ./gradlew assembleDebug
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - name: Release
+        uses: softprops/action-gh-release@v3
         with:
-          name: android-debug-apk
-          path: frontend/android/app/build/outputs/apk/debug/app-debug.apk
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          tag_name: "latest"
+          prerelease: true
+          name: "Development Build"
+          generate_release_notes: true
+          files: |
+            frontend/android/app/build/outputs/apk/debug/app-debug.apk
