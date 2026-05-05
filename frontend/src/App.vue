@@ -267,6 +267,7 @@ const handleFileUpload = async (file) => {
 </template>
 
 <style scoped>
+/*
 :root {
   // For Capacitor transparent statusbar
   padding-top: env(safe-area-inset-top);
@@ -274,7 +275,7 @@ const handleFileUpload = async (file) => {
 header, .ion-page {
   padding-top: env(safe-area-inset-top);
 }
-
+*/
 header {
   line-height: 1.5;
 }
