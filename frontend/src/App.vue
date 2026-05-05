@@ -50,8 +50,10 @@ const updateAddressBar = () => {
       import('@capacitor/status-bar').then(({ StatusBar, Style }) => {
         StatusBar.setBackgroundColor({ color: primaryColor });
         if (currentTheme.value === 'light') {
+          StatusBar.setBackgroundColor({ color: '#ffa726' });
           StatusBar.setStyle({style: Style.Light});
         } else if (currentTheme.value === 'dark') {
+          StatusBar.setBackgroundColor({ color: '#ef6c00' });
           StatusBar.setStyle({ style: Style.Dark });
         } else {
           StatusBar.setStyle({ style: Style.Default });
