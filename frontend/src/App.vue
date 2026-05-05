@@ -51,10 +51,8 @@ const updateAddressBar = () => {
         StatusBar.setOverlaysWebView({ overlay: true });
         StatusBar.setBackgroundColor({ color: primaryColor });
         if (currentTheme.value === 'light') {
-          StatusBar.setBackgroundColor({ color: '#ffa726' });
           StatusBar.setStyle({style: Style.Light});
         } else if (currentTheme.value === 'dark') {
-          StatusBar.setBackgroundColor({ color: '#ef6c00' });
           StatusBar.setStyle({ style: Style.Dark });
         } else {
           StatusBar.setStyle({ style: Style.Default });
@@ -269,19 +267,6 @@ const handleFileUpload = async (file) => {
 </template>
 
 <style scoped>
-html, body, .v-application {
-  padding: 0 !important;
-  margin: 0 !important;
-}
-.v-app-bar {
-  top: 0 !important;
-}
-
-.safe-area-top {
-  padding-top: env(safe-area-inset-top);
-  height: calc(64px + env(safe-area-inset-top)) !important;
-}
-/*
 :root {
   // For Capacitor transparent statusbar
   padding-top: env(safe-area-inset-top);
@@ -289,7 +274,7 @@ html, body, .v-application {
 header, .ion-page {
   padding-top: env(safe-area-inset-top);
 }
-*/
+
 header {
   line-height: 1.5;
 }
