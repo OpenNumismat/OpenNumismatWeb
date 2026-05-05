@@ -63,6 +63,11 @@ jobs:
         working-directory: frontend
         run: cd android && ./gradlew assembleDebug
 
+      - name: Delete old release
+        run: gh release delete latest --yes --cleanup-tag || echo "Not found"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Release
         uses: softprops/action-gh-release@v3
         with:
@@ -71,6 +76,5 @@ jobs:
           prerelease: true
           name: "Development Build"
           generate_release_notes: true
-          append_body: false
           files: |
             frontend/android/app/build/outputs/apk/debug/*.apk
