@@ -48,6 +48,7 @@ const updateAddressBar = () => {
   if (import.meta.env.VITE_PLATFORM_ANDROID) {
     try {
       import('@capacitor/status-bar').then(({ StatusBar, Style }) => {
+        StatusBar.setOverlaysWebView({ overlay: false });
         StatusBar.setBackgroundColor({ color: primaryColor });
         if (currentTheme.value === 'light') {
           StatusBar.setBackgroundColor({ color: '#ffa726' });
