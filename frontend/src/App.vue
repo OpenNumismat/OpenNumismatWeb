@@ -64,12 +64,13 @@ onMounted(async () => {
   await router.replace('/')
 
   if (import.meta.env.VITE_PLATFORM_ANDROID) {
-    const { App } = import('@capacitor/app');
-    App.addListener('backButton', ({ canGoBack }) => {
-      if (window.history.length > 1) {
-        router.back();
-      } else {
+    const { App } = await import('@capacitor/app');
+    await App.addListener('backButton', ({ canGoBack }) => {
+      if (router.currentRoute.value.name === 'home' || !canGoBack) {
+        // App.minimizeApp();
         App.exitApp();
+      } else {
+        router.back();
       }
     });
   }
