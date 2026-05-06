@@ -34,7 +34,7 @@ jobs:
           python-version: '3.12'
           cache: 'pip'
       - name: Bump version
-      - run: |
+        run: |
           pip install bump-my-version==1.3.0
           bump-my-version bump patch --no-commit --verbose
 
@@ -85,7 +85,7 @@ jobs:
           python-version: '3.12'
           cache: 'pip'
       - name: Bump version
-      - run: |
+        run: |
           pip install bump-my-version==1.3.0
           bump-my-version bump patch --no-commit --verbose
 
