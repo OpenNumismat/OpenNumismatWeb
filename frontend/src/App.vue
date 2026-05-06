@@ -67,8 +67,8 @@ onMounted(async () => {
     const { App } = await import('@capacitor/app');
     await App.addListener('backButton', ({ canGoBack }) => {
       if (router.currentRoute.value.name === 'home' || !canGoBack) {
-        // App.minimizeApp();
-        App.exitApp();
+        App.minimizeApp();
+        // App.exitApp();
       } else {
         router.back();
       }
