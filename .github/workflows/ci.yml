@@ -71,7 +71,17 @@ jobs:
 
       - name: Build Android App
         working-directory: frontend
-        run: cd android && ./gradlew assembleDebug
+        run: cd android && ./gradlew assembleRelease
+
+      - name: Sign APK
+        id: sign_app
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: frontend/android/app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Delete old release
         run: gh release delete latest --yes --cleanup-tag || echo "Not found"
@@ -86,5 +96,4 @@ jobs:
           prerelease: true
           name: "Development Build"
           generate_release_notes: true
-          files: |
-            frontend/android/app/build/outputs/apk/debug/*.apk
+          files: ${{ steps.sign_app.outputs.signedReleaseFile }}
