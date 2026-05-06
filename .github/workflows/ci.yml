@@ -46,6 +46,7 @@ jobs:
         run: |
           echo "VITE_BASE_PATH=./" > .env.local
           echo "VITE_SERVERLESS=1" >> .env.local
+          echo "VITE_PLATFORM_ANDROID=1" >> .env.local
           npm run build
           rm .env.local
 
