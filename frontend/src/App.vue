@@ -63,6 +63,18 @@ onMounted(async () => {
 
   await router.replace('/')
 
+  if (import.meta.env.VITE_PLATFORM_ANDROID) {
+    const { App } = await import('@capacitor/app');
+    await App.addListener('backButton', ({ canGoBack }) => {
+      if (router.currentRoute.value.name === 'home' || !canGoBack) {
+        App.minimizeApp();
+        // App.exitApp();
+      } else {
+        router.back();
+      }
+    });
+  }
+
   if (isServerLess === undefined) {
     serverVersion.value = await service.getServerVersion();
     if (serverVersion.value !== null) {

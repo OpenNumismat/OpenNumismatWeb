@@ -29,10 +29,6 @@ jobs:
         with:
           fetch-depth: 0
 
-#      - name: Bump patch version
-#        uses: callowayproject/bump-my-version@master
-#        with:
-#          args: patch --no-commit --verbose
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
@@ -89,7 +85,7 @@ jobs:
             #type=semver,pattern={{major}}.{{minor}}
             #type=semver,pattern={{major}}
 
-      - name: Build and push
+      - name: Build and push docker image
         uses: docker/build-push-action@v7
         with:
           context: .
@@ -97,3 +93,62 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Build
+        working-directory: frontend
+        run: |
+          echo "VITE_BASE_PATH=./" > .env.local
+          echo "VITE_SERVERLESS=1" >> .env.local
+          echo "VITE_PLATFORM_ANDROID=1" >> .env.local
+          npm run build
+          rm .env.local
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '24'
+
+#      - name: Generate Assets
+#        working-directory: frontend
+#        run: npx capacitor-assets generate --android
+
+      - name: Set Build Number
+        working-directory: frontend
+        run: |
+          sed -i "s/versionCode [0-9]*/versionCode ${{ github.run_number }}/" android/app/build.gradle
+
+      - name: Capacitor Sync
+        working-directory: frontend
+        run: npx cap sync android
+
+      - name: Build Android App
+        working-directory: frontend
+        run: cd android && ./gradlew assembleRelease
+
+      - name: Sign APK
+        id: sign_app
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: frontend/android/app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0" 
+
+      - name: Delete old release
+        run: gh release delete latest --yes --cleanup-tag || echo "Not found"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v3
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          tag_name: "latest"
+          prerelease: true
+          name: "Development Build"
+          generate_release_notes: true
+          files: ${{ steps.sign_app.outputs.signedReleaseFile }}
