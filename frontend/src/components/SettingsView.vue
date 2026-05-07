@@ -1,10 +1,13 @@
 <script setup>
-import {onMounted, onUnmounted} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import { useTheme } from 'vuetify'
 import { languageList, setLocale } from '@/i18n'
 import i18n from '../i18n'
 import {appTitle} from "@/composables/appTitle.js"
 import {imagePresentation, statusPresentation, currentTheme, apiKey, serverUrl} from "@/composables/useSettings";
+
+const localServerUrl = ref();
+const localApiKey = ref();
 
 const isServerLess = import.meta.env.VITE_SERVERLESS;
 const isNativeApp = import.meta.env.VITE_PLATFORM_ANDROID;
@@ -32,8 +35,14 @@ const appTheme = useTheme()
 
 onMounted(async () => {
   appTitle.pushTitle(i18n.global.t('title_settings'))
+
+  localServerUrl.value = serverUrl.value
+  localApiKey.value = apiKey.value
 })
 onUnmounted(async () => {
+  serverUrl.value = localServerUrl.value
+  apiKey.value = localApiKey.value
+
   appTitle.popTitle()
 })
 
@@ -118,7 +127,7 @@ const handleThemeChange = (theme) => {
           <v-list-item-action start>
             <v-text-field
                 :label="i18n.global.t('Server URL')"
-                v-model="serverUrl"
+                v-model="localServerUrl"
                 density="comfortable"
                 hide-details
             />
@@ -129,7 +138,7 @@ const handleThemeChange = (theme) => {
           <v-list-item-action start>
             <v-text-field
                 :label="i18n.global.t('API Key')"
-                v-model="apiKey"
+                v-model="localApiKey"
                 density="comfortable"
                 hide-details
             />

@@ -10,7 +10,7 @@ import AboutView from "@/components/AboutView.vue";
 import CoinView from "@/components/CoinView.vue";
 import ImagesView from "@/components/ImagesView.vue";
 import SummaryView from "@/components/SummaryView.vue";
-import { currentTheme } from "@/composables/useSettings";
+import {currentTheme, serverUrl} from "@/composables/useSettings";
 import PasswordDialog from '@/components/PasswordDialog.vue'
 import FileServerView from "@/components/FileServerView.vue";
 import {useGlobalStatus} from "@/composables/useGlobalStatus.js";
@@ -56,6 +56,21 @@ const updateAddressBar = () => {
   metaTag.setAttribute('content', primaryColor)
 }
 
+const testServerConnection = async () => {
+  if (isServerConfigured) {
+    serverVersion.value = await service.getServerVersion();
+    if (serverVersion.value !== null) {
+      if (serverVersion.value !== appVersion) {
+        globalStatus.warning.value = i18n.global.t('The server version is different from the application version');
+      }
+
+      return true;
+    }
+  }
+
+  return false;
+}
+
 const isServerConfigured = computed(() => {
   if (isServerLess)
     return false;
@@ -85,6 +100,14 @@ onMounted(async () => {
   appTheme.change(currentTheme.value)
   updateAddressBar();
 
+  if (!isServerLess) {
+    watch(serverUrl, async () => {
+      if (await testServerConnection()) {
+        serverFileList.value = await service.getServerFileList();
+      }
+    });
+  }
+
   await router.replace('/')
 
   if (isNativeApp) {
@@ -99,14 +122,8 @@ onMounted(async () => {
     });
   }
 
-  if (isServerConfigured) {
-    serverVersion.value = await service.getServerVersion();
-    if (serverVersion.value !== null) {
-      if (serverVersion.value !== appVersion) {
-        globalStatus.warning.value = i18n.global.t('The server version is different from the application version');
-      }
-      serverFileList.value = await service.getServerFileList();
-    }
+  if (await testServerConnection()) {
+    serverFileList.value = await service.getServerFileList();
   }
 })
 
