@@ -5,6 +5,7 @@ import {useSQLite} from "@/composables/useSQLite.js";
 import {arrayBufferToBase64} from "@/utils/bytes2img.js";
 
 const globalStatus = useGlobalStatus();
+const isNativeApp = import.meta.env.VITE_PLATFORM_ANDROID;
 
 const api = axios.create({
 //  baseURL: 'http://localhost:8000',
@@ -12,8 +13,12 @@ const api = axios.create({
 })
 
 api.interceptors.request.use((config) => {
+  const serverUrl = localStorage.getItem('serverUrl');
   const apiKey = localStorage.getItem('apiKey');
 
+  if (isNativeApp && serverUrl) {
+    config.baseURL = serverUrl;
+  }
   if (apiKey) {
     config.headers['access_token'] = apiKey;
   }

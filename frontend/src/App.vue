@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch} from 'vue'
+import {computed, onMounted, ref, watch} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {useTheme} from 'vuetify'
 import {appTitle} from "@/composables/appTitle.js";
@@ -28,6 +28,7 @@ const isLoading = globalStatus.isLoading;
 const hasError = globalStatus.hasError;
 const hasWarning = globalStatus.hasWarning;
 
+const isNativeApp = import.meta.env.VITE_PLATFORM_ANDROID;
 const isServerLess = import.meta.env.VITE_SERVERLESS;
 const serverVersion = ref(null)
 const serverFileList = ref([])
@@ -55,6 +56,29 @@ const updateAddressBar = () => {
   metaTag.setAttribute('content', primaryColor)
 }
 
+const isServerConfigured = computed(() => {
+  if (isServerLess)
+    return false;
+
+  if (isNativeApp) {
+    const serverUrl = localStorage.getItem('serverUrl');
+    if (!serverUrl)
+      return false;
+  }
+
+  return true;
+});
+
+const isServerAvailable = computed(() => {
+  if (!isServerConfigured)
+    return false;
+
+  if (serverVersion.value === null)
+    return false;
+
+  return true;
+});
+
 watch(() => appTheme.global.name.value, updateAddressBar)
 
 onMounted(async () => {
@@ -63,7 +87,7 @@ onMounted(async () => {
 
   await router.replace('/')
 
-  if (import.meta.env.VITE_PLATFORM_ANDROID) {
+  if (isNativeApp) {
     const { App } = await import('@capacitor/app');
     await App.addListener('backButton', ({ canGoBack }) => {
       if (router.currentRoute.value.name === 'home' || !canGoBack) {
@@ -75,7 +99,7 @@ onMounted(async () => {
     });
   }
 
-  if (isServerLess === undefined) {
+  if (isServerConfigured) {
     serverVersion.value = await service.getServerVersion();
     if (serverVersion.value !== null) {
       if (serverVersion.value !== appVersion) {
@@ -184,7 +208,7 @@ const handleFileUpload = async (file) => {
     <v-main>
       <FileUploaderView v-if="(route.name === 'home' && !isOpened) || route.name === 'open'"
         :onFileUploaded="handleFileUpload" />
-      <FileServerView v-if="((route.name === 'home' && !isOpened) || route.name === 'open') && !isServerLess && serverVersion"
+      <FileServerView v-if="((route.name === 'home' && !isOpened) || route.name === 'open') && isServerAvailable"
         :file_list="serverFileList" :onFileSelected="handleRemoteFileSelected" />
       <KeepAlive>
         <CoinListView v-if="route.name === 'home' && isOpened"

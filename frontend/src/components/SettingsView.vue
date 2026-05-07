@@ -4,9 +4,10 @@ import { useTheme } from 'vuetify'
 import { languageList, setLocale } from '@/i18n'
 import i18n from '../i18n'
 import {appTitle} from "@/composables/appTitle.js"
-import { imagePresentation, statusPresentation, currentTheme, apiKey } from "@/composables/useSettings";
+import {imagePresentation, statusPresentation, currentTheme, apiKey, serverUrl} from "@/composables/useSettings";
 
 const isServerLess = import.meta.env.VITE_SERVERLESS;
+const isNativeApp = import.meta.env.VITE_PLATFORM_ANDROID;
 
 const languageItems = Object.entries(languageList).map(([key, value]) => ({
   lang: key,
@@ -112,6 +113,18 @@ const handleThemeChange = (theme) => {
         {{ i18n.global.t('Server') }}
       </v-list-subheader>
       <v-divider />
+      <template  v-if="isNativeApp">
+        <v-list-item>
+          <v-list-item-action start>
+            <v-text-field
+                :label="i18n.global.t('Server URL')"
+                v-model="serverUrl"
+                density="comfortable"
+                hide-details
+            />
+          </v-list-item-action>
+        </v-list-item>
+      </template>
       <v-list-item>
           <v-list-item-action start>
             <v-text-field
