@@ -6,10 +6,6 @@ on:
       - '**'
   workflow_dispatch: # allow manual start
 
-concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: true
-
 env:
   IMAGE_NAME: ${{ github.repository }}
 
