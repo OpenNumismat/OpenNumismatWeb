@@ -63,8 +63,5 @@
  "Open collection": "Відкриття колекції",
  "Load collection": "Load collection",
  "Load coins": "Load coins",
- "Request": "Request",
- "The server version is different from the application version": "The server version is different from the application version",
- "Check server API key": "Check server API key",
- "Check server settings": "Check server settings"
+ "Request": "Request"
 }
