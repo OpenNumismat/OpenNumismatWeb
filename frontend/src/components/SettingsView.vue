@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, onUnmounted, ref} from "vue";
+import {computed, onMounted, onUnmounted, ref} from "vue";
 import { useTheme } from 'vuetify'
 import { languageList, setLocale } from '@/i18n'
 import i18n from '../i18n'
@@ -12,6 +12,17 @@ const localApiKey = ref('');
 
 const isServerLess = import.meta.env.VITE_SERVERLESS;
 const isNativeApp = import.meta.env.VITE_PLATFORM_ANDROID;
+
+const infoMessage = ref(null);
+const hasInfoMessage = computed({
+  get: () => !!infoMessage.value,
+  set: (value) => {
+    if (!value) infoMessage.value = null;
+  }
+});
+const clearInfoMessage = async () => {
+  infoMessage.value = null;
+}
 
 const languageItems = Object.entries(languageList).map(([key, value]) => ({
   lang: key,
@@ -55,11 +66,17 @@ const isChecking = ref(false);
 
 const checkServer = async () => {
   isChecking.value = true
+
+  let result = false;
   const service = useService();
   if (isNativeApp)
-    await service.checkServerConfig(localApiKey.value, localServerUrl.value);
+    result = await service.checkServerConfig(localApiKey.value, localServerUrl.value);
   else
-    await service.checkServerConfig(localApiKey.value);
+    result = await service.checkServerConfig(localApiKey.value);
+
+  if (result)
+    infoMessage.value = i18n.global.t('Server available')
+
   isChecking.value = false
 }
 </script>
@@ -171,6 +188,18 @@ const checkServer = async () => {
       </v-list-item>
     </template>
   </v-list>
+
+  <v-snackbar v-model="hasInfoMessage" :timeout="5000" color="success" variant="tonal">
+    <div class="text-subtitle-1 pb-2">{{ infoMessage }}</div>
+
+    <template v-slot:actions>
+      <v-btn
+        icon="mdi-close"
+        variant="text"
+        @click="clearInfoMessage()"
+      ></v-btn>
+    </template>
+  </v-snackbar>
 </template>
 
 <style scoped>
