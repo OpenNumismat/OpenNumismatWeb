@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - '**'
+      - '*'
   workflow_run:
     workflows: ["Bump version and create release"]
     types:
