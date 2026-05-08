@@ -69,7 +69,7 @@ const refreshApp = async () => {
 }
 
 const testServerConnection = async () => {
-  if (isServerConfigured) {
+  if (isServerConfigured.value) {
     serverVersion.value = await service.getServerVersion();
     if (serverVersion.value !== null) {
       if (serverVersion.value !== appVersion) {
