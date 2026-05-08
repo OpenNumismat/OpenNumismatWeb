@@ -7,8 +7,8 @@ import {appTitle} from "@/composables/appTitle.js"
 import {imagePresentation, statusPresentation, currentTheme, apiKey, serverUrl} from "@/composables/useSettings";
 import {useService} from "@/composables/useService.js";
 
-const localServerUrl = ref();
-const localApiKey = ref();
+const localServerUrl = ref('');
+const localApiKey = ref('');
 
 const isServerLess = import.meta.env.VITE_SERVERLESS;
 const isNativeApp = import.meta.env.VITE_PLATFORM_ANDROID;
@@ -57,9 +57,9 @@ const checkServer = async () => {
   isChecking.value = true
   const service = useService();
   if (isNativeApp)
-    await service.checkApiKey(localApiKey.value, localServerUrl.value);
+    await service.checkServerConfig(localApiKey.value, localServerUrl.value);
   else
-    await service.checkApiKey(localApiKey.value);
+    await service.checkServerConfig(localApiKey.value);
   isChecking.value = false
 }
 </script>
