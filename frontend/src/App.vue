@@ -97,7 +97,7 @@ const isServerConfigured = computed(() => {
 });
 
 const isServerAvailable = computed(() => {
-  if (!isServerConfigured)
+  if (!isServerConfigured.value)
     return false;
 
   if (serverVersion.value === null)
