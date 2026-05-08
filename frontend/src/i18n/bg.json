@@ -64,5 +64,7 @@
  "Load collection": "Зареждане на колекция",
  "Load coins": "Зареждане на монети",
  "Request": "Заявка",
- "The server version is different from the application version": "Версията на сървъра не съвпада с версията на приложението"
+ "The server version is different from the application version": "Версията на сървъра не съвпада с версията на приложението",
+ "Check server API key": "Check server API key",
+ "Check server settings": "Check server settings"
 }
