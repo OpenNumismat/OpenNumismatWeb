@@ -65,6 +65,7 @@
  "Load coins": "Cargar monedas",
  "Request": "Solicitud",
  "The server version is different from the application version": "The server version is different from the application version",
- "Check server API key": "Check server API key",
- "Check server settings": "Check server settings"
+ "Check server settings": "Check server settings",
+ "Wrong response": "Wrong response",
+ "Server available": "Server available"
 }
