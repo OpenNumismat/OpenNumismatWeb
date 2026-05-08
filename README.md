@@ -10,7 +10,7 @@ Latest stable version:
 
 Latest development build available at:
 - Web-application (PWA): https://opennumismat.github.io/OpenNumismatWeb/dev/
-- Android application - https://github.com/OpenNumismat/OpenNumismatWeb/releases/download/v0.2.0/OpenNumismat.apk
+- Android application - https://github.com/OpenNumismat/OpenNumismatWeb/releases/tag/latest
 - Docker image - `ghcr.io/opennumismat/opennumismatweb:main`
 
 ## Running it yourself
