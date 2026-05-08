@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch} from 'vue'
+import {computed, onMounted, ref, watch} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {useTheme} from 'vuetify'
 import {appTitle} from "@/composables/appTitle.js";
@@ -10,7 +10,7 @@ import AboutView from "@/components/AboutView.vue";
 import CoinView from "@/components/CoinView.vue";
 import ImagesView from "@/components/ImagesView.vue";
 import SummaryView from "@/components/SummaryView.vue";
-import { currentTheme } from "@/composables/useSettings";
+import {currentTheme, serverUrl, apiKey} from "@/composables/useSettings";
 import PasswordDialog from '@/components/PasswordDialog.vue'
 import FileServerView from "@/components/FileServerView.vue";
 import {useGlobalStatus} from "@/composables/useGlobalStatus.js";
@@ -28,6 +28,7 @@ const isLoading = globalStatus.isLoading;
 const hasError = globalStatus.hasError;
 const hasWarning = globalStatus.hasWarning;
 
+const isNativeApp = import.meta.env.VITE_PLATFORM_ANDROID;
 const isServerLess = import.meta.env.VITE_SERVERLESS;
 const serverVersion = ref(null)
 const serverFileList = ref([])
@@ -55,15 +56,72 @@ const updateAddressBar = () => {
   metaTag.setAttribute('content', primaryColor)
 }
 
+const refreshApp = async () => {
+  if (coinListViewRef.value)
+    coinListViewRef.value.clear()
+
+  await router.replace('/');
+  isOpened = false;
+
+  if (await testServerConnection()) {
+    serverFileList.value = await service.getServerFileList();
+  }
+}
+
+const testServerConnection = async () => {
+  if (isServerConfigured.value) {
+    serverVersion.value = await service.getServerVersion();
+    if (serverVersion.value !== null) {
+      if (serverVersion.value !== appVersion) {
+        globalStatus.warning.value = i18n.global.t('The server version is different from the application version');
+      }
+
+      return true;
+    }
+  }
+
+  return false;
+}
+
+const isServerConfigured = computed(() => {
+  if (isServerLess)
+    return false;
+
+  if (isNativeApp) {
+    const serverUrl = localStorage.getItem('serverUrl');
+    if (!serverUrl)
+      return false;
+  }
+
+  return true;
+});
+
+const isServerAvailable = computed(() => {
+  if (!isServerConfigured.value)
+    return false;
+
+  if (serverVersion.value === null)
+    return false;
+
+  return true;
+});
+
 watch(() => appTheme.global.name.value, updateAddressBar)
 
 onMounted(async () => {
   appTheme.change(currentTheme.value)
   updateAddressBar();
 
-  await router.replace('/')
+  if (!isServerLess) {
+    watch(serverUrl, async () => {
+      await refreshApp();
+    });
+    watch(apiKey, async () => {
+      await refreshApp();
+    });
+  }
 
-  if (import.meta.env.VITE_PLATFORM_ANDROID) {
+  if (isNativeApp) {
     const { App } = await import('@capacitor/app');
     await App.addListener('backButton', ({ canGoBack }) => {
       if (router.currentRoute.value.name === 'home' || !canGoBack) {
@@ -75,15 +133,7 @@ onMounted(async () => {
     });
   }
 
-  if (isServerLess === undefined) {
-    serverVersion.value = await service.getServerVersion();
-    if (serverVersion.value !== null) {
-      if (serverVersion.value !== appVersion) {
-        globalStatus.warning.value = i18n.global.t('The server version is different from the application version');
-      }
-      serverFileList.value = await service.getServerFileList();
-    }
-  }
+  await refreshApp();
 })
 
 const openFile = async (file, connection_type) => {
@@ -184,7 +234,7 @@ const handleFileUpload = async (file) => {
     <v-main>
       <FileUploaderView v-if="(route.name === 'home' && !isOpened) || route.name === 'open'"
         :onFileUploaded="handleFileUpload" />
-      <FileServerView v-if="((route.name === 'home' && !isOpened) || route.name === 'open') && !isServerLess && serverVersion"
+      <FileServerView v-if="((route.name === 'home' && !isOpened) || route.name === 'open') && isServerAvailable"
         :file_list="serverFileList" :onFileSelected="handleRemoteFileSelected" />
       <KeepAlive>
         <CoinListView v-if="route.name === 'home' && isOpened"

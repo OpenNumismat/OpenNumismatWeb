@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - '**'
+      - '*'
   workflow_run:
     workflows: ["Bump version and create release"]
     types:
@@ -117,13 +117,12 @@ jobs:
         working-directory: frontend
         run: |
           echo "VITE_BASE_PATH=./" > .env.local
-          echo "VITE_SERVERLESS=1" >> .env.local
           echo "VITE_PLATFORM_ANDROID=1" >> .env.local
           npm run build
           rm .env.local
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: '24'
