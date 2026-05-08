@@ -10,7 +10,7 @@ import AboutView from "@/components/AboutView.vue";
 import CoinView from "@/components/CoinView.vue";
 import ImagesView from "@/components/ImagesView.vue";
 import SummaryView from "@/components/SummaryView.vue";
-import {currentTheme, serverUrl} from "@/composables/useSettings";
+import {currentTheme, serverUrl, apiKey} from "@/composables/useSettings";
 import PasswordDialog from '@/components/PasswordDialog.vue'
 import FileServerView from "@/components/FileServerView.vue";
 import {useGlobalStatus} from "@/composables/useGlobalStatus.js";
@@ -54,6 +54,18 @@ const updateAddressBar = () => {
   }
 
   metaTag.setAttribute('content', primaryColor)
+}
+
+const refreshApp = async () => {
+  if (coinListViewRef.value)
+    coinListViewRef.value.clear()
+
+  await router.replace('/');
+  isOpened = false;
+
+  if (await testServerConnection()) {
+    serverFileList.value = await service.getServerFileList();
+  }
 }
 
 const testServerConnection = async () => {
@@ -102,13 +114,12 @@ onMounted(async () => {
 
   if (!isServerLess) {
     watch(serverUrl, async () => {
-      if (await testServerConnection()) {
-        serverFileList.value = await service.getServerFileList();
-      }
+      await refreshApp();
+    });
+    watch(apiKey, async () => {
+      await refreshApp();
     });
   }
-
-  await router.replace('/')
 
   if (isNativeApp) {
     const { App } = await import('@capacitor/app');
@@ -122,9 +133,7 @@ onMounted(async () => {
     });
   }
 
-  if (await testServerConnection()) {
-    serverFileList.value = await service.getServerFileList();
-  }
+  await refreshApp();
 })
 
 const openFile = async (file, connection_type) => {
