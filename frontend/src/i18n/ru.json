@@ -64,5 +64,7 @@
  "Load collection": "Загрузка коллекции",
  "Load coins": "Загрузка списка монет",
  "Request": "Запрос",
- "The server version is different from the application version": "The server version is different from the application version"
+ "The server version is different from the application version": "The server version is different from the application version",
+ "Check server API key": "Check server API key",
+ "Check server settings": "Check server settings"
 }
