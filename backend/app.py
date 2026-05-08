@@ -44,6 +44,7 @@ def version():
     return __version__
 
 
+@app.head("/api/filelist", dependencies=[Depends(get_api_key)]) # TODO: should be enough `get`
 @app.get("/api/filelist", dependencies=[Depends(get_api_key)])
 def filelist():
     root = Path(DATA_PATH).resolve()

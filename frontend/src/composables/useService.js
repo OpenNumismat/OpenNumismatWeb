@@ -13,6 +13,10 @@ const api = axios.create({
 })
 
 api.interceptors.request.use((config) => {
+  if (config.skipInterceptor) {
+    return config;
+  }
+
   const serverUrl = localStorage.getItem('serverUrl');
   const apiKey = localStorage.getItem('apiKey');
 
@@ -147,6 +151,33 @@ export function useService(passwordDialogRef) {
     }
 
     return serverVersion;
+  }
+
+  const checkApiKey = async (apiKey = null, serverUrl = null) => {
+    await globalStatus.startLoading(i18n.global.t('Check server API key'));
+
+    const config = {}
+    if (apiKey !== null || serverUrl !== null) {
+      config.skipInterceptor = true;
+
+      if (serverUrl !== null)
+        config.baseURL = serverUrl;
+      if (apiKey !== null) {
+        config.headers = {};
+        config.headers['access_token'] = apiKey;
+      }
+    }
+
+    try {
+      // await api.head('/api/filelist', config);
+      await api.get('/api/filelist', config);
+      return true;
+    } catch (err) {
+      globalStatus.error.value = err;
+      return false;
+    } finally {
+      await globalStatus.finishLoading();
+    }
   }
 
   const getServerFileList = async () => {
@@ -651,6 +682,7 @@ export function useService(passwordDialogRef) {
 
   return {
     getServerVersion,
+    checkApiKey,
     getServerFileList,
     openRemoteFile,
     openLocalFile,

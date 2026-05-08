@@ -5,6 +5,7 @@ import { languageList, setLocale } from '@/i18n'
 import i18n from '../i18n'
 import {appTitle} from "@/composables/appTitle.js"
 import {imagePresentation, statusPresentation, currentTheme, apiKey, serverUrl} from "@/composables/useSettings";
+import {useService} from "@/composables/useService.js";
 
 const localServerUrl = ref();
 const localApiKey = ref();
@@ -49,6 +50,18 @@ onUnmounted(async () => {
 const handleThemeChange = (theme) => {
   appTheme.change(theme)
 }
+
+const isChecking = ref(false);
+
+const checkServer = async () => {
+  isChecking.value = true
+  const service = useService();
+  if (isNativeApp)
+    await service.checkApiKey(localApiKey.value, localServerUrl.value);
+  else
+    await service.checkApiKey(localApiKey.value);
+  isChecking.value = false
+}
 </script>
 
 <template>
@@ -59,7 +72,7 @@ const handleThemeChange = (theme) => {
     <v-divider />
     <v-list-item :title="i18n.global.t('settings_theme')">
       <template v-slot:append>
-        <v-list-item-action start>
+        <v-list-item-action>
           <v-btn-toggle
               v-model="currentTheme"
               rounded="xl"
@@ -75,7 +88,7 @@ const handleThemeChange = (theme) => {
     </v-list-item>
     <v-list-item :title="i18n.global.t('settings_language')">
       <template v-slot:append>
-        <v-list-item-action start>
+        <v-list-item-action>
           <v-select
               v-model="$i18n.locale"
               :items="languageItems"
@@ -91,7 +104,7 @@ const handleThemeChange = (theme) => {
     </v-list-item>
     <v-list-item :title="i18n.global.t('settings_status')">
       <template v-slot:append>
-        <v-list-item-action start>
+        <v-list-item-action>
           <v-select
               v-model="statusPresentation"
               :items="statusItems"
@@ -105,7 +118,7 @@ const handleThemeChange = (theme) => {
     </v-list-item>
     <v-list-item :title="i18n.global.t('settings_image_view')">
       <template v-slot:append>
-        <v-list-item-action start>
+        <v-list-item-action>
           <v-select
               v-model="imagePresentation"
               :items="imageViewItems"
@@ -124,7 +137,7 @@ const handleThemeChange = (theme) => {
       <v-divider />
       <template  v-if="isNativeApp">
         <v-list-item>
-          <v-list-item-action start>
+          <v-list-item-action>
             <v-text-field
                 :label="i18n.global.t('Server URL')"
                 v-model="localServerUrl"
@@ -135,14 +148,26 @@ const handleThemeChange = (theme) => {
         </v-list-item>
       </template>
       <v-list-item>
-          <v-list-item-action start>
-            <v-text-field
+        <v-list-item-action>
+          <v-text-field
                 :label="i18n.global.t('API Key')"
                 v-model="localApiKey"
                 density="comfortable"
                 hide-details
-            />
-          </v-list-item-action>
+          />
+        </v-list-item-action>
+      </v-list-item>
+      <v-list-item>
+        <v-list-item-action>
+          <v-btn
+            color="primary"
+            variant="flat"
+            :loading="isChecking"
+            @click="checkServer"
+          >
+            {{ i18n.global.t('Check server settings') }}
+          </v-btn>
+        </v-list-item-action>
       </v-list-item>
     </template>
   </v-list>
