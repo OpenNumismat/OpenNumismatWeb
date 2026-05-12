@@ -428,10 +428,6 @@ export function useService(passwordDialogRef) {
       const { data } = await api.get('/api/images', {params: {f: file}});
 
       if (Array.isArray(data)) {
-        data.forEach((coin_image) => {
-          if (coin_image[1])
-            coin_image[1] = Uint8Array.fromBase64(coin_image[1]);
-        });
         return data;
       }
     }

@@ -42,11 +42,7 @@ onMounted(async () => {
   watch(imagePresentation,async () => {
     await clearImages();
     if (imagePresentation.value === 'image' && props.settings.type) {
-      const coin_images = await service.loadImages()
-      coin_images.forEach((coin_image) => {
-        const blob = new Blob([coin_image[1]], { type: 'image/png' });
-        images.value[coin_image[0]] = URL.createObjectURL(blob);
-      });
+      await loadImages();
     }
   })
 })
@@ -58,11 +54,7 @@ const onOpenFile = async () => {
   await clearImages();
   coinsList.value = await service.loadCoins()
   if (imagePresentation.value === 'image') {
-    const coin_images = await service.loadImages()
-    coin_images.forEach((coin_image) => {
-      const blob = new Blob([coin_image[1]], { type: 'image/png' });
-      images.value[coin_image[0]] = URL.createObjectURL(blob);
-    });
+    await loadImages();
   }
 
   fields.value = ['title',]
@@ -80,6 +72,19 @@ const onOpenFile = async () => {
     fields.value.push('period')
 }
 
+const loadImages = async () => {
+  const coin_images = await service.loadImages()
+  coin_images.forEach((coin_image) => {
+    if (typeof coin_image[1] === "string") {
+      images.value[coin_image[0]] = `data:image/webp;base64,${coin_image[1]}`;
+    }
+    else {
+      const blob = new Blob([coin_image[1]], { type: 'image/webp' });
+      images.value[coin_image[0]] = URL.createObjectURL(blob);
+    }
+  });
+}
+
 const clearImages = async () => {
   Object.values(images.value).forEach(value => {
     URL.revokeObjectURL(value);
@@ -89,7 +94,6 @@ const clearImages = async () => {
 }
 
 const clear = async () => {
-  await clearImages()
   searchVal.value = null
   sortedBy.value = null
   reverseSort.value = false
@@ -100,6 +104,8 @@ const clear = async () => {
   selectedType.value = null
   selectedPeriod.value = null
   selectedMint.value = null
+  coinsList.value = []
+  await clearImages()
 }
 
 defineExpose({
