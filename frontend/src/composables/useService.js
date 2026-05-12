@@ -145,7 +145,7 @@ export function useService(passwordDialogRef) {
       const response = await api.get('/api/version')
       serverVersion = response.data
     } catch (err) {
-      globalStatus.error.value = err
+      globalStatus.error.value = err?.message || err;
     } finally {
       await globalStatus.finishLoading()
     }
@@ -153,19 +153,20 @@ export function useService(passwordDialogRef) {
     return serverVersion;
   }
 
-  const checkApiKey = async (apiKey = null, serverUrl = null) => {
-    await globalStatus.startLoading(i18n.global.t('Check server API key'));
+  const checkServerConfig = async (apiKey = null, serverUrl = null) => {
+    await globalStatus.startLoading(i18n.global.t('Check server settings'));
 
     const config = {}
-    if (apiKey !== null || serverUrl !== null) {
-      config.skipInterceptor = true;
+    config.skipInterceptor = true;
 
-      if (serverUrl !== null)
+    if (isNativeApp) {
+      if (serverUrl)
         config.baseURL = serverUrl;
-      if (apiKey !== null) {
-        config.headers = {};
-        config.headers['access_token'] = apiKey;
-      }
+    }
+
+    if (apiKey) {
+      config.headers = {};
+      config.headers['access_token'] = apiKey;
     }
 
     try {
@@ -173,7 +174,7 @@ export function useService(passwordDialogRef) {
       await api.get('/api/filelist', config);
       return true;
     } catch (err) {
-      globalStatus.error.value = err;
+      globalStatus.error.value = err?.message || err;
       return false;
     } finally {
       await globalStatus.finishLoading();
@@ -181,20 +182,23 @@ export function useService(passwordDialogRef) {
   }
 
   const getServerFileList = async () => {
-    let serverFileList = [];
-
     await globalStatus.startLoading(i18n.global.t('Connect to remote server'));
 
     try {
-      const response = await api.get('/api/filelist')
-      serverFileList = response.data
+      const { data } = await api.get('/api/filelist');
+
+      if (Array.isArray(data)) {
+        return data;
+      }
+
+      globalStatus.error.value = i18n.global.t('Wrong response');
     } catch (err) {
-      globalStatus.error.value = err
+      globalStatus.error.value = err?.message || err;
     } finally {
-      await globalStatus.finishLoading()
+      await globalStatus.finishLoading();
     }
 
-    return serverFileList;
+    return [];
   }
 
   const openRemoteFile = async (file) => {
@@ -682,7 +686,7 @@ export function useService(passwordDialogRef) {
 
   return {
     getServerVersion,
-    checkApiKey,
+    checkServerConfig,
     getServerFileList,
     openRemoteFile,
     openLocalFile,
