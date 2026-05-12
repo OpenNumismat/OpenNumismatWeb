@@ -78,6 +78,8 @@ const onOpenFile = async () => {
 }
 
 const clear = async () => {
+  images.value = {}
+  coinsList.value = []
   searchVal.value = null
   sortedBy.value = null
   reverseSort.value = false
@@ -88,7 +90,6 @@ const clear = async () => {
   selectedType.value = null
   selectedPeriod.value = null
   selectedMint.value = null
-  coinsList.value = []
 }
 
 defineExpose({
