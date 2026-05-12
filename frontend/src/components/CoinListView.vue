@@ -40,25 +40,28 @@ const props = defineProps({
 
 onMounted(async () => {
   watch(imagePresentation,async () => {
-    images.value = {}
+    await clearImages();
     if (imagePresentation.value === 'image' && props.settings.type) {
       const coin_images = await service.loadImages()
       coin_images.forEach((coin_image) => {
-        images.value[coin_image[0]] = coin_image[1];
+        const blob = new Blob([coin_image[1]], { type: 'image/png' });
+        images.value[coin_image[0]] = URL.createObjectURL(blob);
       });
     }
   })
 })
 onUnmounted(async () => {
+  await clearImages();
 })
 
 const onOpenFile = async () => {
-  images.value = {};
+  await clearImages();
   coinsList.value = await service.loadCoins()
   if (imagePresentation.value === 'image') {
     const coin_images = await service.loadImages()
     coin_images.forEach((coin_image) => {
-      images.value[coin_image[0]] = coin_image[1];
+      const blob = new Blob([coin_image[1]], { type: 'image/png' });
+      images.value[coin_image[0]] = URL.createObjectURL(blob);
     });
   }
 
@@ -77,9 +80,16 @@ const onOpenFile = async () => {
     fields.value.push('period')
 }
 
-const clear = async () => {
+const clearImages = async () => {
+  Object.values(images.value).forEach(value => {
+    URL.revokeObjectURL(value);
+  });
+
   images.value = {}
-  coinsList.value = []
+}
+
+const clear = async () => {
+  await clearImages()
   searchVal.value = null
   sortedBy.value = null
   reverseSort.value = false
@@ -194,7 +204,7 @@ const loadImage = async (coinId) => {
           </v-lazy>
         </template>
         <template v-slot:prepend v-else>
-          <v-img :src="arrayBufferToBase64(images[coin[0]])" :width="100" max-height="56" />
+          <v-img :src="images[coin[0]]" :width="100" max-height="56" />
         </template>
         <template v-slot:append>
           <StatusItem :status="coin[2]" :statuses="settings.statuses" :statusPresentation="statusPresentation" />

@@ -424,17 +424,22 @@ export function useService(passwordDialogRef) {
   }
 
   const loadImagesRemote = async (file) => {
-    let images = [];
-
     try {
-      const response = await api.get('/api/images', {params: {f: file}})
-      images = response.data
+      const { data } = await api.get('/api/images', {params: {f: file}});
+
+      if (Array.isArray(data)) {
+        data.forEach((coin_image) => {
+          if (coin_image[1])
+            coin_image[1] = Uint8Array.fromBase64(coin_image[1]);
+        });
+        return data;
+      }
     }
     catch (err) {
-      globalStatus.error.value = err
+      globalStatus.error.value = err?.message || err;
     }
 
-    return images;
+    return [];
   }
 
   const loadImagesLocal = async () => {
