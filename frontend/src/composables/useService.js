@@ -458,7 +458,7 @@ export function useService(passwordDialogRef) {
 
     try {
       const response = await api.get('/api/photo', {params: {f: file, id: coinId, type: type}})
-      photo = arrayBufferToBase64(response.data)
+      photo = response.data
     }
     catch (err) {
       globalStatus.error.value = err
@@ -495,33 +495,34 @@ export function useService(passwordDialogRef) {
       let newWidth1 = 0, newWidth2 = 0
 
       if (results[0][0]) {
-        const b64_img1 = arrayBufferToBase64(results[0][0])
-        img1 = new Image()
-        img1.src = b64_img1
-        await img1.decode()
-        aspectRatio = img1.naturalWidth / img1.naturalHeight
+        const blob = new Blob([results[0][0]], { type: 'image/webp' });
+        img1 = await createImageBitmap(blob);
+        aspectRatio = img1.width / img1.height
         newWidth1 = maxHeight * aspectRatio
       }
 
       if (results[0][1]) {
-        const b64_img2 = arrayBufferToBase64(results[0][1])
-        img2 = new Image()
-        img2.src = b64_img2
-        await img2.decode()
-        aspectRatio = img2.naturalWidth / img2.naturalHeight
+        const blob = new Blob([results[0][1]], { type: 'image/webp' });
+        img2 = await createImageBitmap(blob);
+        aspectRatio = img2.width / img2.height
         newWidth2 = maxHeight * aspectRatio
       }
 
-      const canvas = document.createElement('canvas')
+      const canvas = new OffscreenCanvas(newWidth1 + newWidth2, maxHeight)
       const ctx = canvas.getContext('2d')
 
-      canvas.width = newWidth1 + newWidth2
-      canvas.height = maxHeight
-      if (img1)
-        ctx.drawImage(img1, 0, 0, newWidth1, maxHeight)
-      if (img2)
-        ctx.drawImage(img2, newWidth1, 0, newWidth2, maxHeight)
-      img = canvas.toDataURL('image/png')
+      if (img1) {
+        ctx.drawImage(img1, 0, 0, newWidth1, maxHeight);
+        img1.close();
+      }
+      if (img2) {
+        ctx.drawImage(img2, newWidth1, 0, newWidth2, maxHeight);
+        img2.close();
+      }
+
+      const compressedBlob = await canvas.convertToBlob({ type: 'image/png' });
+      const arrayBuffer = await compressedBlob.arrayBuffer();
+      img = new Uint8Array(arrayBuffer);
     }
     else {
       img = results[0][0]
