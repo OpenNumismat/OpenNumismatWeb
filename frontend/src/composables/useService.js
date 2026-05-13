@@ -524,7 +524,7 @@ export function useService(passwordDialogRef) {
       img = canvas.toDataURL('image/png')
     }
     else {
-      img = arrayBufferToBase64(results[0][0])
+      img = results[0][0]
     }
 
     return img

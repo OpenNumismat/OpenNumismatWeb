@@ -152,7 +152,14 @@ const loadImage = async (coinId) => {
   if (coinId in images.value)
     return;
 
-  images.value[coinId] = await service.loadImage(coinId, imagePresentation.value);
+  const img = await service.loadImage(coinId, imagePresentation.value);
+  if (typeof img === "string") {
+    images.value[coinId] = `data:image/webp;base64,${img}`;
+  }
+  else {
+    const blob = new Blob([img], { type: 'image/webp' });
+    images.value[coinId] = URL.createObjectURL(blob);
+  }
 }
 </script>
 
