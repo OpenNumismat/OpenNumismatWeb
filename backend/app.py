@@ -2,7 +2,7 @@ import base64
 import os
 import sqlite3
 from io import BytesIO
-from fastapi import FastAPI, HTTPException, Security, Depends
+from fastapi import FastAPI, HTTPException, Security, Depends, Response
 from fastapi.security.api_key import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
@@ -215,7 +215,6 @@ def photo(f, id, type):
     data = res.fetchall()
     con.close()
 
-    result = ''
     if img_type == 'both':
         img1 = None
         img2 = None
@@ -253,9 +252,9 @@ def photo(f, id, type):
         img = data[0][0]
 
     if img:
-        result = base64.b64encode(img).decode('utf-8')
-
-    return result
+        return Response(content=img, media_type="image/webp")
+    else:
+        return ''
 
 
 @app.get("/api/photos", dependencies=[Depends(get_api_key)])

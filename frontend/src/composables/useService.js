@@ -457,8 +457,14 @@ export function useService(passwordDialogRef) {
     let photo;
 
     try {
-      const response = await api.get('/api/photo', {params: {f: file, id: coinId, type: type}})
-      photo = response.data
+      const response = await api.get('/api/photo',
+          {params: {f: file, id: coinId, type: type}, responseType: 'arraybuffer'})
+      if (response.headers['content-type'] === 'image/webp')
+        photo = new Uint8Array(response.data);
+      else {
+        const jsonString = new TextDecoder().decode(response.data);
+        photo = JSON.parse(jsonString);
+      }
     }
     catch (err) {
       globalStatus.error.value = err
