@@ -2,7 +2,7 @@ import axios from "axios";
 import {useGlobalStatus} from "@/composables/useGlobalStatus.js";
 import i18n from "@/i18n/index.js";
 import {useSQLite} from "@/composables/useSQLite.js";
-import {arrayBufferToBase64} from "@/utils/bytes2img.js";
+import { useDevicePixelRatio } from '@vueuse/core'
 
 const globalStatus = useGlobalStatus();
 const isNativeApp = import.meta.env.VITE_PLATFORM_ANDROID;
@@ -495,7 +495,8 @@ export function useService(passwordDialogRef) {
     const results = await executeQuery(sql, [coinId,])
     let img
     if (type === 'both') {
-      const maxHeight = 54*4 // Step-down scaling for better quality
+      const { pixelRatio } = useDevicePixelRatio();
+      const maxHeight = 56*pixelRatio.value;
       let aspectRatio
       let img1 = null, img2 = null
       let newWidth1 = 0, newWidth2 = 0
@@ -516,6 +517,8 @@ export function useService(passwordDialogRef) {
 
       const canvas = new OffscreenCanvas(newWidth1 + newWidth2, maxHeight)
       const ctx = canvas.getContext('2d')
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
 
       if (img1) {
         ctx.drawImage(img1, 0, 0, newWidth1, maxHeight);
