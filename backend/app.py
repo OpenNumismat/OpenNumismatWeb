@@ -191,7 +191,7 @@ def coin_data(f, id):
 
 
 @app.get("/api/photo", dependencies=[Depends(get_api_key)])
-def photo(f, id, type):
+def photo(f, id, type, max_height: int | None = None):
     file = f
     coin_id = id
     img_type = type
@@ -215,29 +215,32 @@ def photo(f, id, type):
     data = res.fetchall()
     con.close()
 
+    img = None
     if img_type == 'both':
         img1 = None
         img2 = None
-        img = None
         new_width1 = 0
         new_width2 = 0
+
+        if not max_height:
+            max_height = MAX_PREVIEW_IMAGE_HEIGHT
 
         if data[0][0]:
             img1 = Image.open(BytesIO(data[0][0]))
             aspect_ratio = img1.width / img1.height
-            new_width1 = MAX_PREVIEW_IMAGE_HEIGHT * aspect_ratio
-            img1.thumbnail((new_width1, MAX_PREVIEW_IMAGE_HEIGHT), Image.Resampling.LANCZOS)
+            new_width1 = max_height * aspect_ratio
+            img1.thumbnail((new_width1, max_height), Image.Resampling.LANCZOS)
             new_width1 = img1.width
 
         if data[0][1]:
             img2 = Image.open(BytesIO(data[0][1]))
             aspect_ratio = img2.width / img2.height
-            new_width2 = MAX_PREVIEW_IMAGE_HEIGHT * aspect_ratio
-            img2.thumbnail((new_width2, MAX_PREVIEW_IMAGE_HEIGHT), Image.Resampling.LANCZOS)
+            new_width2 = max_height * aspect_ratio
+            img2.thumbnail((new_width2, max_height), Image.Resampling.LANCZOS)
             new_width2 = img2.width
 
         total_width = new_width1 + new_width2
-        new_img = Image.new("RGBA", (total_width, MAX_PREVIEW_IMAGE_HEIGHT), (0, 0, 0, 0))
+        new_img = Image.new("RGBA", (total_width, max_height), (0, 0, 0, 0))
 
         if img1:
             new_img.paste(img1, (0, 0))
@@ -249,7 +252,18 @@ def photo(f, id, type):
             new_img.save(buffered, format="WEBP", lossless=False, quality=80)
             img = buffered.getvalue()
     else:
-        img = data[0][0]
+        if data[0][0]:
+            if max_height:
+                img = Image.open(BytesIO(data[0][0]))
+                aspect_ratio = img.width / img.height
+                new_width = int(max_height * aspect_ratio)
+                img.thumbnail((new_width, max_height), Image.Resampling.LANCZOS)
+
+                buffered = BytesIO()
+                img.save(buffered, format="WEBP", lossless=False, quality=80)
+                img = buffered.getvalue()
+            else:
+                img = data[0][0]
 
     if img:
         return Response(content=img, media_type="image/webp")

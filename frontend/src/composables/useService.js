@@ -455,10 +455,12 @@ export function useService(passwordDialogRef) {
 
   const loadImageRemote = async (coinId, type, file) => {
     let photo;
+    const { pixelRatio } = useDevicePixelRatio();
+    const maxHeight = 56*pixelRatio.value;
 
     try {
       const response = await api.get('/api/photo',
-          {params: {f: file, id: coinId, type: type}, responseType: 'arraybuffer'})
+          {params: {f: file, id: coinId, type: type, max_height: maxHeight}, responseType: 'arraybuffer'})
       if (response.headers['content-type'] === 'image/webp')
         photo = new Uint8Array(response.data);
       else {
