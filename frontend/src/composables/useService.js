@@ -593,16 +593,26 @@ export function useService(passwordDialogRef) {
 
     await globalStatus.startLoading(i18n.global.t('Request'));
 
-    try {
-      const response = await api.get('/api/photos', {params: {f: file, id: coinId}})
-      photos = response.data
-    }
-    catch (err) {
-      globalStatus.error.value = err
-    }
-    finally {
-      await globalStatus.finishLoading();
-    }
+    const photoTypes = ['obverse', 'reverse', 'edge', 'photo1', 'photo2', 'photo3', 'photo4'];
+    const promises = photoTypes.map(type =>
+      axios.get('/api/photo', {
+        params: { f: file, id: coinId, type },
+        responseType: 'blob'
+      })
+    );
+
+    const results = await Promise.allSettled(promises);
+
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        photos.push(result.value.data);
+      }
+      else {
+        globalStatus.error.value = result.reason.message;
+      }
+    });
+
+    await globalStatus.finishLoading();
 
     return photos;
   }

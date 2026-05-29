@@ -205,7 +205,27 @@ def photo(f, id, type, max_height: int | None = None):
     elif img_type == 'reverse':
         res = cur.execute("""SELECT reverseimg.image FROM coins
             LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id
-            WHERE coins.id=?""", (coin_id,))
+            WHERE coins.id = ?""", (coin_id,))
+    elif img_type == 'edge':
+        res = cur.execute("""SELECT edgeimg.image FROM coins
+            LEFT JOIN photos AS edgeimg ON coins.edgeimg = edgeimg.id
+            WHERE coins.id = ?""", (coin_id,))
+    elif img_type == 'photo1':
+        res = cur.execute("""SELECT photo.image FROM coins
+            LEFT JOIN photos AS photo ON coins.photo1 = photo.id
+            WHERE coins.id = ?""", (coin_id,))
+    elif img_type == 'photo2':
+        res = cur.execute("""SELECT photo.image FROM coins
+            LEFT JOIN photos AS photo ON coins.photo2 = photo.id
+            WHERE coins.id = ?""", (coin_id,))
+    elif img_type == 'photo3':
+        res = cur.execute("""SELECT photo.image FROM coins
+            LEFT JOIN photos AS photo ON coins.photo3 = photo.id
+            WHERE coins.id = ?""", (coin_id,))
+    elif img_type == 'photo4':
+        res = cur.execute("""SELECT photo.image FROM coins
+            LEFT JOIN photos AS photo ON coins.photo4 = photo.id
+            WHERE coins.id = ?""", (coin_id,))
     else:
         res = cur.execute("""SELECT obverseimg.image, reverseimg.image FROM coins
             LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
