@@ -1,7 +1,6 @@
 <script setup>
 import {onMounted, onUnmounted, ref, watch} from "vue";
 import {useRouter} from "vue-router";
-import {arrayBufferToBase64} from "@/utils/bytes2img.js"
 import StatusItem from "./StatusItem.vue"
 import { imagePresentation, statusPresentation } from "@/composables/useSettings";
 import {convertFraction, formatYear} from "@/utils/formatter.js";
@@ -75,13 +74,8 @@ const onOpenFile = async () => {
 const loadImages = async () => {
   const coin_images = await service.loadImages()
   coin_images.forEach((coin_image) => {
-    if (typeof coin_image[1] === "string") {
-      images.value[coin_image[0]] = `data:image/webp;base64,${coin_image[1]}`;
-    }
-    else {
-      const blob = new Blob([coin_image[1]], { type: 'image/webp' });
-      images.value[coin_image[0]] = URL.createObjectURL(blob);
-    }
+    const blob = new Blob([coin_image[1]], { type: 'image/webp' });
+    images.value[coin_image[0]] = URL.createObjectURL(blob);
   });
 }
 
@@ -153,12 +147,12 @@ const loadImage = async (coinId) => {
     return;
 
   const img = await service.loadImage(coinId, imagePresentation.value);
-  if (typeof img === "string") {
-    images.value[coinId] = `data:image/webp;base64,${img}`;
-  }
-  else {
+  if (img) {
     const blob = new Blob([img], { type: 'image/webp' });
     images.value[coinId] = URL.createObjectURL(blob);
+  }
+  else {
+    images.value[coinId] = null;
   }
 }
 </script>

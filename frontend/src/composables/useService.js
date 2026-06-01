@@ -454,18 +454,16 @@ export function useService(passwordDialogRef) {
   }
 
   const loadImageRemote = async (coinId, type, file) => {
-    let photo;
+    let photo = null;
     const { pixelRatio } = useDevicePixelRatio();
     const maxHeight = 56*pixelRatio.value;
 
     try {
       const response = await api.get('/api/photo',
           {params: {f: file, id: coinId, type: type, max_height: maxHeight}, responseType: 'arraybuffer'})
-      if (response.headers['content-type'] === 'image/webp')
+      const contentType = response.headers['content-type']
+      if (contentType && contentType.includes('image')) {
         photo = new Uint8Array(response.data);
-      else {
-        const jsonString = new TextDecoder().decode(response.data);
-        photo = JSON.parse(jsonString);
       }
     }
     catch (err) {
@@ -570,7 +568,13 @@ export function useService(passwordDialogRef) {
     }
 
     if (results[1].status === 'fulfilled') {
-      coinData.push(results[1].value.data);
+      const contentType = results[1].value.headers['content-type']
+      if (contentType && contentType.includes('image')) {
+        coinData.push(results[1].value.data);
+      }
+      else {
+        coinData.push(null);
+      }
     }
     else {
       coinData.push(null);
@@ -578,7 +582,13 @@ export function useService(passwordDialogRef) {
     }
 
     if (results[2].status === 'fulfilled') {
-      coinData.push(results[2].value.data);
+      const contentType = results[2].value.headers['content-type']
+      if (contentType && contentType.includes('image')) {
+        coinData.push(results[2].value.data);
+      }
+      else {
+        coinData.push(null);
+      }
     }
     else {
       coinData.push(null);
@@ -634,7 +644,13 @@ export function useService(passwordDialogRef) {
 
     results.forEach((result, index) => {
       if (result.status === 'fulfilled') {
-        photos.push(result.value.data);
+        const contentType = result.value.headers['content-type']
+        if (contentType && contentType.includes('image')) {
+          photos.push(result.value.data);
+        }
+        else {
+          photos.push(null);
+        }
       }
       else {
         globalStatus.error.value = result.reason.message;
@@ -647,7 +663,7 @@ export function useService(passwordDialogRef) {
   }
 
   const getPhotosLocal = async (coinId) => {
-    let photos;
+    let photos = [];
 
     const sql = `SELECT obverseimg.image, reverseimg.image, edgeimg.image, photo1.image, photo2.image, photo3.image, photo4.image FROM coins
           LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
@@ -659,7 +675,14 @@ export function useService(passwordDialogRef) {
           LEFT JOIN photos AS photo4 ON coins.photo4 = photo4.id
           WHERE coins.id=?`
     const results = await executeQuery(sql, [coinId,])
-    photos = results[0]
+    results[0].forEach((photo) => {
+      if (photo) {
+        photos.push(new Blob([photo], { type: 'image/webp' }));
+      }
+      else {
+        photos.push(null);
+      }
+    });
 
     return photos
   }
