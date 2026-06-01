@@ -1,7 +1,6 @@
 <script setup>
 import {onMounted, onUnmounted, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import {arrayBufferToBase64} from "@/utils/bytes2img.js"
 import {appTitle} from "@/composables/appTitle.js"
 import i18n from '../i18n'
 import StatusItem from "./StatusItem.vue"
@@ -12,6 +11,9 @@ import InfoRow from "@/components/InfoRow.vue";
 const router = useRouter()
 const route = useRoute()
 const service = useService();
+
+const obverse_index = service.infoFieldIndex('obverseimg.image');
+const reverse_index = service.infoFieldIndex('reverseimg.image');
 
 const props = defineProps({
   settings: {
@@ -26,9 +28,26 @@ onMounted(async () => {
   const id = route.params['id']
   coinData.value = await service.getDetails(id)
 
+  const obverse_img = coinData.value[obverse_index];
+  if (obverse_img) {
+    coinData.value[obverse_index] = URL.createObjectURL(obverse_img);
+  }
+  const reverse_img = coinData.value[reverse_index];
+  if (reverse_img) {
+    coinData.value[reverse_index] = URL.createObjectURL(reverse_img);
+  }
+
   appTitle.pushTitle(coinData.value[0])
 })
+
 onUnmounted(async () => {
+  const obverse_img = coinData.value[obverse_index];
+  if (obverse_img)
+    URL.revokeObjectURL(obverse_img);
+  const reverse_img = coinData.value[reverse_index];
+  if (reverse_img)
+    URL.revokeObjectURL(reverse_img);
+
   appTitle.popTitle()
 })
 </script>
@@ -39,10 +58,10 @@ onUnmounted(async () => {
       <div class="text-headline-small pb-1">{{ coinData[0] }}</div>
     </v-row>
     <v-row density="compact" class="photos">
-      <v-img :src="arrayBufferToBase64(coinData[service.infoFieldIndex('obverseimg.image')])"
+      <v-img :src="coinData[obverse_index]"
             width="150"
             @click="router.push('/images/' + route.params['id'])" />
-      <v-img :src="arrayBufferToBase64(coinData[service.infoFieldIndex('reverseimg.image')])"
+      <v-img :src="coinData[reverse_index]"
             width="150"
             @click="router.push('/images/' + route.params['id'])" />
     </v-row>

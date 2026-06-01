@@ -57,11 +57,11 @@ const fieldIds = {
   1: 'title',
 }
 
-const infoFields = ['coins.title', 'obverseimg.image', 'reverseimg.image',
+const infoFields = ['coins.title',
     'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
     'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
     'mint', 'mintmark', 'features', 'subject', 'grade', 'paydate', 'payprice',
-    'storage', 'condition', 'quantity',];
+    'storage', 'condition', 'quantity', 'obverseimg.image', 'reverseimg.image',];
 
 const initSettings = async () => {
   let settings = {};
@@ -554,16 +554,38 @@ export function useService(passwordDialogRef) {
 
     await globalStatus.startLoading(i18n.global.t('Request'));
 
-    try {
-      const response = await api.get('/api/coin_data', {params: {f: file, id: coinId}})
-      coinData = response.data
+    const requests  = [
+        api.get('/api/coin_data', {params: {f: file, id: coinId}}),
+        api.get('/api/photo', {params: {f: file, id: coinId, type: 'obverse'}, responseType: 'blob'}),
+        api.get('/api/photo', {params: {f: file, id: coinId, type: 'reverse'}, responseType: 'blob'}),
+    ];
+
+    const results = await Promise.allSettled(requests);
+
+    if (results[0].status === 'fulfilled') {
+      coinData = results[0].value.data;
     }
-    catch (err) {
-      globalStatus.error.value = err
+    else {
+      globalStatus.error.value = results[0].reason.message;
     }
-    finally {
-      await globalStatus.finishLoading();
+
+    if (results[1].status === 'fulfilled') {
+      coinData.push(results[1].value.data);
     }
+    else {
+      coinData.push(null);
+      globalStatus.error.value = results[1].reason.message;
+    }
+
+    if (results[2].status === 'fulfilled') {
+      coinData.push(results[2].value.data);
+    }
+    else {
+      coinData.push(null);
+      globalStatus.error.value = results[2].reason.message;
+    }
+
+    await globalStatus.finishLoading();
 
     return coinData;
   }
@@ -577,6 +599,13 @@ export function useService(passwordDialogRef) {
         WHERE coins.id=?`
     const results = await executeQuery(sql, [coinId,])
     coinData = results[0]
+
+    const obverse_img = coinData[infoFieldIndex('obverseimg.image')];
+    if (obverse_img)
+      coinData[infoFieldIndex('obverseimg.image')] = new Blob([obverse_img], { type: 'image/webp' });
+    const reverse_img = coinData[infoFieldIndex('reverseimg.image')];
+    if (reverse_img)
+      coinData[infoFieldIndex('reverseimg.image')] = new Blob([reverse_img], { type: 'image/webp' });
 
     return coinData
   }

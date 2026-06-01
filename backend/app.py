@@ -163,8 +163,7 @@ def filters(f):
 
 @app.get("/api/coin_data", dependencies=[Depends(get_api_key)])
 def coin_data(f, id):
-    info_fields = ('coins.title', 'obverseimg.image', 'reverseimg.image',
-                  'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
+    info_fields = ('coins.title', 'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
                   'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
                   'mint', 'mintmark', 'features', 'subject', 'grade', 'paydate', 'payprice',
                   'storage', 'condition', 'quantity', )
@@ -175,17 +174,11 @@ def coin_data(f, id):
     cur = con.cursor()
 
     res = cur.execute(f"SELECT {','.join(info_fields)} FROM coins "
-        "LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id "
-        "LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id "
         "WHERE coins.id=?", (coin_id,))
     data = res.fetchall()
     con.close()
 
     result = list(data[0])
-    if result[1]:
-        result[1] = base64.b64encode(result[1]).decode('utf-8')
-    if result[2]:
-        result[2] = base64.b64encode(result[2]).decode('utf-8')
 
     return result
 
