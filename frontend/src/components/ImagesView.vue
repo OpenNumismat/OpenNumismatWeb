@@ -15,6 +15,9 @@ onMounted(async () => {
   const photos = await service.getPhotos(coinId);
   photos.forEach((photo) => {
     if (photo) {
+      if (photo instanceof Uint8Array) {
+        photo = new Blob([photo], { type: 'image/webp' });
+      }
       images.value.push(URL.createObjectURL(photo));
     }
   });
