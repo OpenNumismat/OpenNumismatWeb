@@ -63,5 +63,9 @@
  "Open collection": "Abrir colección",
  "Load collection": "Cargar colección",
  "Load coins": "Cargar monedas",
- "Request": "Solicitud"
+ "Request": "Solicitud",
+ "The server version is different from the application version": "La versión del servidor es distinta de la versión de la aplicación",
+ "Check server settings": "Revisa la configuración del servidor",
+ "Wrong response": "Respuesta incorrecta",
+ "Server available": "Servidor disponible"
 }

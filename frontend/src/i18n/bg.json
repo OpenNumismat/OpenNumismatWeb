@@ -63,5 +63,9 @@
  "Open collection": "Отвори колекция",
  "Load collection": "Зареждане на колекция",
  "Load coins": "Зареждане на монети",
- "Request": "Заявка"
+ "Request": "Заявка",
+ "The server version is different from the application version": "Версията на сървъра не съвпада с версията на приложението",
+ "Check server settings": "Проверка на настройките на сървъра",
+ "Wrong response": "Грешен отговор",
+ "Server available": "Сървърът е наличен"
 }
