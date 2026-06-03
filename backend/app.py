@@ -284,34 +284,6 @@ def photo(f, id, type, max_height: int | None = None):
         return ''
 
 
-@app.get("/api/photos", dependencies=[Depends(get_api_key)])
-def photos(f, id):
-    file = f
-    coin_id = id
-    con = sqlite_connect(file)
-    cur = con.cursor()
-
-    res = cur.execute("""SELECT obverseimg.image, reverseimg.image, edgeimg.image, photo1.image, photo2.image, photo3.image, photo4.image FROM coins
-          LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
-          LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id
-          LEFT JOIN photos AS edgeimg ON coins.edgeimg = edgeimg.id
-          LEFT JOIN photos AS photo1 ON coins.photo1 = photo1.id
-          LEFT JOIN photos AS photo2 ON coins.photo2 = photo2.id
-          LEFT JOIN photos AS photo3 ON coins.photo3 = photo3.id
-          LEFT JOIN photos AS photo4 ON coins.photo4 = photo4.id
-          WHERE coins.id=?""", (coin_id,))
-    data = res.fetchall()
-    con.close()
-
-    result = []
-    for i, img in enumerate(data[0]):
-        if img:
-            encoded_img = base64.b64encode(img).decode('utf-8')
-            result.append(encoded_img)
-
-    return result
-
-
 @app.get("/api/settings", dependencies=[Depends(get_api_key)])
 def settings(f):
     field_ids = {
