@@ -2,7 +2,7 @@
 import {onMounted, onUnmounted} from "vue"
 import {useRoute} from "vue-router"
 import { VFileUpload } from 'vuetify/labs/VFileUpload'
-import i18n from '../i18n'
+import i18n from '@/i18n'
 import {appTitle} from "@/composables/appTitle.js"
 
 const props = defineProps({

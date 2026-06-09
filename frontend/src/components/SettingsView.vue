@@ -2,7 +2,7 @@
 import {computed, onMounted, onUnmounted, ref} from "vue";
 import { useTheme } from 'vuetify'
 import { languageList, setLocale } from '@/i18n'
-import i18n from '../i18n'
+import i18n from '@/i18n'
 import {appTitle} from "@/composables/appTitle.js"
 import {imagePresentation, statusPresentation, currentTheme, apiKey, serverUrl} from "@/composables/useSettings";
 import {useService} from "@/composables/useService.js";

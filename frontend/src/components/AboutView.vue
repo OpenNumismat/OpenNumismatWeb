@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, onUnmounted} from "vue";
-import i18n from '../i18n'
+import i18n from '@/i18n'
 import {appTitle} from "@/composables/appTitle.js"
 
 const appVersion = import.meta.env.VITE_APP_VERSION;

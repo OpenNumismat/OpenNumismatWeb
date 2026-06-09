@@ -1,13 +1,13 @@
 <script setup>
 import {onMounted, onUnmounted, ref, watch} from "vue";
 import {useRouter} from "vue-router";
-import StatusItem from "./StatusItem.vue"
+import StatusItem from "@/components/StatusItem.vue"
 import { imagePresentation, statusPresentation } from "@/composables/useSettings";
 import {convertFraction, formatYear} from "@/utils/formatter.js";
 import {useService} from "@/composables/useService.js";
 import FilterItem from "@/components/FilterItem.vue";
 import SortItem from "@/components/SortItem.vue";
-import i18n from "@/i18n/index.js";
+import i18n from "@/i18n";
 
 const router = useRouter()
 const service = useService();
@@ -197,7 +197,7 @@ const loadImage = async (coinId) => {
   <v-container class="pa-0 ma-0">
     <v-list lines="two">
       <v-list-item
-        v-for="(coin, index) in coinsList"
+        v-for="coin in coinsList"
         :key="coin[0]"
         :subtitle="generateDescription(coin).join(', ')"
         :title="coin[1]"

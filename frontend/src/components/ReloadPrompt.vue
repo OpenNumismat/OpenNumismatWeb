@@ -16,7 +16,7 @@
 
 <script setup>
 import { useRegisterSW } from 'virtual:pwa-register/vue'
-import i18n from "@/i18n/index.js";
+import i18n from "@/i18n";
 
 const {
   needRefresh,

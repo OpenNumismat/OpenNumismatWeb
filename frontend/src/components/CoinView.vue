@@ -2,8 +2,8 @@
 import {onMounted, onUnmounted, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {appTitle} from "@/composables/appTitle.js"
-import i18n from '../i18n'
-import StatusItem from "./StatusItem.vue"
+import i18n from '@/i18n'
+import StatusItem from "@/components/StatusItem.vue"
 import {convertFraction, convertLinksToAnchors, dSys, nSys, formatYear} from "@/utils/formatter";
 import {useService} from "@/composables/useService.js";
 import InfoRow from "@/components/InfoRow.vue";

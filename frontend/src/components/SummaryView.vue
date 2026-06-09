@@ -1,7 +1,7 @@
 <script setup>
 import {useService} from "@/composables/useService.js";
 import {onMounted, ref} from "vue";
-import i18n from "@/i18n/index.js";
+import i18n from "@/i18n";
 import { dSys, nSys } from '@/utils/formatter'
 
 const service = useService();

@@ -1,5 +1,5 @@
 <script setup>
-import i18n from "@/i18n/index.js";
+import i18n from "@/i18n";
 
 const props = defineProps(['fields', 'settings'])
 const emit = defineEmits(['sortByChanged'])
