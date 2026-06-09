@@ -25,13 +25,10 @@ const selectedType = ref(null)
 const selectedPeriod = ref(null)
 const selectedMint = ref(null)
 const fields = ref([])
+const collectionFilters = ref({})
 
 const props = defineProps({
   settings: {
-    type: Object,
-    required: true,
-  },
-  filters: {
     type: Object,
     required: true,
   },
@@ -51,23 +48,29 @@ onUnmounted(async () => {
 
 const onOpenFile = async () => {
   await clearImages();
-  coinsList.value = await service.loadCoins()
+
+  const ret = await service.loadCoins()
+  if (ret) {
+    coinsList.value = ret.coinsList;
+    collectionFilters.value = ret.collectionFilters;
+  }
+
   if (imagePresentation.value === 'image') {
     await loadImages();
   }
 
   fields.value = ['title',]
-  if (props.filters['status'].length > 1)
+  if (collectionFilters.value['status'].length > 1)
     fields.value.push('status')
-  if (props.filters['country'].length > 1)
+  if (collectionFilters.value['country'].length > 1)
     fields.value.push('country')
-  if (props.filters['year'].length > 1)
+  if (collectionFilters.value['year'].length > 1)
     fields.value.push('year')
-  if (props.filters['series'].length > 1)
+  if (collectionFilters.value['series'].length > 1)
     fields.value.push('series')
-  if (props.filters['type'].length > 1)
+  if (collectionFilters.value['type'].length > 1)
     fields.value.push('type')
-  if (props.filters['period'].length > 1)
+  if (collectionFilters.value['period'].length > 1)
     fields.value.push('period')
 }
 
@@ -99,6 +102,7 @@ const clear = async () => {
   selectedPeriod.value = null
   selectedMint.value = null
   coinsList.value = []
+  collectionFilters.value = {}
   await clearImages()
 }
 
@@ -128,7 +132,8 @@ function generateDescription( coin_data ) {
 
 const onChanged = async () => {
   coinsList.value = []
-  coinsList.value = await service.loadCoins(
+
+  const ret = await service.loadCoins(
       searchVal.value,
       sortedBy.value,
       reverseSort.value,
@@ -140,6 +145,10 @@ const onChanged = async () => {
       selectedPeriod.value,
       selectedMint.value
   );
+  if (ret) {
+    coinsList.value = ret.coinsList;
+    collectionFilters.value = ret.collectionFilters;
+  }
 }
 
 const loadImage = async (coinId) => {
@@ -163,13 +172,13 @@ const loadImage = async (coinId) => {
   </v-container>
 
   <v-container>
-    <FilterItem :filters="filters['status']" field="status" :settings="settings" @filter-changed="onChanged" v-model="selectedStatus" />
-    <FilterItem :filters="filters['country']" field="country" :settings="settings" @filter-changed="onChanged" v-model="selectedCountry" />
-    <FilterItem :filters="filters['year']" field="year" :settings="settings" @filter-changed="onChanged" v-model="selectedYear" />
-    <FilterItem :filters="filters['series']" field="series" :settings="settings" @filter-changed="onChanged" v-model="selectedSeries" />
-    <FilterItem :filters="filters['type']" field="type" :settings="settings" @filter-changed="onChanged" v-model="selectedType" />
-    <FilterItem :filters="filters['period']" field="period" :settings="settings" @filter-changed="onChanged" v-model="selectedPeriod" />
-    <FilterItem :filters="filters['mint']" field="mint" :settings="settings" @filter-changed="onChanged" v-model="selectedMint" />
+    <FilterItem :filters="collectionFilters['status']" field="status" :settings="settings" @filter-changed="onChanged" v-model="selectedStatus" />
+    <FilterItem :filters="collectionFilters['country']" field="country" :settings="settings" @filter-changed="onChanged" v-model="selectedCountry" />
+    <FilterItem :filters="collectionFilters['year']" field="year" :settings="settings" @filter-changed="onChanged" v-model="selectedYear" />
+    <FilterItem :filters="collectionFilters['series']" field="series" :settings="settings" @filter-changed="onChanged" v-model="selectedSeries" />
+    <FilterItem :filters="collectionFilters['type']" field="type" :settings="settings" @filter-changed="onChanged" v-model="selectedType" />
+    <FilterItem :filters="collectionFilters['period']" field="period" :settings="settings" @filter-changed="onChanged" v-model="selectedPeriod" />
+    <FilterItem :filters="collectionFilters['mint']" field="mint" :settings="settings" @filter-changed="onChanged" v-model="selectedMint" />
   </v-container>
 
   <v-container v-if="coinsList.length > 0">

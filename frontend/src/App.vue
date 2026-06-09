@@ -32,7 +32,6 @@ const isNativeApp = import.meta.env.VITE_PLATFORM_ANDROID;
 const isServerLess = import.meta.env.VITE_SERVERLESS;
 const serverVersion = ref(null)
 const serverFileList = ref([])
-const collectionFilters = ref({})
 const collectionSettings = ref({})
 let isOpened = false;
 
@@ -148,7 +147,6 @@ const openFile = async (file, connection_type) => {
 
   await router.replace('/')
   collectionSettings.value = {};
-  collectionFilters.value = {'status': [], 'country': [], 'year': [], 'series': [], 'type': [], 'period': [], 'mint': []}
   isOpened = true;
 
   let ret = null
@@ -165,8 +163,7 @@ const openFile = async (file, connection_type) => {
   }
 
   if (ret) {
-    collectionSettings.value = ret.collectionSettings;
-    collectionFilters.value = ret.collectionFilters;
+    collectionSettings.value = ret;
 
     await coinListViewRef.value.onOpenFile()
   }
@@ -238,7 +235,7 @@ const handleFileUpload = async (file) => {
         :file_list="serverFileList" :onFileSelected="handleRemoteFileSelected" />
       <KeepAlive>
         <CoinListView v-if="route.name === 'home' && isOpened"
-          :settings="collectionSettings" :filters="collectionFilters"
+          :settings="collectionSettings"
           ref="coinListViewRef" />
       </KeepAlive>
       <SummaryView v-if="route.name === 'summary' && isOpened" />

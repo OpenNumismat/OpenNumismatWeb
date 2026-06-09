@@ -141,15 +141,42 @@ def coins(f):
 
 
 @app.get("/api/filters", dependencies=[Depends(get_api_key)])
-def filters(f):
+def filters(f, status: str | None = None, country: str | None = None, year: str | None = None,
+            series: str | None = None, type: str | None = None, period: str | None = None, mint: str | None = None):
     file = f
     con = sqlite_connect(file)
     cur = con.cursor()
 
+    fields_map = {
+        'status': status,
+        'country': country,
+        'year': year,
+        'series': series,
+        'type': type,
+        'period': period,
+        'mint': mint,
+    }
     result = {}
 
-    for field in ('status', 'country', 'year', 'series', 'type', 'period', 'mint',):
-        res = cur.execute(f"SELECT DISTINCT IFNULL({field},'') FROM coins ORDER BY {field}")
+    for field in fields_map.keys():
+        where_sql = []
+        where_params = []
+
+        for additional_field, value in fields_map.items():
+            if additional_field == field:
+                continue
+
+            if value:
+                where_sql.append(f"{additional_field}=?")
+                where_params.append(value)
+
+        if where_sql:
+            where_sql_str = f"WHERE {' AND '.join(where_sql)}"
+        else:
+            where_sql_str = ''
+
+        res = cur.execute(f"SELECT DISTINCT IFNULL({field},'') FROM coins {where_sql_str} ORDER BY {field}",
+                          where_params)
         data = res.fetchall()
 
         result[field] = []

@@ -206,7 +206,6 @@ export function useService(passwordDialogRef) {
     connected_file = file;
 
     let collectionSettings = await initSettings();
-    let collectionFilters = {};
     let settingsDb = {};
 
     await globalStatus.startLoading(i18n.global.t('Open collection'));
@@ -243,26 +242,12 @@ export function useService(passwordDialogRef) {
       }
     }
 
-    await globalStatus.startLoading(i18n.global.t('Load collection'));
-
-    try {
-      const responseFilters = await api.get('/api/filters', {params: {f: file}})
-      collectionFilters = responseFilters.data
-    }
-    catch (err) {
-      globalStatus.error.value = err
-    }
-    finally {
-      await globalStatus.finishLoading();
-    }
-
-    return {collectionSettings, collectionFilters};
+    return collectionSettings;
   }
 
   const openLocalFile = async (file) => {
     connection_type = 'local';
 
-    let collectionFilters = {};
     let collectionSettings = await initSettings()
 
     await openDatabase(file)
@@ -308,22 +293,7 @@ export function useService(passwordDialogRef) {
       collectionSettings.fields[field] = elem[1]
     })
 
-    const sql_statuses = 'SELECT DISTINCT status FROM coins';
-    collectionFilters['status'] = (await executeQuery(sql_statuses)).flat()
-    const sql_countries = "SELECT DISTINCT IFNULL(country,'') FROM coins ORDER BY country";
-    collectionFilters['country'] = (await executeQuery(sql_countries)).flat()
-    const sql_years = "SELECT DISTINCT IFNULL(year,'') FROM coins ORDER BY year";
-    collectionFilters['year'] = (await executeQuery(sql_years)).flat()
-    const sql_series = "SELECT DISTINCT IFNULL(series,'') FROM coins ORDER BY series";
-    collectionFilters['series'] = (await executeQuery(sql_series)).flat()
-    const sql_types = "SELECT DISTINCT IFNULL(type,'') FROM coins ORDER BY type";
-    collectionFilters['type'] = (await executeQuery(sql_types)).flat()
-    const sql_periods = "SELECT DISTINCT IFNULL(period,'') FROM coins ORDER BY period";
-    collectionFilters['period'] = (await executeQuery(sql_periods)).flat()
-    const sql_mints = "SELECT DISTINCT IFNULL(mint,'') FROM coins ORDER BY mint";
-    collectionFilters['mint'] = (await executeQuery(sql_mints)).flat()
-
-    return {collectionSettings, collectionFilters};
+    return collectionSettings;
   }
 
   const loadCoins = async (search=null, sortBy=null, reverse=false, statusFilter=null, countryFilter=null,
@@ -336,11 +306,22 @@ export function useService(passwordDialogRef) {
 
   const loadCoinsRemote = async (search, sortBy, reverse, statusFilter, countryFilter, yearFilter, seriesFilter, typeFilter, periodFilter, mintFilter, file) => {
     let coinsList = [];
+    let collectionFilters = {};
 
     await globalStatus.startLoading(i18n.global.t('Load coins'));
 
-    try {
-      const responseCoins = await api.get('/api/coins', {params: {
+    const requests  = [
+        api.get('/api/filters', {params: {
+          f: file,
+          status: statusFilter,
+          country: countryFilter,
+          year: yearFilter,
+          series: seriesFilter,
+          type: typeFilter,
+          period: periodFilter,
+          mint: mintFilter,
+        }}),
+        api.get('/api/coins', {params: {
           f: file,
           search: search,
           sort: sortBy,
@@ -352,60 +333,55 @@ export function useService(passwordDialogRef) {
           type_filter: typeFilter,
           period_filter: periodFilter,
           mint_filter: mintFilter,
-      }})
-      coinsList = responseCoins.data
+        }}),
+    ];
+
+    const results = await Promise.allSettled(requests);
+
+    if (results[0].status === 'fulfilled') {
+      collectionFilters = results[0].value.data;
     }
-    catch (err) {
-      globalStatus.error.value = err
-    }
-    finally {
-      await globalStatus.finishLoading();
+    else {
+      globalStatus.error.value = results[0].reason.message;
     }
 
-    return coinsList;
+    if (results[1].status === 'fulfilled') {
+      coinsList = results[1].value.data;
+    }
+    else {
+      globalStatus.error.value = results[0].reason.message;
+    }
+
+    await globalStatus.finishLoading();
+
+    return {coinsList, collectionFilters};
   }
 
   const loadCoinsLocal = async (search, sortBy, reverse, statusFilter, countryFilter, yearFilter, seriesFilter, typeFilter, periodFilter, mintFilter) => {
+    const fieldsMap = { status: statusFilter, country: countryFilter, year: yearFilter, series: seriesFilter,
+      type: typeFilter, period: periodFilter, mint: mintFilter };
+
     let sql = `
         SELECT coins.id, title, status, subjectshort, value, unit, year, mintmark, series, country
         FROM coins
       `
     let params = [];
-    let sql_filters = [];
+    let sqlFilters = [];
+
     if (search) {
-      sql_filters.push("title LIKE ?")
+      sqlFilters.push("title LIKE ?")
       params.push(`%${search}%`);
     }
-    if (statusFilter) {
-      sql_filters.push('status = ?')
-      params.push(statusFilter);
+
+    for (const [field, value] of Object.entries(fieldsMap)) {
+      if (value) {
+        sqlFilters.push(`${field} = ?`);
+        params.push(value);
+      }
     }
-    if (countryFilter) {
-      sql_filters.push('country = ?')
-      params.push(countryFilter);
-    }
-    if (yearFilter) {
-      sql_filters.push('year = ?')
-      params.push(yearFilter);
-    }
-    if (seriesFilter) {
-      sql_filters.push('series = ?')
-      params.push(seriesFilter);
-    }
-    if (typeFilter) {
-      sql_filters.push('type = ?')
-      params.push(typeFilter);
-    }
-    if (periodFilter) {
-      sql_filters.push('period = ?')
-      params.push(periodFilter);
-    }
-    if (mintFilter) {
-      sql_filters.push('mint = ?')
-      params.push(mintFilter);
-    }
-    if (sql_filters.length > 0)
-      sql += ` WHERE ${sql_filters.join(' AND ')}`;
+
+    if (sqlFilters.length > 0)
+      sql += ` WHERE ${sqlFilters.join(' AND ')}`;
     if (sortBy)
       sql += ` ORDER BY ${sortBy}`;
     else
@@ -413,7 +389,31 @@ export function useService(passwordDialogRef) {
     if (reverse)
       sql += ' DESC';
 
-    return await executeQuery(sql, params)
+    const coinsList = await executeQuery(sql, params)
+
+    let collectionFilters = {}
+
+    for (const field of Object.keys(fieldsMap)) {
+      const params = [];
+      const sqlFilters = [];
+
+      for (const [additionalField, value] of Object.entries(fieldsMap)) {
+        if (additionalField === field)
+          continue;
+
+        if (value) {
+          sqlFilters.push(`${additionalField}=?`);
+          params.push(value);
+        }
+      }
+      const whereSqlStr = sqlFilters.length > 0
+        ? `WHERE ${sqlFilters.join(' AND ')}`
+        : '';
+      const sql = `SELECT DISTINCT IFNULL(${field},'') FROM coins ${whereSqlStr} ORDER BY ${field}`;
+      collectionFilters[field] = (await executeQuery(sql, params)).flat()
+    }
+
+    return {coinsList, collectionFilters};
   }
 
   const loadImages = async () => {

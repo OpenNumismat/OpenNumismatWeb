@@ -11,7 +11,7 @@ const onFilterChanged = async (val) => {
 </script>
 
 <template>
-  <v-select v-if="filters.length > 1"
+  <v-select v-if="filters && filters.length > 1"
     v-model="selectedFilter"
     :label="settings.fields[field]"
     :items="filters"
