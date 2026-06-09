@@ -113,13 +113,13 @@ onUnmounted(async () => {
 
             <InfoRow
                 v-if="coinData[service.infoFieldIndex('issuedate')]"
-                :title="i18n.global.t('Issuedate')"
+                :title="settings.fields['issuedate']"
             >
               {{ dSys(coinData[service.infoFieldIndex('issuedate')]) }}
             </InfoRow>
             <InfoRow
                 v-else-if="coinData[service.infoFieldIndex('year')]"
-                :title="i18n.global.t('year')"
+                :title="settings.fields['year']"
             >
               {{ formatYear(props.settings.enable_bc, coinData[service.infoFieldIndex('year')]) }}
             </InfoRow>
