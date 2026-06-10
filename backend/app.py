@@ -76,27 +76,23 @@ def coins(f, search=None, sort=None, reverse: bool = False, status_filter=None, 
     if search:
         sql_filters.append("title LIKE ?")
         params.append(f"%{search}%")
-    if status_filter:
-        sql_filters.append("status = ?")
-        params.append(status_filter)
-    if country_filter:
-        sql_filters.append("country = ?")
-        params.append(country_filter)
-    if year_filter:
-        sql_filters.append("year = ?")
-        params.append(year_filter)
-    if series_filter:
-        sql_filters.append("series = ?")
-        params.append(series_filter)
-    if type_filter:
-        sql_filters.append("type = ?")
-        params.append(type_filter)
-    if period_filter:
-        sql_filters.append("period = ?")
-        params.append(period_filter)
-    if mint_filter:
-        sql_filters.append("mint = ?")
-        params.append(mint_filter)
+
+    fields_map = {
+        'status': status_filter,
+        'country': country_filter,
+        'year': year_filter,
+        'series': series_filter,
+        'type': type_filter,
+        'period': period_filter,
+        'mint': mint_filter,
+    }
+    for field, value in fields_map.items():
+        if value:
+            sql_filters.append(f"{field} = ?")
+            params.append(value)
+        elif value == '':
+            sql_filters.append(f"{field} IS NULL OR {field} = ''")
+
     if sql_filters:
         sql += f" WHERE {' AND '.join(sql_filters)}"
 
@@ -169,6 +165,8 @@ def filters(f, status: str | None = None, country: str | None = None, year: str 
             if value:
                 where_sql.append(f"{additional_field}=?")
                 where_params.append(value)
+            elif value == '':
+                where_sql.append(f"{additional_field} IS NULL OR {additional_field} = ''")
 
         if where_sql:
             where_sql_str = f"WHERE {' AND '.join(where_sql)}"

@@ -378,6 +378,9 @@ export function useService(passwordDialogRef) {
         sqlFilters.push(`${field} = ?`);
         params.push(value);
       }
+      else if (value === '') {
+        sqlFilters.push(`${field} IS NULL OR ${field} = ''`);
+      }
     }
 
     if (sqlFilters.length > 0)
@@ -404,6 +407,9 @@ export function useService(passwordDialogRef) {
         if (value) {
           sqlFilters.push(`${additionalField}=?`);
           params.push(value);
+        }
+        else if (value === '') {
+          sqlFilters.push(`${additionalField} IS NULL OR ${additionalField} = ''`);
         }
       }
       const whereSqlStr = sqlFilters.length > 0
