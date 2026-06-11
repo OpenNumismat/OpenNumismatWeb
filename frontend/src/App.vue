@@ -245,22 +245,22 @@ const handleFileUpload = async (file) => {
       <SettingsView v-if="route.name === 'settings'" />
       <AboutView v-if="route.name === 'about'" />
 
-      <div class="text-center">
-        <v-overlay
-          v-model="isLoading"
-          class="align-center justify-center"
-          persistent
-        >
-          <div class="d-flex flex-column align-center">
-            <v-progress-circular
-              color="primary"
-              indeterminate
-              size="64"
-            ></v-progress-circular>
-            <span class="mt-4 text-white">{{ globalStatus.status }}</span>
-          </div>
-        </v-overlay>
-      </div>
+      <v-overlay
+        v-model="isLoading"
+        class="align-center justify-center"
+        persistent
+        location="center"
+      >
+        <div class="d-flex flex-column align-center">
+          <v-progress-circular
+            color="primary"
+            indeterminate
+            size="64"
+          ></v-progress-circular>
+          <span class="mt-4 text-white">{{ globalStatus.status }}</span>
+        </div>
+      </v-overlay>
+
 <!-- Alternative alert message
       <v-alert
         v-model="hasError"
