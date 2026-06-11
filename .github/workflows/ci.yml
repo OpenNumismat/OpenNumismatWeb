@@ -113,7 +113,7 @@ jobs:
           publish_dir: ./frontend/dist
           destination_dir: dev
 
-      - name: Build
+      - name: Build Android
         working-directory: frontend
         run: |
           echo "VITE_BASE_PATH=./" > .env.local
