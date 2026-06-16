@@ -181,7 +181,7 @@ const loadImage = async (coinId) => {
     <FilterItem :filters="collectionFilters['mint']" field="mint" :settings="settings" @filter-changed="onChanged" v-model="selectedMint" />
   </v-container>
 
-  <v-container v-if="coinsList.length > 0">
+  <v-container v-if="coinsList.length > 0 || searchVal">
     <v-text-field
         v-model="searchVal"
         :label="i18n.global.t('Search')"
