@@ -2,7 +2,8 @@
 
 OpenNumismat Web is a web browser for [OpenNumismat](https://opennumismat.github.io/) collections.
 
-![Screenshot](https://opennumismat.github.io/images/OpenNumismatWeb.png)
+<img src="https://opennumismat.github.io/images/OpenNumismatWeb.png" alt="InApp" width="32%"/>
+<img src="https://opennumismat.github.io/images/OpenNumismatWeb-info.png" alt="Coin info" width="32%"/>
 
 Latest stable version:
 - Web-application (PWA): https://opennumismat.github.io/OpenNumismatWeb/
