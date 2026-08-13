@@ -74,10 +74,22 @@ const onOpenFile = async () => {
     fields.value.push('period')
 }
 
+function base64ToBlobImage(base64) {
+  const byteString = atob(base64);
+  const arrayBuffer = new ArrayBuffer(byteString.length);
+  const uint8Array = new Uint8Array(arrayBuffer);
+
+  for (let i = 0; i < byteString.length; i++) {
+    uint8Array[i] = byteString.charCodeAt(i);
+  }
+
+  return new Blob([uint8Array], { type: 'image/webp' });
+}
+
 const loadImages = async () => {
   const coin_images = await service.loadImages()
   coin_images.forEach((coin_image) => {
-    const blob = new Blob([coin_image[1]], { type: 'image/webp' });
+    const blob = base64ToBlobImage(coin_image[1]);
     images.value[coin_image[0]] = URL.createObjectURL(blob);
   });
 }
