@@ -188,18 +188,38 @@ def filters(f, status: str | None = None, country: str | None = None, year: str 
 
 @app.get("/api/coin_data", dependencies=[Depends(get_api_key)])
 def coin_data(f, id):
-    info_fields = ('coins.title', 'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
-                  'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
-                  'mint', 'mintmark', 'features', 'subject', 'grade', 'paydate', 'payprice',
-                  'storage', 'condition', 'quantity', )
-
     file = f
     coin_id = id
     con = sqlite_connect(file)
     cur = con.cursor()
 
-    res = cur.execute(f"SELECT {','.join(info_fields)} FROM coins "
-        "WHERE coins.id=?", (coin_id,))
+    res = cur.execute("SELECT value FROM settings WHERE title='Version'")
+    version = int(res.fetchall()[0][0])
+
+    if version >= 11:
+        join_buy_prices = """
+LEFT JOIN prices buy_prices ON buy_prices.id = (
+  SELECT id
+  FROM prices
+  WHERE coin_id = coins.id AND action = 'buy'
+  ORDER BY id
+  LIMIT 1
+        )"""
+        info_fields = ('coins.title', 'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
+                       'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
+                       'mint', 'mintmark', 'features', 'subject', 'coins.grade', 'buy_prices.date', 'buy_prices.price',
+                       'storage', 'condition', 'coins.quantity',)
+
+        res = cur.execute(f"SELECT {','.join(info_fields)} FROM coins {join_buy_prices} "
+            "WHERE coins.id=?", (coin_id,))
+    else:
+        info_fields = ('coins.title', 'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
+                       'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
+                       'mint', 'mintmark', 'features', 'subject', 'grade', 'paydate', 'payprice',
+                       'storage', 'condition', 'quantity',)
+
+        res = cur.execute(f"SELECT {','.join(info_fields)} FROM coins "
+            "WHERE coins.id=?", (coin_id,))
     data = res.fetchall()
     con.close()
 
