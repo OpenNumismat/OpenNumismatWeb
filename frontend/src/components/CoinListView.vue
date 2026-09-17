@@ -76,12 +76,7 @@ const onOpenFile = async () => {
 
 function base64ToBlobImage(base64) {
   const byteString = atob(base64);
-  const arrayBuffer = new ArrayBuffer(byteString.length);
-  const uint8Array = new Uint8Array(arrayBuffer);
-
-  for (let i = 0; i < byteString.length; i++) {
-    uint8Array[i] = byteString.charCodeAt(i);
-  }
+  const uint8Array = Uint8Array.from(byteString, c => c.charCodeAt(0));
 
   return new Blob([uint8Array], { type: 'image/webp' });
 }
@@ -89,7 +84,11 @@ function base64ToBlobImage(base64) {
 const loadImages = async () => {
   const coin_images = await service.loadImages()
   coin_images.forEach((coin_image) => {
-    const blob = base64ToBlobImage(coin_image[1]);
+    let blob;
+    if (typeof coin_image[1] === 'string')
+      blob = base64ToBlobImage(coin_image[1]);
+    else
+      blob = new Blob([coin_image[1]], { type: 'image/webp' });
     images.value[coin_image[0]] = URL.createObjectURL(blob);
   });
 }
