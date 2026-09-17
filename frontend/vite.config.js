@@ -1,5 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
-import path from 'node:path'
+import path from 'path'
 
 import { VitePWA } from 'vite-plugin-pwa'
 import { defineConfig, loadEnv, normalizePath } from 'vite'
@@ -52,7 +52,7 @@ export default defineConfig(({ mode }) => {
       viteStaticCopy({
         targets: [
           {
-            src: normalizePath(path.resolve(__dirname, './node_modules/sql.js/dist/sql-wasm-browser.wasm')),
+            src: normalizePath(path.resolve(import.meta.dirname, './node_modules/sql.js/dist/sql-wasm-browser.wasm')),
             dest: 'wasm'
           }
         ]
