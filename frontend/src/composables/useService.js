@@ -32,7 +32,9 @@ api.interceptors.request.use((config) => {
 
 let connection_type = null;
 let connected_file = null;
+let collection_version = null;
 
+const current_db_version = 11;
 const fieldIds = {
   13: 'status',
   75: 'region',
@@ -62,6 +64,11 @@ const infoFields = ['coins.title',
     'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
     'mint', 'mintmark', 'features', 'subject', 'grade', 'paydate', 'payprice',
     'storage', 'condition', 'quantity', 'obverseimg.image', 'reverseimg.image',];
+const infoFieldsEx = ['coins.title',
+    'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
+    'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
+    'mint', 'mintmark', 'features', 'subject', 'coins.grade', 'buy_prices.date', 'buy_prices.price',
+    'storage', 'condition', 'coins.quantity', 'obverseimg.image', 'reverseimg.image',];
 
 const initSettings = async () => {
   let settings = {};
@@ -104,10 +111,10 @@ const checkDbVersion = async (settings) => {
       globalStatus.error.value = i18n.global.t('too_old_version');
       return false;
     }
-    else if (settings.version < 10) {
+    else if (settings.version < current_db_version) {
       globalStatus.warning.value = i18n.global.t('old_version');
     }
-    else if (settings.version > 10) {
+    else if (settings.version > current_db_version) {
       globalStatus.warning.value = i18n.global.t('newest_version');
     }
 
@@ -241,6 +248,7 @@ export function useService(passwordDialogRef) {
         return null;
       }
     }
+    collection_version = collectionSettings.version;
 
     return collectionSettings;
   }
@@ -284,6 +292,7 @@ export function useService(passwordDialogRef) {
         return null;
       }
     }
+    collection_version = collectionSettings.version;
 
     const field_sql = `SELECT id, title FROM fields WHERE id IN (${Object.keys(fieldIds)})`
     const fieldsDb = await executeQuery(field_sql)
@@ -608,11 +617,28 @@ export function useService(passwordDialogRef) {
 
   const getDetailsLocal = async (coinId) => {
     let coinData;
+    let sql;
 
-    const sql = `SELECT ${ infoFields.join(',') } FROM coins
-        LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
-        LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id
-        WHERE coins.id=?`
+    if (collection_version >= 11) {
+      const join_buy_prices = `
+          LEFT JOIN prices buy_prices ON buy_prices.id = (
+            SELECT id
+            FROM prices
+            WHERE coin_id = coins.id AND action = 'buy'
+            ORDER BY id
+            LIMIT 1)`
+      sql = `SELECT ${ infoFieldsEx.join(',') } FROM coins
+          LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
+          LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id
+          ${join_buy_prices}
+          WHERE coins.id=?`
+    }
+    else {
+      sql = `SELECT ${ infoFields.join(',') } FROM coins
+          LEFT JOIN photos AS obverseimg ON coins.obverseimg = obverseimg.id
+          LEFT JOIN photos AS reverseimg ON coins.reverseimg = reverseimg.id
+          WHERE coins.id=?`
+    }
     const results = await executeQuery(sql, [coinId,])
     coinData = results[0]
 
@@ -694,7 +720,10 @@ export function useService(passwordDialogRef) {
   }
 
   function infoFieldIndex(field) {
-    return infoFields.findIndex(element => element === field);
+    if (collection_version >= 11)
+      return infoFieldsEx.findIndex(element => element === field);
+    else
+      return infoFields.findIndex(element => element === field);
   }
 
   const getSummary = async () => {

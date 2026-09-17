@@ -209,17 +209,15 @@ LEFT JOIN prices buy_prices ON buy_prices.id = (
                        'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
                        'mint', 'mintmark', 'features', 'subject', 'coins.grade', 'buy_prices.date', 'buy_prices.price',
                        'storage', 'condition', 'coins.quantity',)
-
-        res = cur.execute(f"SELECT {','.join(info_fields)} FROM coins {join_buy_prices} "
-            "WHERE coins.id=?", (coin_id,))
+        sql = f"SELECT {','.join(info_fields)} FROM coins {join_buy_prices} WHERE coins.id=?"
     else:
         info_fields = ('coins.title', 'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
                        'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
                        'mint', 'mintmark', 'features', 'subject', 'grade', 'paydate', 'payprice',
                        'storage', 'condition', 'quantity',)
 
-        res = cur.execute(f"SELECT {','.join(info_fields)} FROM coins "
-            "WHERE coins.id=?", (coin_id,))
+        sql = f"SELECT {','.join(info_fields)} FROM coins WHERE coins.id=?"
+    res = cur.execute(sql, (coin_id,))
     data = res.fetchall()
     con.close()
 
