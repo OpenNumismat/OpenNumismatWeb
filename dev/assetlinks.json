@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.opennumismat.twa",
+        "sha256_cert_fingerprints": ["EC:94:58:0D:CF:EE:83:3B:48:9A:42:F8:CD:6B:60:47:2A:27:47:D8:FA:4D:4E:79:7D:79:61:5A:76:6A:E5:94"]
+      }
+    }]
