@@ -21,7 +21,7 @@ export function useSQLite() {
 
     try {
       SQL = await initSqlJs({
-        locateFile: file => `wasm/${file}`
+        locateFile: file => `/wasm/${file}`
       });
       isInitialized = true
     }

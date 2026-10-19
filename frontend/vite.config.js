@@ -53,7 +53,8 @@ export default defineConfig(({ mode }) => {
         targets: [
           {
             src: normalizePath(path.resolve(import.meta.dirname, './node_modules/sql.js/dist/sql-wasm-browser.wasm')),
-            dest: 'wasm'
+            dest: 'wasm',
+            rename: { stripBase: true }
           }
         ]
       }),
