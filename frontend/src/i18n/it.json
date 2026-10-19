@@ -67,5 +67,6 @@
  "The server version is different from the application version": "La versione del server è diversa da quella dell'applicazione",
  "Check server settings": "Controlla le impostazioni del server",
  "Wrong response": "Risposta non corretta",
- "Server available": "Server disponibile"
+ "Server available": "Server disponibile",
+  "The browser has blocked a pop-up window. Please allow pop-up windows.": "The browser has blocked a pop-up window. Please allow pop-up windows."
 }
