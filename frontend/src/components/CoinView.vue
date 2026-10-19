@@ -60,9 +60,11 @@ onUnmounted(async () => {
     <v-row density="compact" class="photos">
       <v-img :src="coinData[obverse_index]"
             width="150"
+            class="cursor-pointer"
             @click="router.push('/images/' + route.params['id'])" />
       <v-img :src="coinData[reverse_index]"
             width="150"
+            class="cursor-pointer"
             @click="router.push('/images/' + route.params['id'])" />
     </v-row>
   </v-container>
