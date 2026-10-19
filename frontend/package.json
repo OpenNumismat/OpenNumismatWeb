@@ -1,6 +1,6 @@
 {
   "name": "OpenNumismat",
-  "version": "0.8.0",
+  "version": "0.7.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -12,26 +12,26 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@capacitor/app": "^8.1.0",
+    "@capacitor/app": "^8.1.2",
     "@mdi/font": "^7.4.47",
     "@vueuse/core": "^15.0.0",
     "axios": "^1.20.0",
-    "sql.js": "^1.14.2",
-    "vue": "^3.5.43",
-    "vue-i18n": "^11.4.12",
-    "vue-router": "^5.3.1",
-    "vuetify": "^4.2.1"
+    "sql.js": "^1.15.0",
+    "vue": "^3.5.44",
+    "vue-i18n": "^11.4.16",
+    "vue-router": "^5.4.0",
+    "vuetify": "^4.2.6"
   },
   "devDependencies": {
-    "@capacitor/android": "^8.5.2",
+    "@capacitor/android": "^8.5.3",
     "@capacitor/assets": "^3.0.5",
-    "@capacitor/cli": "^8.5.2",
-    "@vitejs/plugin-vue": "^6.0.9",
+    "@capacitor/cli": "^8.5.3",
+    "@vitejs/plugin-vue": "^6.0.10",
     "terser": "^5.51.2",
     "typescript": "^7.0.2",
-    "vite": "^8.3.0",
-    "vite-plugin-pwa": "^1.3.0",
-    "vite-plugin-static-copy": "^3.4.0",
+    "vite": "^8.3.4",
+    "vite-plugin-pwa": "^2.0.0",
+    "vite-plugin-static-copy": "^4.1.1",
     "vite-plugin-vue-devtools": "^8.2.1"
   }
 }
