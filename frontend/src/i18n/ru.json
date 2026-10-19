@@ -67,6 +67,5 @@
  "The server version is different from the application version": "Версия сервера отличается от версии приложения",
  "Check server settings": "Проверка настроек сервера",
  "Wrong response": "Неверный ответ",
- "Server available": "Сервер доступен",
-  "The browser has blocked a pop-up window. Please allow pop-up windows.": "The browser has blocked a pop-up window. Please allow pop-up windows."
+ "Server available": "Сервер доступен"
 }
