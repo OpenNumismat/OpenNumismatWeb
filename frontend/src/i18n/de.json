@@ -67,5 +67,6 @@
  "The server version is different from the application version": "Die Serverversion und die Anwendungsversion sind unterschiedlich",
  "Check server settings": "Prüfe Servereinstellungen",
  "Wrong response": "Falsche Antwort",
- "Server available": "Server verfügbar"
+ "Server available": "Server verfügbar",
+ "Download collection": "Download collection"
 }
