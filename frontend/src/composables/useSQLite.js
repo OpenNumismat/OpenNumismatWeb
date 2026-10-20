@@ -49,8 +49,7 @@ export function useSQLite() {
           const arrayBuffer = e.target.result;
           const uint8Array = new Uint8Array(arrayBuffer);
 
-          // Load database
-          db = new SQL.Database(uint8Array);
+          await loadDatabase(uint8Array);
 
           resolve()
         }
@@ -74,6 +73,25 @@ export function useSQLite() {
 
       reader.readAsArrayBuffer(file);
     });
+  }
+
+  const loadDatabase = async (uint8Array) => {
+    if (!isInitialized)
+      await initialize()
+
+    await globalStatus.startLoading(i18n.global.t('Loading database...'));
+
+    try {
+      db = new SQL.Database(uint8Array);
+    }
+    catch (err) {
+      console.error('Error loading database:', err);
+      globalStatus.status.value = i18n.global.t('Error loading database')
+      globalStatus.error.value = err
+    }
+    finally {
+      await globalStatus.finishLoading();
+    }
   }
 
   const executeQuery = async (sql, params = []) => {
@@ -115,6 +133,7 @@ export function useSQLite() {
 
   return {
     openDatabase,
+    loadDatabase,
     executeQuery,
   }
 }

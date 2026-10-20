@@ -132,7 +132,15 @@ onMounted(async () => {
     });
   }
 
+  await router.isReady()
+  const urlParam = route.query.db
+
   await refreshApp();
+
+  if (urlParam) {
+    const dbUrl = decodeURIComponent(urlParam)
+    await openFile(dbUrl, 'url')
+  }
 })
 
 const openFile = async (file, connection_type) => {
@@ -160,6 +168,12 @@ const openFile = async (file, connection_type) => {
     appTitle.pushTitle(file.name)
 
     ret = await service.openLocalFile(file);
+  }
+  else if (connection_type === 'url') {
+    const urlObj = new URL(file)
+    appTitle.pushTitle(urlObj.pathname.split('/').pop())
+
+    ret = await service.openUrlFile(file);
   }
 
   if (ret) {
