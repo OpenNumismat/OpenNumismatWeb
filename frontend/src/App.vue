@@ -160,18 +160,18 @@ const openFile = async (file, connection_type) => {
   let ret = null
 
   if (connection_type === 'remote') {
-    appTitle.pushTitle(file)
+    appTitle.pushTitle(file.replace(/\.db$/, ""))
 
     ret = await service.openRemoteFile(file);
   }
   else if (connection_type === 'local') {
-    appTitle.pushTitle(file.name)
+    appTitle.pushTitle(file.name.replace(/\.db$/, ""))
 
     ret = await service.openLocalFile(file);
   }
   else if (connection_type === 'url') {
     const urlObj = new URL(file)
-    appTitle.pushTitle(urlObj.pathname.split('/').pop())
+    appTitle.pushTitle(urlObj.pathname.split('/').pop().replace(/\.db$/, ""))
 
     ret = await service.openUrlFile(file);
   }
