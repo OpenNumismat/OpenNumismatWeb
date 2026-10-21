@@ -60,18 +60,25 @@ const fieldIds = {
   68: 'features',
   52: 'note',
   61: 'subject',
+  45: 'payinfo',
 }
 
 const infoFields = ['coins.title',
     'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
     'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
     'mint', 'mintmark', 'features', 'subject', 'grade', 'paydate', 'payprice',
-    'storage', 'condition', 'quantity', 'note', 'obverseimg.image', 'reverseimg.image',];
+    'storage', 'condition', 'quantity', 'note', 'payinfo', 'obverseimg.image', 'reverseimg.image',];
 const infoFieldsEx = ['coins.title',
     'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
     'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
     'mint', 'mintmark', 'features', 'subject', 'coins.grade', 'buy_prices.date', 'buy_prices.price',
-    'storage', 'condition', 'coins.quantity', 'note', 'obverseimg.image', 'reverseimg.image',];
+    'storage', 'condition', 'coins.quantity', 'note', 'buy_prices.info', 'obverseimg.image', 'reverseimg.image',];
+const infoFiledsExMap = {
+  'quantity': 'coins.quantity',
+  'paydate': 'buy_prices.date',
+  'payprice': 'buy_prices.price',
+  'payinfo': 'buy_prices.info',
+};
 
 const initSettings = async () => {
   let settings = {};
@@ -753,8 +760,11 @@ export function useService(passwordDialogRef) {
   }
 
   function infoFieldIndex(field) {
-    if (collection_version >= 11)
+    if (collection_version >= 11) {
+      if (field in infoFiledsExMap)
+        field = infoFiledsExMap[field];
       return infoFieldsEx.findIndex(element => element === field);
+    }
     else
       return infoFields.findIndex(element => element === field);
   }

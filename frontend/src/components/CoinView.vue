@@ -164,16 +164,6 @@ onUnmounted(async () => {
               :value="coinData[service.infoFieldIndex('grade')]"
             />
             <InfoRow
-              v-if="coinData[service.infoFieldIndex('paydate')]"
-              :title="settings.fields['paydate']"
-              :value="dSys(coinData[service.infoFieldIndex('paydate')])"
-            />
-            <InfoRow
-              v-if="coinData[service.infoFieldIndex('payprice')]"
-              :title="settings.fields['payprice']"
-              :value="nSys(coinData[service.infoFieldIndex('payprice')])"
-            />
-            <InfoRow
               :title="settings.fields['storage']"
               :value="coinData[service.infoFieldIndex('storage')]"
             />
@@ -185,6 +175,22 @@ onUnmounted(async () => {
               :title="settings.fields['quantity']"
               :value="coinData[service.infoFieldIndex('quantity')]"
             />
+            <InfoRow
+              v-if="coinData[service.infoFieldIndex('paydate')]"
+              :title="settings.fields['paydate']"
+              :value="dSys(coinData[service.infoFieldIndex('paydate')])"
+            />
+            <InfoRow
+              v-if="coinData[service.infoFieldIndex('payprice')]"
+              :title="settings.fields['payprice']"
+              :value="nSys(coinData[service.infoFieldIndex('payprice')])"
+            />
+            <template v-if="coinData[service.infoFieldIndex('payinfo')]">
+              <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
+                {{ settings.fields['payinfo'] }}
+              </v-col>
+              <p v-html="convertLinksToAnchors(coinData[service.infoFieldIndex('payinfo')])"></p>
+            </template>
           </v-row>
         </v-col>
       </v-row>
