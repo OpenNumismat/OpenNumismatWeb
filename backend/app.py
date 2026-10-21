@@ -208,13 +208,13 @@ LEFT JOIN prices buy_prices ON buy_prices.id = (
         info_fields = ('coins.title', 'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
                        'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
                        'mint', 'mintmark', 'features', 'subject', 'coins.grade', 'buy_prices.date', 'buy_prices.price',
-                       'storage', 'condition', 'coins.quantity',)
+                       'storage', 'condition', 'coins.quantity', 'note',)
         sql = f"SELECT {','.join(info_fields)} FROM coins {join_buy_prices} WHERE coins.id=?"
     else:
         info_fields = ('coins.title', 'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
                        'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
                        'mint', 'mintmark', 'features', 'subject', 'grade', 'paydate', 'payprice',
-                       'storage', 'condition', 'quantity',)
+                       'storage', 'condition', 'quantity', 'note',)
 
         sql = f"SELECT {','.join(info_fields)} FROM coins WHERE coins.id=?"
     res = cur.execute(sql, (coin_id,))
@@ -351,6 +351,9 @@ def settings(f):
         83: 'condition',
         71: 'quantity',
         1: 'title',
+        68: 'features',
+        52: 'note',
+        61: 'subject',
     }
 
     file = f

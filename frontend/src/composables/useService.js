@@ -57,18 +57,21 @@ const fieldIds = {
   83: 'condition',
   71: 'quantity',
   1: 'title',
+  68: 'features',
+  52: 'note',
+  61: 'subject',
 }
 
 const infoFields = ['coins.title',
     'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
     'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
     'mint', 'mintmark', 'features', 'subject', 'grade', 'paydate', 'payprice',
-    'storage', 'condition', 'quantity', 'obverseimg.image', 'reverseimg.image',];
+    'storage', 'condition', 'quantity', 'note', 'obverseimg.image', 'reverseimg.image',];
 const infoFieldsEx = ['coins.title',
     'status', 'region', 'country', 'period', 'ruler', 'value', 'unit', 'type',
     'series', 'subjectshort', 'issuedate', 'year', 'mintage', 'material',
     'mint', 'mintmark', 'features', 'subject', 'coins.grade', 'buy_prices.date', 'buy_prices.price',
-    'storage', 'condition', 'coins.quantity', 'obverseimg.image', 'reverseimg.image',];
+    'storage', 'condition', 'coins.quantity', 'note', 'obverseimg.image', 'reverseimg.image',];
 
 const initSettings = async () => {
   let settings = {};

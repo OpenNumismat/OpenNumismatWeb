@@ -192,8 +192,26 @@ onUnmounted(async () => {
   </v-container>
 
   <v-container>
-    <p v-html="convertLinksToAnchors(coinData[service.infoFieldIndex('features')])"></p>
-    <p v-html="convertLinksToAnchors(coinData[service.infoFieldIndex('subject')])"></p>
+    <template v-if="coinData[service.infoFieldIndex('features')]">
+      <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
+        {{ settings.fields['features'] }}
+      </v-col>
+      <p v-html="convertLinksToAnchors(coinData[service.infoFieldIndex('features')])"></p>
+    </template>
+
+    <template v-if="coinData[service.infoFieldIndex('note')]">
+      <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
+        {{ settings.fields['note'] }}
+      </v-col>
+      <p v-html="convertLinksToAnchors(coinData[service.infoFieldIndex('note')])"></p>
+    </template>
+
+    <template v-if="coinData[service.infoFieldIndex('subject')]">
+      <v-col tag="dt" cols="12" sm="3" class="text-medium-emphasis">
+        {{ settings.fields['subject'] }}
+      </v-col>
+      <p v-html="convertLinksToAnchors(coinData[service.infoFieldIndex('subject')])"></p>
+    </template>
   </v-container>
 </template>
 
