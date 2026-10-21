@@ -67,5 +67,6 @@
  "The server version is different from the application version": "Версия сервера отличается от версии приложения",
  "Check server settings": "Проверка настроек сервера",
  "Wrong response": "Неверный ответ",
- "Server available": "Сервер доступен"
+ "Server available": "Сервер доступен",
+ "Download collection": "Скачивание коллекции"
 }
