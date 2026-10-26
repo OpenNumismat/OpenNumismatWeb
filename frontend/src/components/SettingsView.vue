@@ -4,7 +4,7 @@ import { useTheme } from 'vuetify'
 import { languageList, setLocale } from '@/i18n'
 import i18n from '@/i18n'
 import {appTitle} from "@/composables/appTitle.js"
-import {imagePresentation, statusPresentation, currentTheme, apiKey, serverUrl} from "@/composables/useSettings";
+import {imagePresentation, statusPresentation, currentTheme, currentLayout, apiKey, serverUrl} from "@/composables/useSettings";
 import {useService} from "@/composables/useService.js";
 
 const localServerUrl = ref('');
@@ -99,6 +99,20 @@ const checkServer = async () => {
             <v-btn value="dark" icon="mdi-weather-night"></v-btn>
             <v-btn value="system" icon="mdi-brightness-auto"></v-btn>
             <v-btn value="light" icon="mdi-weather-sunny"></v-btn>
+          </v-btn-toggle>
+        </v-list-item-action>
+      </template>
+    </v-list-item>
+    <v-list-item :title="i18n.global.t('settings_layout')">
+      <template v-slot:append>
+        <v-list-item-action>
+          <v-btn-toggle
+              v-model="currentLayout"
+              rounded="xl"
+              border
+          >
+            <v-btn value="phone" icon="mdi-cellphone"></v-btn>
+            <v-btn value="tablet" icon="mdi-tablet"></v-btn>
           </v-btn-toggle>
         </v-list-item-action>
       </template>

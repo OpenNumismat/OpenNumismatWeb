@@ -2,7 +2,7 @@
 import {onMounted, onUnmounted, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import StatusItem from "@/components/StatusItem.vue"
-import { imagePresentation, statusPresentation } from "@/composables/useSettings";
+import { imagePresentation, statusPresentation, currentLayout } from "@/composables/useSettings";
 import {convertFraction, formatYear} from "@/utils/formatter.js";
 import {useService} from "@/composables/useService.js";
 import FilterItem from "@/components/FilterItem.vue";
@@ -117,9 +117,12 @@ const clear = async () => {
   await clearImages()
 }
 
+const coinId = ref(null)
+
 defineExpose({
   onOpenFile,
-  clear
+  clear,
+  coinId
 })
 
 function generateDescription( coin_data ) {
@@ -175,6 +178,14 @@ const loadImage = async (coinId) => {
     images.value[coinId] = null;
   }
 }
+
+const onCoinClick = async (coin_id) => {
+  if (currentLayout.value === 'phone') {
+    router.push('/coin/' + coin_id);
+  }
+  else
+    coinId.value = coin_id;
+}
 </script>
 
 <template>
@@ -212,7 +223,7 @@ const loadImage = async (coinId) => {
         :key="coin[0]"
         :subtitle="generateDescription(coin).join(', ')"
         :title="coin[1]"
-        @click="router.push('/coin/' + coin[0])"
+        @click="onCoinClick(coin[0])"
         class="pa-1"
       >
         <template v-slot:prepend v-if="imagePresentation === 'obverse'">

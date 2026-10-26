@@ -10,7 +10,7 @@ import AboutView from "@/components/AboutView.vue";
 import CoinView from "@/components/CoinView.vue";
 import ImagesView from "@/components/ImagesView.vue";
 import SummaryView from "@/components/SummaryView.vue";
-import {currentTheme, serverUrl, apiKey} from "@/composables/useSettings";
+import {currentTheme, serverUrl, apiKey, currentLayout} from "@/composables/useSettings";
 import PasswordDialog from '@/components/PasswordDialog.vue'
 import FileServerView from "@/components/FileServerView.vue";
 import {useGlobalStatus} from "@/composables/useGlobalStatus.js";
@@ -42,6 +42,10 @@ const router = useRouter()
 const route = useRoute()
 
 const appTheme = useTheme()
+
+const isCoinDetailsPage = computed(() => {
+  return !!coinListViewRef.value?.coinId;
+})
 
 const updateAddressBar = () => {
   const primaryColor = appTheme.current.value.colors.primary
@@ -247,14 +251,34 @@ const handleFileUpload = async (file) => {
         :onFileUploaded="handleFileUpload" />
       <FileServerView v-if="((route.name === 'home' && !isOpened) || route.name === 'open') && isServerAvailable"
         :file_list="serverFileList" :onFileSelected="handleRemoteFileSelected" />
-      <KeepAlive>
-        <CoinListView v-if="route.name === 'home' && isOpened"
-          :settings="collectionSettings"
-          ref="coinListViewRef" />
+
+      <!-- phone layout -->
+      <template v-if="currentLayout === 'phone' && isOpened">
+        <KeepAlive>
+          <CoinListView v-if="route.name === 'home'"
+            :settings="collectionSettings"
+            ref="coinListViewRef" />
+        </KeepAlive>
+        <CoinView v-if="route.name === 'coin'"
+          :settings="collectionSettings" />
+      </template>
+      <!-- tablet layout -->
+      <KeepAlive v-if="currentLayout === 'tablet' && isOpened">
+        <v-container v-if="route.name === 'home'"
+                     fluid class="pa-0">
+          <v-row no-gutters>
+            <v-col cols="12" md="4" class="border-end fill-height">
+              <CoinListView :settings="collectionSettings"
+                ref="coinListViewRef" />
+            </v-col>
+            <v-col cols="12" md="8" v-if="isCoinDetailsPage">
+              <CoinView :settings="collectionSettings" :coin_id="coinListViewRef.coinId" />
+            </v-col>
+          </v-row>
+        </v-container>
       </KeepAlive>
+
       <SummaryView v-if="route.name === 'summary' && isOpened" />
-      <CoinView v-if="route.name === 'coin' && isOpened"
-        :settings="collectionSettings" />
       <ImagesView v-if="route.name === 'images' && isOpened" />
       <SettingsView v-if="route.name === 'settings'" />
       <AboutView v-if="route.name === 'about'" />

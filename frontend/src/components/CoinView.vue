@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, onUnmounted, ref} from "vue";
+import {onMounted, onUnmounted, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {appTitle} from "@/composables/appTitle.js"
 import i18n from '@/i18n'
@@ -20,24 +20,29 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  coin_id: {
+    type: Number,
+    required: false,
+  },
 });
 
 const coinData = ref([])
+const coinId = ref(null)
 
 onMounted(async () => {
-  const id = route.params['id']
-  coinData.value = await service.getDetails(id)
-
-  const obverse_img = coinData.value[obverse_index];
-  if (obverse_img) {
-    coinData.value[obverse_index] = URL.createObjectURL(obverse_img);
+  if (props.coin_id) {
+    watch(
+      () => props.coin_id,
+      (newId) => {
+        handleCoinIdChange(newId);
+      },
+      { immediate: true }
+    );
   }
-  const reverse_img = coinData.value[reverse_index];
-  if (reverse_img) {
-    coinData.value[reverse_index] = URL.createObjectURL(reverse_img);
+  else {
+    const coin_id = route.params['id'];
+    await handleCoinIdChange(coin_id);
   }
-
-  appTitle.pushTitle(coinData.value[0])
 })
 
 onUnmounted(async () => {
@@ -50,6 +55,22 @@ onUnmounted(async () => {
 
   appTitle.popTitle()
 })
+
+const handleCoinIdChange = async (newId) => {
+  coinId.value = newId;
+  coinData.value = await service.getDetails(newId);
+
+  const obverse_img = coinData.value[obverse_index];
+  if (obverse_img) {
+    coinData.value[obverse_index] = URL.createObjectURL(obverse_img);
+  }
+  const reverse_img = coinData.value[reverse_index];
+  if (reverse_img) {
+    coinData.value[reverse_index] = URL.createObjectURL(reverse_img);
+  }
+
+  appTitle.pushTitle(coinData.value[0])
+}
 </script>
 
 <template>
@@ -61,11 +82,11 @@ onUnmounted(async () => {
       <v-img :src="coinData[obverse_index]"
             width="150"
             class="cursor-pointer"
-            @click="router.push('/images/' + route.params['id'])" />
+            @click="router.push('/images/' + coinId)" />
       <v-img :src="coinData[reverse_index]"
             width="150"
             class="cursor-pointer"
-            @click="router.push('/images/' + route.params['id'])" />
+            @click="router.push('/images/' + coinId)" />
     </v-row>
   </v-container>
 
