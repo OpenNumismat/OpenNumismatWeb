@@ -1,7 +1,7 @@
 <script setup>
 import {computed, onMounted, ref, watch} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
-import {useTheme} from 'vuetify'
+import {useDisplay, useTheme} from 'vuetify'
 import {appTitle} from "@/composables/appTitle.js";
 import FileUploaderView from '@/components/FileUploaderView.vue'
 import CoinListView from "@/components/CoinListView.vue";
@@ -43,10 +43,6 @@ const route = useRoute()
 
 const appTheme = useTheme()
 
-const isCoinDetailsPage = computed(() => {
-  return !!coinListViewRef.value?.coinId;
-})
-
 const updateAddressBar = () => {
   const primaryColor = appTheme.current.value.colors.primary
   let metaTag = document.querySelector('meta[name="theme-color"]')
@@ -70,6 +66,15 @@ const refreshApp = async () => {
     serverFileList.value = await service.getServerFileList();
   }
 }
+
+const { mdAndUp } = useDisplay();
+const isTabletView = computed(() => {
+  return currentLayout.value === 'tablet' && mdAndUp.value;
+});
+watch(isTabletView, () => {
+  refreshApp();
+});
+const isCoinDetailsPage = computed(() => !!coinListViewRef.value?.coinId);
 
 const testServerConnection = async () => {
   if (isServerConfigured.value) {
@@ -253,22 +258,24 @@ const handleFileUpload = async (file) => {
         :file_list="serverFileList" :onFileSelected="handleRemoteFileSelected" />
 
       <!-- phone layout -->
-      <template v-if="currentLayout === 'phone' && isOpened">
+      <template v-if="!isTabletView && isOpened">
         <KeepAlive>
           <CoinListView v-if="route.name === 'home'"
             :settings="collectionSettings"
+            :isTabletView="false"
             ref="coinListViewRef" />
         </KeepAlive>
         <CoinView v-if="route.name === 'coin'"
           :settings="collectionSettings" />
       </template>
       <!-- tablet layout -->
-      <KeepAlive v-if="currentLayout === 'tablet' && isOpened">
+      <KeepAlive v-if="isTabletView && isOpened">
         <v-container v-if="route.name === 'home'"
                      fluid class="pa-0">
           <v-row no-gutters>
             <v-col cols="12" md="4" class="border-end fill-height">
               <CoinListView :settings="collectionSettings"
+                :isTabletView="true"
                 ref="coinListViewRef" />
             </v-col>
             <v-col cols="12" md="8" v-if="isCoinDetailsPage">

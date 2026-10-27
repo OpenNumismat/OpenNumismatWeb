@@ -32,6 +32,7 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  isTabletView: Boolean
 });
 
 onMounted(async () => {
@@ -180,11 +181,10 @@ const loadImage = async (coinId) => {
 }
 
 const onCoinClick = async (coin_id) => {
-  if (currentLayout.value === 'phone') {
-    router.push('/coin/' + coin_id);
-  }
-  else
+  if (props.isTabletView)
     coinId.value = coin_id;
+  else
+    router.push('/coin/' + coin_id);
 }
 </script>
 
