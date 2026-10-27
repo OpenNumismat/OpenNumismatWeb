@@ -156,6 +156,9 @@ const openFile = async (file, connection_type) => {
   if (!file)
     return;
 
+  if (coinListViewRef.value !== null)
+    coinListViewRef.value.clear()
+
   const stopClearWatch = watch(coinListViewRef, (newVal) => {
     if (newVal) {
       coinListViewRef.value.clear()

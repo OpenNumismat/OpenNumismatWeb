@@ -103,6 +103,7 @@ const clearImages = async () => {
 }
 
 const clear = async () => {
+  coinId.value = null
   searchVal.value = null
   sortedBy.value = null
   reverseSort.value = false
