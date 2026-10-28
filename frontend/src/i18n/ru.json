@@ -9,6 +9,7 @@
   "status_view_icon_text": "Иконка + текст",
   "status_view_text_icon": "Текст + иконка",
   "settings_theme": "Тема",
+  "settings_layout": "Вид",
   "settings_language": "Язык",
   "settings_status": "Показывать статус как",
   "settings_image_view": "Показывать изображения в списке",
@@ -67,5 +68,6 @@
  "The server version is different from the application version": "Версия сервера отличается от версии приложения",
  "Check server settings": "Проверка настроек сервера",
  "Wrong response": "Неверный ответ",
- "Server available": "Сервер доступен"
+ "Server available": "Сервер доступен",
+ "Download collection": "Скачивание коллекции"
 }

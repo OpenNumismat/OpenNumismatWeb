@@ -9,6 +9,7 @@
   "status_view_icon_text": "Text + Icon",
   "status_view_text_icon": "Text + Icon",
   "settings_theme": "Thema",
+  "settings_layout": "View",
   "settings_language": "Sprache",
   "settings_status": "Status anzeigen als",
   "settings_image_view": "Bilder in der Liste anzeigen",
@@ -64,8 +65,9 @@
  "Load collection": "Lade Sammlung",
  "Load coins": "Lade Münzen",
  "Request": "Anfrage",
- "The server version is different from the application version": "The server version is different from the application version",
- "Check server settings": "Check server settings",
- "Wrong response": "Wrong response",
- "Server available": "Server available"
+ "The server version is different from the application version": "Die Serverversion und die Anwendungsversion sind unterschiedlich",
+ "Check server settings": "Prüfe Servereinstellungen",
+ "Wrong response": "Falsche Antwort",
+ "Server available": "Server verfügbar",
+ "Download collection": "Download collection"
 }

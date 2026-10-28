@@ -9,6 +9,7 @@
   "status_view_icon_text": "Icona + Testo",
   "status_view_text_icon": "Testo + Icona",
   "settings_theme": "Tema",
+  "settings_layout": "View",
   "settings_language": "Lingua",
   "settings_status": "Mostra lo stato come",
   "settings_image_view": "Mostra le immagini nell'elenco",
@@ -67,5 +68,6 @@
  "The server version is different from the application version": "La versione del server è diversa da quella dell'applicazione",
  "Check server settings": "Controlla le impostazioni del server",
  "Wrong response": "Risposta non corretta",
- "Server available": "Server disponibile"
+ "Server available": "Server disponibile",
+ "Download collection": "Download collection"
 }
