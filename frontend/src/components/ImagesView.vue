@@ -39,7 +39,7 @@ const openLightbox = (image) => {
 
 <template>
   <v-container class="pa-0">
-    <div v-for="(image, idx) in images" :key="idx" class="mb-4">
+    <div v-for="(image) in images" class="pa-1">
       <v-img
         :src="image"
         width="100%"
@@ -87,5 +87,7 @@ const openLightbox = (image) => {
 </template>
 
 <style scoped>
-
+:deep(.v-img__img) {
+  position: relative;
+}
 </style>
