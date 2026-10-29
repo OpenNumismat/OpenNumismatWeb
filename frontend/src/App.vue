@@ -256,9 +256,9 @@ const handleFileUpload = async (file) => {
 
     <v-main>
       <FileUploaderView v-if="(route.name === 'home' && !isOpened) || route.name === 'open'"
-        :onFileUploaded="handleFileUpload" />
+        :onFileUploaded="handleFileUpload" class="mx-auto" />
       <FileServerView v-if="((route.name === 'home' && !isOpened) || route.name === 'open') && isServerAvailable"
-        :file_list="serverFileList" :onFileSelected="handleRemoteFileSelected" />
+        :file_list="serverFileList" :onFileSelected="handleRemoteFileSelected" class="mx-auto" />
 
       <!-- phone layout -->
       <template v-if="!isTabletView && isOpened">
@@ -289,9 +289,9 @@ const handleFileUpload = async (file) => {
       </KeepAlive>
 
       <SummaryView v-if="route.name === 'summary' && isOpened" />
-      <ImagesView v-if="route.name === 'images' && isOpened" />
+      <ImagesView v-if="route.name === 'images' && isOpened" class="mx-auto" />
       <SettingsView v-if="route.name === 'settings'" />
-      <AboutView v-if="route.name === 'about'" />
+      <AboutView v-if="route.name === 'about'" class="mx-auto" />
 
       <v-overlay
         v-model="isLoading"
@@ -365,5 +365,10 @@ header {
     place-items: center;
     padding-right: calc(var(--section-gap) / 2);
   }
+}
+
+.mx-auto {
+    margin-left: auto !important;
+    margin-right: auto !important;
 }
 </style>
