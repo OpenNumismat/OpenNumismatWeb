@@ -5,9 +5,9 @@ let oldTitles = []
 
 export const appTitle = reactive({
   title: currentTitle,
-  pushTitle(title) {
+  pushTitle(title, append = false) {
     oldTitles.push(currentTitle)
-    this.title = title
+    this.title = append ? `${title} - ${this.title}` : title
     currentTitle = this.title
   },
   popTitle() {

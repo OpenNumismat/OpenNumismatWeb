@@ -69,7 +69,7 @@ const handleCoinIdChange = async (newId) => {
     coinData.value[reverse_index] = URL.createObjectURL(reverse_img);
   }
 
-  appTitle.pushTitle(coinData.value[0])
+  appTitle.pushTitle(coinData.value[0], true)
 }
 </script>
 
